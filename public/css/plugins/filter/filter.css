@@ -1,0 +1,198 @@
+.tableExistencia {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+.tableExistencia thead th:nth-child(1) {
+    width: 700px;
+}
+.tableExistencia thead th {
+    width: 75px;
+}
+.tableExistencia thead th:nth-last-child(1) {
+    width: 100px;
+}
+
+.tableClientes {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+.tableClientes thead th:nth-child(1) {
+    width: 75px;
+}
+.tableClientes thead th:nth-child(2) {
+    width: 100px;
+}
+.tableClientes thead th:nth-child(3) {
+    width: 250px;
+}
+.tableClientes thead th:nth-child(4) {
+    width: 275px;
+}
+.tableClientes thead th:nth-last-child(1) {
+    width: 100px;
+}
+.tableClientes thead th {
+    width: 75px;
+}
+.tableClientes tbody td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+[type=checkbox] {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: dodgerblue;
+    vertical-align: middle;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    outline: 0;
+    flex-grow: 0;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    transition: background 300ms;
+    cursor: pointer;
+}
+[type=checkbox]::before {
+    content: "";
+    color: transparent;
+    display: block;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    border: 0;
+    background-color: transparent;
+    background-size: contain;
+    box-shadow: inset 0 0 0 1px #CCD3D8;
+}
+[type=checkbox]:checked {
+    background-color: currentcolor;
+}
+
+[type=checkbox]:checked::before {
+    box-shadow: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+}
+[type=checkbox]:disabled {
+    background-color: #CCD3D8;
+    opacity: 0.84;
+    cursor: not-allowed;
+}
+[type=checkbox]::-ms-check {
+    content: "";
+    color: transparent;
+    display: block;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    border: 0;
+    background-color: transparent;
+    background-size: contain;
+    box-shadow: inset 0 0 0 1px #ffffff;
+}
+[type=checkbox]:checked::-ms-check {
+    box-shadow: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+}
+
+[type=number]{
+    background: transparent;
+    max-width: 60px;
+    text-align: center;
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
+}
+[type=number]::-webkit-inner-spin-button, [type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+[type=number]:focus {
+    outline: none;
+    border: 1px solid transparent;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.information{
+    font-family: 'Time New Roman';
+    font-weight: bold;
+    border-color: #26292E;
+    border-width: 5px;
+    border-style: solid;
+    padding: 15px;
+    font-size: 6vw;
+    height: 100%;
+}
+.reference, .color{
+    color: transparent;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    font-family: 'Times New Roman', serif;
+    letter-spacing: 5px;
+    font-weight: bold;
+    background-image: linear-gradient(
+        to right,
+        #544C1B,
+        #7D7128,
+        #A39334,
+        #B8A53B,
+        #A39334,
+        #7D7128,
+        #544C1B
+    );
+    -webkit-background-clip: text;
+}
+.desc{
+    font-family: 'Time New Roman';
+    font-size: 22px;
+    padding: 0px !important;
+    width: 100%;
+}
+.intermitente{
+    box-shadow: 0px 0px 20px;
+    animation: infinite resplandorAnimation 2s;
+}
+@keyframes resplandorAnimation {
+    0%,100%{
+        box-shadow: 0px 0px 20px;
+    }
+    50%{
+        box-shadow: 0px 0px 0px;
+    }
+}
+
+
+
+input[type=text]{
+    background: transparent;
+    max-width: 130px;
+    text-align: center;
+    border: none;
+}
+
+.bg-success{
+    color: white !important;
+}
+.bg-danger{
+    color: white !important;
+}
+.bg-orange{
+    color: white !important;
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6; /* Visualmente se ve deshabilitado */
+    text-decoration: none;
+    color: gray; /* Cambiar el color del texto para indicar deshabilitación */
+}

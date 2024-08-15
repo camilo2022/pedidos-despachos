@@ -1,0 +1,14 @@
+.order-table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+.order-table, .order {
+    border: 1px solid rgb(230, 230, 230) !important;
+    padding: 6px !important;
+    font-size: 14px;
+}
+
+.order-table {
+    background-color: #ffffff !important;
+}
