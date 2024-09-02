@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/phpinfo', function () { 
+Route::get('/phpinfo', function () {
     echo phpinfo();
 } );
 
@@ -261,9 +261,12 @@ Route::middleware(['auth'])->group(function () {
                     Route::post('/Store', 'store')->middleware('can:Dashboard.Orders.Details.Store')->name('Dashboard.Orders.Details.Store');
                     Route::post('/Edit/{id}', 'edit')->middleware('can:Dashboard.Orders.Details.Edit')->name('Dashboard.Orders.Details.Edit');
                     Route::put('/Update/{id}', 'update')->middleware('can:Dashboard.Orders.Details.Update')->name('Dashboard.Orders.Details.Update');
+                    Route::post('/Show/{id}', 'show')->middleware('can:Dashboard.Orders.Details.Show')->name('Dashboard.Orders.Details.Show');
+                    Route::post('/Clone', 'clone')->middleware('can:Dashboard.Orders.Details.Clone')->name('Dashboard.Orders.Details.Clone');
                     Route::put('/Pending', 'pending')->middleware('can:Dashboard.Orders.Details.Pending')->name('Dashboard.Orders.Details.Pending');
                     Route::put('/Authorize', 'authorized')->middleware('can:Dashboard.Orders.Details.Authorize')->name('Dashboard.Orders.Details.Authorize');
                     Route::put('/Approve', 'approve')->middleware('can:Dashboard.Orders.Details.Approve')->name('Dashboard.Orders.Details.Approve');
+                    Route::put('/Allow', 'allow')->middleware('can:Dashboard.Orders.Details.Allow')->name('Dashboard.Orders.Details.Allow');
                     Route::put('/Cancel', 'cancel')->middleware('can:Dashboard.Orders.Details.Cancel')->name('Dashboard.Orders.Details.Cancel');
                     Route::put('/Suspend', 'suspend')->middleware('can:Dashboard.Orders.Details.Suspend')->name('Dashboard.Orders.Details.Suspend');
                 });
@@ -335,7 +338,6 @@ Route::middleware(['auth'])->group(function () {
                 });
             });
         });
-
 
         Route::prefix('/Reports')->group(function () {
             Route::controller(ReportSalesController::class)->group(function () {

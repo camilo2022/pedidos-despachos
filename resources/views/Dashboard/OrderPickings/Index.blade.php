@@ -76,7 +76,7 @@
                                             <td class="order">{{ $orderPicking->order_dispatch->client->client_branch_address }}</td>
                                             <th class="order">FECHA ALISTAMIENTO:</th>
                                             <td class="order">
-                                                <span class="badge badge-pill badge-primary">{{ Carbon::parse($orderPicking->picking_date)->format('Y-m-d H:i:s') }}</span>
+                                                <span class="badge badge-primary">{{ Carbon::parse($orderPicking->picking_date)->format('Y-m-d H:i:s') }}</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -85,22 +85,22 @@
                                             <th class="order">TELEFONO:</th>
                                             <td class="order">{{ $orderPicking->order_dispatch->client->client_branch_number_phone }}</td>
                                             <th class="order">ESTADO:</th>
-                                            <td class="order">                                            
+                                            <td class="order">
                                                 @switch($orderPicking->picking_status)
                                                     @case('En curso')
-                                                        <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>En curso</span>
+                                                        <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>En curso</span>
                                                         @break
                                                     @case('Cancelado')
-                                                        <span class="badge badge-pill badge-danger text-white" style="color:white !important;"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
+                                                        <span class="badge badge-danger text-white" style="color:white !important;"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
                                                         @break
                                                     @case('Revision')
-                                                        <span class="badge badge-pill badge-warning" style="color:white !important;"><i class="fas fa-gear mr-2 text-white"></i>Revision</span>
+                                                        <span class="badge badge-warning" style="color:white !important;"><i class="fas fa-gear mr-2 text-white"></i>Revision</span>
                                                         @break
                                                     @case('Aprobado')
-                                                        <span class="badge badge-pill badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span>
+                                                        <span class="badge badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span>
                                                         @break
                                                     @default
-                                                        <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>En curso</span>
+                                                        <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>En curso</span>
                                                 @endswitch
                                             </td>
                                         </tr>
@@ -123,7 +123,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="card">
                 <div class="card-header text-center" style="background-color: #343a40; color:white; font-weigth:bold;">
                     DETALLES DE LA ORDEN DE ALISTAMIENTO
@@ -136,14 +136,14 @@
                         </div>
                         <div class="card-body">
                             <div class="row" id="OrderPickingDetails">
-                                
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
     </section>
 @endsection
 @section('script')

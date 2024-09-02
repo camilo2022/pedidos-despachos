@@ -181,12 +181,12 @@
 
                         @foreach ($orderSizes as $size)
                         <td class="cell fz-12">
-                            {{ $order_detail->{"T{$size->code}"} }} @php($quantities += $order_detail->{"T{$size->code}"})
+                            {{ $order_detail->{"T{$size->code}"} }} @php($quantities += !in_array($order_detail->status, ['Suspendido', 'Agotado', 'Cancelado']) ? $order_detail->{"T{$size->code}"} : 0)
                         </td>
                         @endforeach
 
-                        @php($price = $quantities * $order_detail->negotiated_price)
-                        @php($priceTotal += $quantities * $order_detail->negotiated_price)
+                        @php($price = !in_array($order_detail->status, ['Suspendido', 'Agotado', 'Cancelado']) ? $quantities * $order_detail->negotiated_price : 0)
+                        @php($priceTotal += !in_array($order_detail->status, ['Suspendido', 'Agotado', 'Cancelado']) ? $quantities * $order_detail->negotiated_price : 0)
 
                         <th style="background-color: #d4d4d4;" class="cell fz-12">
                             {{ $quantities }}
@@ -232,7 +232,7 @@
                 <tr>
                     <th colspan="2" class="cell fz-10">TOTAL</th>
                     @foreach ($orderSizes as $size)
-                    <td class="cell fz-12">{{ $order->order_details->pluck("T{$size->code}")->sum() }} @php($quantitiesTotal += $order->order_details->pluck("T{$size->code}")->sum()) </td>
+                    <td class="cell fz-12">{{ $order->order_details->whereNotIn('status', ['Suspendido', 'Agotado', 'Cancelado'])->pluck("T{$size->code}")->sum() }} @php($quantitiesTotal += $order->order_details->whereNotIn('status', ['Suspendido', 'Agotado', 'Cancelado'])->pluck("T{$size->code}")->sum()) </td>
                     @endforeach
                     <th style="background-color: #d4d4d4;" class="cell fz-12">{{ $quantitiesTotal }}</th>
                     <th style="background-color: #d4d4d4;" class="cell fz-10" colspan="3">{{ '$ ' . number_format(($priceTotal), 0, ',', '.') }}</th>

@@ -52,6 +52,7 @@ return new class extends Migration
             $table->unsignedBigInteger('TL')->default(0);
             $table->unsignedBigInteger('TXL')->default(0);
             $table->unsignedBigInteger('TXXL')->default(0);
+            $table->enum('priority', ['1', '2', '3', '4', '5'])->default('3')->comment('1: Crítica, 2: Alta, 3: Media, 4: Baja, 5: Mínima');
             $table->unsignedBigInteger('seller_user_id')->nullable()->comment('Identificador del usuario vendedor.');
             $table->datetime('seller_date')->comment('Fecha del vendedor');
             $table->longText('seller_observation')->nullable()->comment('Observacion del vendedor');

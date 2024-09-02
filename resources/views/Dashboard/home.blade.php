@@ -17,7 +17,7 @@
 </div>
 <section class="content">
     <div class="container-fluid">
-      
+
         <div class="row">
           <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
@@ -31,7 +31,7 @@
               <a href="#" class="small-box-footer">Mas informacion <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-          
+
           <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
               <div class="inner">
@@ -44,7 +44,7 @@
               <a href="#" class="small-box-footer">Mas informacion <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-          
+
           <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
               <div class="inner">
@@ -57,7 +57,7 @@
               <a href="#" class="small-box-footer">Mas informacion <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-          
+
           <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
               <div class="inner">
@@ -70,25 +70,25 @@
               <a href="#" class="small-box-footer">Mas informacion <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-          
+
         </div>
-        
+
         <div class="row">
           <section class="col-md-12 col-sm-12 col-lg-6 connectedSortable">
-            
+
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-chart-simple mr-1"></i>
-                  <b>GRAFICA VENTAS VENDEDORES</b>
+                  <b>VENTAS VENDEDORES</b>
                 </h3>
                 <div class="card-tools">
-                  
+
                 </div>
               </div>
               <div class="card-body">
                 <div class="tab-content p-0">
-                  
+
                   <div class="chart tab-pane active" id="revenue-chart" style="position: relative; text-align: center; vertical-align: middle;">
                     <div class="table-responsive">
                       <img src="{{ $chartSellers }}" height="300px" style="width: auto%;">
@@ -101,20 +101,20 @@
 
           </section>
           <section class="col-lg-3 col-md-6 col-sm-12 connectedSortable">
-            
+
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-chart-pie mr-1"></i>
-                  <b>GRAFICA VENTAS MARCAS</b>
+                  <b>VENTAS MARCAS</b>
                 </h3>
                 <div class="card-tools">
-                  
+
                 </div>
               </div>
               <div class="card-body">
                 <div class="tab-content p-0">
-                  
+
                   <div class="chart tab-pane active" id="revenue-chart" style="position: relative; text-align: center; vertical-align: middle;">
                     <div class="table-responsive">
                       <img src="{{ $chartTrademarks }}" height="300px" style="width: auto;">
@@ -127,20 +127,20 @@
 
           </section>
           <section class="col-lg-3 col-md-6 col-sm-12 connectedSortable">
-            
+
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-chart-pie mr-1"></i>
-                  <b>GRAFICA VENTAS ESTADOS</b>
+                  <b>VENTAS ESTADOS</b>
                 </h3>
                 <div class="card-tools">
-                  
+
                 </div>
               </div>
               <div class="card-body">
                 <div class="tab-content p-0">
-                  
+
                   <div class="chart tab-pane active" id="revenue-chart" style="position: relative; text-align: center; vertical-align: middle;">
                     <div class="table-responsive">
                       <img src="{{ $chartStatus }}" height="300px" style="width: auto;">
@@ -153,7 +153,7 @@
 
           </section>
         </div>
-        
+
         <div class="row">
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
@@ -192,7 +192,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="row">
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
@@ -231,15 +231,15 @@
             </div>
           </div>
         </div>
-        
+
         <div class="row">
           <section class="col-md-12 col-sm-12 col-lg-12 connectedSortable">
-            
+
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-chart-network mr-1"></i>
-                  <b>REPORTE GRAFICA CORRERIA</b>
+                  <b>REPORTE CORRERIA</b>
                 </h3>
                 <div class="card-tools">
                   <div class="btn-group">
@@ -258,7 +258,7 @@
               </div>
               <div class="card-body">
                 <div class="tab-content p-0">
-                  
+
                   <div class="chart tab-pane active" id="revenue-chart" style="position: relative;">
                     <div class="table-responsive" id="ChartCorreria">
                       <img src="{{ $chartCorreria }}" height="300px" style="width: auto;">

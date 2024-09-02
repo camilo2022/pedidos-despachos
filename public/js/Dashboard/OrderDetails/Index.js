@@ -1,6 +1,7 @@
 $('#IndexOrderDetail').trigger('click');
 
 function IndexOrderDetail(order_id) {
+
     $.ajax({
         url: `/Dashboard/Orders/Details/Index/Query`,
         type: 'POST',
@@ -19,6 +20,13 @@ function IndexOrderDetail(order_id) {
 }
 
 function IndexOrderDetailModalCleaned(order, sizes) {
+    if ($.fn.DataTable.isDataTable('#details')) {
+        $('#details').DataTable().destroy();
+        $('#details thead').empty();
+        $('#details tbody').empty();
+        $('#details tfoot').empty();
+    }
+
     $('#OrderDetailHead').html('');
     $('#OrderDetailBody').html('');
 
@@ -29,7 +37,9 @@ function IndexOrderDetailModalCleaned(order, sizes) {
     });
 
     let head = `<tr>
+                    <th>#</th>
                     <th>ACCION</th>
+                    <th>PRIORIDAD</th>
                     <th>PRECIO TOTAL</th>
                     <th>REFERENCIA</th>
                     <th>COLOR</th>
@@ -37,10 +47,13 @@ function IndexOrderDetailModalCleaned(order, sizes) {
                     <th>TOTAL</th>
                     <th>OBSERVACION</th>
                     <th>ESTADO</th>
+                    <th>FECHA</th>
                 </tr>`;
 
     let foot = `<tr>
-                    <th>ACCION</th>`;
+                    <th>#</th>
+                    <th>ACCION</th>
+                    <th>PRIORIDAD</th>`;
 
     let totalSum = 0;
     let quantitySum = 0;
@@ -48,9 +61,12 @@ function IndexOrderDetailModalCleaned(order, sizes) {
     let body = '';
 
     $.each(order.order_details, function(index, order_detail) {
-        body += `<tr>`;
+        body += `<tr>
+            <td>
+                <div class="icheck-primary"><input type="checkbox" id="${order_detail.id}" name="${order_detail.id}" class="details"><label for="${order_detail.id}"></label></div>
+            </td>`;
         let btn = '';
-        
+
         if ((isAdministrador() || isVendedor() || isVendedorEspecial() || isCartera() || isFiltrador()) && order.seller_user_id == $('meta[name="user-id"]').attr('content') && order.seller_status == 'Pendiente') {
             switch (order_detail.status) {
                 case 'Pendiente':
@@ -63,6 +79,11 @@ function IndexOrderDetailModalCleaned(order, sizes) {
                     class="btn btn-primary btn-sm mr-2 btn-order" title="Editar detalle de pedido.">
                         <i class="fas fa-pen text-white"></i>
                     </a>`;
+
+                    btn += `<a onclick="CloneOrderDetailModal(${order_detail.id})" type="button"
+                    class="btn bg-orange btn-sm mr-2 btn-order" title="Clonar detalle de pedido.">
+                        <i class="fas fa-arrow-right-arrow-left text-white"></i>
+                    </a>`;
                     break;
                 case 'Cancelado':
                     btn += `<a onclick="PendingOrderDetail(${order_detail.id})" type="button"
@@ -74,9 +95,14 @@ function IndexOrderDetailModalCleaned(order, sizes) {
                     btn += ``;
                     break;
             };
-        } else if ((isAdministrador() || isCartera()) && ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Autorizado'].includes(order.wallet_status) && order.dispatch_status != 'Despachado') {
+        } else if ((isAdministrador() || isCartera()) && ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Autorizado', 'Suspendido', 'En mora'].includes(order.wallet_status) && order.dispatch_status != 'Despachado') {
             switch (order_detail.status) {
                 case 'Agotado':
+                    btn += `<a onclick="AllowOrderDetail(${order_detail.id})" type="button"
+                    class="btn btn-warning btn-sm mr-2 btn-order" title="Permitir detalle de pedido.">
+                        <i class="fas fa-key-skeleton text-white"></i>
+                    </a>`;
+
                     btn += `<a onclick="EditOrderDetailModal(${order_detail.id})" type="button"
                     class="btn btn-primary btn-sm mr-2 btn-order" title="Editar detalle de pedido.">
                         <i class="fas fa-pen text-white"></i>
@@ -88,16 +114,18 @@ function IndexOrderDetailModalCleaned(order, sizes) {
                         <i class="fas fa-xmark text-white"></i>
                     </a>`;
 
-                    if(order.seller_user.title == 'VENDEDOR ESPECIAL') {
-                        btn += `<a onclick="AuthorizeOrderDetail(${order_detail.id})" type="button"
-                        class="btn btn-success btn-sm mr-2 btn-order" title="Autorizar detalle de pedido.">
-                            <i class="fas fa-check text-white"></i>
-                        </a>`;
-                    } else {
-                        btn += `<a onclick="ApproveOrderDetail(${order_detail.id})" type="button"
-                        class="btn btn-success btn-sm mr-2 btn-order" title="Aprobar detalle de pedido.">
-                            <i class="fas fa-check text-white"></i>
-                        </a>`;
+                    if(['Parcialmente Aprobado', 'Aprobado', 'Autorizado'].includes(order.wallet_status)) {
+                        if(order.seller_user.title == 'VENDEDOR ESPECIAL') {
+                            btn += `<a onclick="AuthorizeOrderDetail(${order_detail.id})" type="button"
+                            class="btn btn-success btn-sm mr-2 btn-order" title="Autorizar detalle de pedido.">
+                                <i class="fas fa-check text-white"></i>
+                            </a>`;
+                        } else {
+                            btn += `<a onclick="ApproveOrderDetail(${order_detail.id})" type="button"
+                            class="btn btn-success btn-sm mr-2 btn-order" title="Aprobar detalle de pedido.">
+                                <i class="fas fa-check text-white"></i>
+                            </a>`;
+                        }
                     }
 
                     btn += `<a onclick="EditOrderDetailModal(${order_detail.id})" type="button"
@@ -111,20 +139,29 @@ function IndexOrderDetailModalCleaned(order, sizes) {
                     </a>`;
                     break;
                 case 'Cancelado':
-                    btn += `<a onclick="ApproveOrderDetail(${order_detail.id})" type="button"
-                    class="btn btn-success btn-sm mr-2 btn-order" title="Aprobar detalle de pedido.">
-                        <i class="fas fa-check text-white"></i>
-                    </a>`;
+                    if(['Parcialmente Aprobado', 'Aprobado', 'Autorizado'].includes(order.wallet_status)) {
+                        btn += `<a onclick="ApproveOrderDetail(${order_detail.id})" type="button"
+                        class="btn btn-success btn-sm mr-2 btn-order" title="Aprobar detalle de pedido.">
+                            <i class="fas fa-check text-white"></i>
+                        </a>`;
+                    }
                     break;
                 case 'Suspendido':
                     btn += `<a onclick="CancelOrderDetail(${order_detail.id})" type="button"
                     class="btn btn-danger btn-sm mr-2 btn-order" title="Rechazar detalle de pedido.">
                         <i class="fas fa-xmark text-white"></i>
                     </a>`;
-                    
-                    btn += `<a onclick="ApproveOrderDetail(${order_detail.id})" type="button"
-                    class="btn btn-success btn-sm mr-2 btn-order" title="Aprobar detalle de pedido.">
-                        <i class="fas fa-check text-white"></i>
+
+                    if(['Aprobado', 'Parcialmente Aprobado'].includes(order.wallet_status)) {
+                        btn += `<a onclick="ApproveOrderDetail(${order_detail.id})" type="button"
+                        class="btn btn-success btn-sm mr-2 btn-order" title="Aprobar detalle de pedido.">
+                            <i class="fas fa-check text-white"></i>
+                        </a>`;
+                    }
+
+                    btn += `<a onclick="EditOrderDetailModal(${order_detail.id})" type="button"
+                    class="btn btn-primary btn-sm mr-2 btn-order" title="Editar detalle de pedido.">
+                        <i class="fas fa-pen text-white"></i>
                     </a>`;
                     break;
                 case 'Aprobado':
@@ -157,6 +194,27 @@ function IndexOrderDetailModalCleaned(order, sizes) {
 
         body += `<td><div class="text-center">${btn}</div></td>`;
 
+        switch (order_detail.priority) {
+            case '1':
+                body += `<th><span class="badge bg-danger">⚠️ Crítica</span></th>`;
+                break;
+            case '2':
+                body += `<th><span class="badge bg-warning">🔥 Alta</span></th>`;
+                break;
+            case '3':
+                body += `<th><span class="badge bg-primary">⏳ Media</span></th>`;
+                break;
+            case '4':
+                body += `<th><span class="badge bg-info">🛒 Baja</span></th>`;
+                break;
+            case '5':
+                body += `<th><span class="badge bg-secondary">💤 Mínima</span></th>`;
+                break;
+            default:
+                body += `<th></th>`;
+                break;
+        };
+
         let quantities = 0;
 
         $.each(sizes, function(index, size) {
@@ -166,7 +224,7 @@ function IndexOrderDetailModalCleaned(order, sizes) {
         totalSum += quantities * order_detail.negotiated_price;
         quantitySum += quantities;
 
-        body += `<td>${(quantities * order_detail.negotiated_price).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 })} COP</td>
+        body += `<td style="background: #FF5733; color: #fff; font-weight: bold;">${(quantities * order_detail.negotiated_price).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 })} COP</td>
                 <td>${order_detail.product.code}</td>
                 <td>${order_detail.color.name + ' - ' + order_detail.color.code}</td>`;
 
@@ -179,35 +237,36 @@ function IndexOrderDetailModalCleaned(order, sizes) {
 
         switch (order_detail.status) {
             case 'Pendiente':
-                body += `<td><span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
+                body += `<td><span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
                 break;
             case 'Cancelado':
-                body += `<td><span class="badge badge-pill badge-danger text-white"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span></td>`;
+                body += `<td><span class="badge badge-danger text-white"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span></td>`;
                 break;
             case 'Aprobado':
-                body += `<td><span class="badge badge-pill badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span></td>`;
+                body += `<td><span class="badge badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span></td>`;
                 break;
             case 'Autorizado':
-                body += `<td><span class="badge badge-pill badge-success"><i class="fas fa-check mr-2"></i>Autorizado</span></td>`;
+                body += `<td><span class="badge badge-success"><i class="fas fa-check mr-2"></i>Autorizado</span></td>`;
                 break;
             case 'Agotado':
-                body += `<td><span class="badge badge-pill badge-warning" style="color:white !important;"><i class="fas fa-triangle-exclamation mr-2 text-white"></i>Agotado</span></td>`;
+                body += `<td><span class="badge badge-warning" style="color:white !important;"><i class="fas fa-triangle-exclamation mr-2 text-white"></i>Agotado</span></td>`;
                 break;
             case 'Suspendido':
-                body += `<td><span class="badge badge-pill badge-secondary text-white"><i class="fas fa-solid fa-clock-rotate-left mr-2 text-white"></i>Suspendido</span></td>`;
+                body += `<td><span class="badge badge-secondary text-white"><i class="fas fa-solid fa-clock-rotate-left mr-2 text-white"></i>Suspendido</span></td>`;
                 break;
             case 'Comprometido':
-                body += `<td><span class="badge badge-pill bg-purple" style="color:white !important;"><i class="fas fa-filter mr-2 text-white"></i>Comprometido</span></td>`;
+                body += `<td><span class="badge bg-purple" style="color:white !important;"><i class="fas fa-filter mr-2 text-white"></i>Comprometido</span></td>`;
                 break;
             case 'Despachado':
-                body += `<td><span class="badge badge-pill badge-primary"><i class="fas fa-share mr-2 text-white"></i>Despachado</span></td>`;
+                body += `<td><span class="badge badge-primary"><i class="fas fa-share mr-2 text-white"></i>Despachado</span></td>`;
                 break;
             default:
-                body += `<td><span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
+                body += `<td><span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
                 break;
         };
 
-        body += `</tr>`;
+        body += `<td><span class="badge badge-dark">${(order_detail.dispatch_date ?? order_detail.wallet_date) ?? order_detail.seller_date}</span></td>
+        </tr>`;
     });
 
     foot += `<th>${totalSum.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 })} COP</th>
@@ -225,11 +284,19 @@ function IndexOrderDetailModalCleaned(order, sizes) {
     foot += `<th>${quantitySum}</th>
         <th>OBSERVACION</th>
         <th>ESTADO</th>
+        <th>FECHA</th>
         </tr>`;
 
     $('#OrderDetailHead').html(head);
     $('#OrderDetailBody').html(body);
     $('#OrderDetailFoot').html(foot);
+    $('#details').DataTable({
+        "paging": false,
+        "info": false,
+        "lengthChange": false,
+        "searching": true,
+        "pageLength": -1
+    });
 }
 
 function IndexOrderDetailAjaxSuccess(response) {

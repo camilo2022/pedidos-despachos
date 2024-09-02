@@ -48,10 +48,10 @@ let tableOrderDispatches = $('#orderDispatches').DataTable({
             },
         },
         { data: 'id' },
-        { 
+        {
             data: 'consecutive',
             render: function (data, type, row) {
-                return `<h5><span class="badge badge-pill bg-info text-white"><i class="fas fa-paperclip mr-2 text-white"></i>${data}</span></h5>`
+                return `<h5><span class="badge bg-info text-white"><i class="fas fa-paperclip mr-2 text-white"></i>${data}</span></h5>`
             }
         },
         {
@@ -91,28 +91,28 @@ let tableOrderDispatches = $('#orderDispatches').DataTable({
             render: function (data, type, row) {
                 switch (data) {
                     case 'Pendiente':
-                        return `<h5><span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></h5>`;
+                        return `<h5><span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></h5>`;
                         break;
                     case 'Cancelado':
-                        return `<h5><span class="badge badge-pill badge-danger"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span></h5>`;
+                        return `<h5><span class="badge badge-danger"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span></h5>`;
                         break;
                     case 'Alistamiento':
-                        return `<h5><span class="badge badge-pill badge-primary text-white"><i class="fas fa-barcode-read mr-2"></i>Alistamiento</span></h5>`;
+                        return `<h5><span class="badge badge-primary text-white"><i class="fas fa-barcode-read mr-2"></i>Alistamiento</span></h5>`;
                         break;
                     case 'Revision':
-                        return `<h5><span class="badge badge-pill badge-warning" style="color:white !important;"><i class="fas fa-gear mr-2 text-white"></i>Revision</span></h5>`;
+                        return `<h5><span class="badge badge-warning" style="color:white !important;"><i class="fas fa-gear mr-2 text-white"></i>Revision</span></h5>`;
                         break;
                     case 'Empacado':
-                        return `<h5><span class="badge badge-pill badge-secondary"><i class="fas fa-box-open-full mr-2"></i>Empacado</span></h5>`;
+                        return `<h5><span class="badge badge-secondary"><i class="fas fa-box-open-full mr-2"></i>Empacado</span></h5>`;
                         break;
                     case 'Facturacion':
-                        return `<h5><span class="badge badge-pill bg-orange text-white" style="color: white !important;"><i class="fas fa-money-bill mr-2 text-white"></i>Facturacion</span></h5>`;
-                        break;                        
+                        return `<h5><span class="badge bg-orange text-white" style="color: white !important;"><i class="fas fa-money-bill mr-2 text-white"></i>Facturacion</span></h5>`;
+                        break;
                     case 'Despachado':
-                        return `<h5><span class="badge badge-pill badge-success"><i class="fas fa-share-all mr-2"></i>Despachado</span></h5>`;
+                        return `<h5><span class="badge badge-success"><i class="fas fa-share-all mr-2"></i>Despachado</span></h5>`;
                         break;
                     default:
-                        return `<h5><span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></h5>`;
+                        return `<h5><span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></h5>`;
                         break;
                 }
             }
@@ -145,7 +145,7 @@ let tableOrderDispatches = $('#orderDispatches').DataTable({
                             class="btn btn-success btn-sm mr-2" title="Aprobar orden de despacho.">
                                 <i class="fas fa-check text-white"></i>
                             </a>`;
-            
+
                             btn += `<a onclick="CancelOrderDispatch(${row.id})" type="button"
                             class="btn btn-danger btn-sm mr-2" title="Cancelar orden de despacho.">
                                 <i class="fas fa-xmark-large text-white"></i>
@@ -158,8 +158,8 @@ let tableOrderDispatches = $('#orderDispatches').DataTable({
                             class="btn btn-info btn-sm mr-2" title="Regresar orden de despacho.">
                                 <i class="fas fa-arrows-rotate text-white"></i>
                             </a>`;
-                        } 
-    
+                        }
+
                         if((isBodega() || isAdministrador()) && row.order_picking == null) {
                             btn += `<a onclick="PickingOrderDispatch(${row.id})" type="button"
                             class="btn btn-primary btn-sm mr-2" title="Alistar orden de despacho.">
@@ -190,7 +190,7 @@ let tableOrderDispatches = $('#orderDispatches').DataTable({
                                 <i class="fas fa-money-bill text-white"></i>
                             </a>`;
                         }
-                        break;                        
+                        break;
                     case 'Despachado':
                         if((isCoordinadorBodega() || isFiltrador() || isFacturador() || isAdministrador()) && row.order_packing != null) {
                             btn += `<a href="/Dashboard/Dispatches/Download/${row.id}" type="button"
@@ -273,7 +273,7 @@ function tableOrderDispatchDetails(row) {
         columns += `<th>T${size.code}</th>`;
     });
 
-    let table = `<table class="table table-bordered table-hover dataTable dtr-inline nowrap w-100" id="orderDetails${row.id}">
+    let table = `<table class="table table-bordered table-hover dataTable dtr-inline nowrap w-100" id="orderDispatchDetails${row.id}">
                     <thead>
                         <tr>
                             <th>ESTADO</th>
@@ -294,31 +294,31 @@ function tableOrderDispatchDetails(row) {
         table += `<tr>`;
         switch (order_dispatch_detail.status) {
             case 'Pendiente':
-                table += `<td><span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
+                table += `<td><span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
                 break;
             case 'Cancelado':
-                table += `<td><span class="badge badge-pill badge-danger"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span></td>`;
+                table += `<td><span class="badge badge-danger"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span></td>`;
                 break;
             case 'Aprobado':
-                table += `<td><span class="badge badge-pill badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span></td>`;
+                table += `<td><span class="badge badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span></td>`;
                 break;
             case 'Alistamiento':
-                table += `<td><span class="badge badge-pill badge-warning text-white"><i class="fas fa-box-open-full mr-2"></i>Alistamiento</span></td>`;
+                table += `<td><span class="badge badge-warning text-white"><i class="fas fa-box-open-full mr-2"></i>Alistamiento</span></td>`;
                 break;
             case 'Revision':
-                table += `<td><span class="badge badge-pill bg-dark text-white"><i class="fas fa-box-taped mr-2 text-black"></i>Revision</span></td>`;
+                table += `<td><span class="badge bg-dark text-white"><i class="fas fa-box-taped mr-2 text-black"></i>Revision</span></td>`;
                 break;
             case 'Empacado':
-                table += `<td><span class="badge badge-pill badge-secondary"><i class="fas fa-reply mr-2"></i>Empacado</span></td>`;
+                table += `<td><span class="badge badge-secondary"><i class="fas fa-reply mr-2"></i>Empacado</span></td>`;
                 break;
             case 'Facturacion':
-                table += `<td><span class="badge badge-pill bg-orange text-white" style="color: #fff !important;"><i class="fas fa-money-bill mr-2 text-white"></i>Facturacion</span></td>`;
-                break;                        
+                table += `<td><span class="badge bg-orange text-white" style="color: #fff !important;"><i class="fas fa-money-bill mr-2 text-white"></i>Facturacion</span></td>`;
+                break;
             case 'Despachado':
-                table += `<td><span class="badge badge-pill badge-primary"><i class="fas fa-share-all mr-2"></i>Despachado</span></td>`;
+                table += `<td><span class="badge badge-primary"><i class="fas fa-share-all mr-2"></i>Despachado</span></td>`;
                 break;
             default:
-                table += `<td><span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
+                table += `<td><span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
                 break;
         };
 
@@ -336,35 +336,35 @@ function tableOrderDispatchDetails(row) {
 
             table += `<td>${quantities}</td>
                 <td>${order_dispatch_detail.order_detail.seller_observation == null ? '' : order_dispatch_detail.order_detail.seller_observation}</td>
-                <td><span class="badge badge-pill bg-dark">${order_dispatch_detail.order.dispatch_type}</span></td>`;
+                <td><span class="badge bg-dark">${order_dispatch_detail.order.dispatch_type}</span></td>`;
 
             switch (order_dispatch_detail.order_detail.status) {
                 case 'Pendiente':
-                    table += `<td><span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
+                    table += `<td><span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
                     break;
                 case 'Cancelado':
-                    table += `<td><span class="badge badge-pill badge-danger text-white"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span></td>`;
+                    table += `<td><span class="badge badge-danger text-white"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span></td>`;
                     break;
                 case 'Aprobado':
-                    table += `<td><span class="badge badge-pill badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span></td>`;
+                    table += `<td><span class="badge badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span></td>`;
                     break;
                 case 'Autorizado':
-                    table += `<td><span class="badge badge-pill badge-success"><i class="fas fa-check mr-2"></i>Autorizado</span></td>`;
+                    table += `<td><span class="badge badge-success"><i class="fas fa-check mr-2"></i>Autorizado</span></td>`;
                     break;
                 case 'Agotado':
-                    table += `<td><span class="badge badge-pill badge-warning" style="color:white !important;"><i class="fas fa-triangle-exclamation mr-2 text-white"></i>Agotado</span></td>`;
+                    table += `<td><span class="badge badge-warning" style="color:white !important;"><i class="fas fa-triangle-exclamation mr-2 text-white"></i>Agotado</span></td>`;
                     break;
                 case 'Suspendido':
-                    table += `<td><span class="badge badge-pill badge-secondary text-white"><i class="fas fa-clock-rotate-left mr-2 text-white"></i>Suspendido</span></td>`;
+                    table += `<td><span class="badge badge-secondary text-white"><i class="fas fa-clock-rotate-left mr-2 text-white"></i>Suspendido</span></td>`;
                     break;
                 case 'Comprometido':
-                    table += `<td><span class="badge badge-pill bg-purple" style="color:white !important;"><i class="fas fa-filter mr-2 text-white"></i>Comprometido</span></td>`;
+                    table += `<td><span class="badge bg-purple" style="color:white !important;"><i class="fas fa-filter mr-2 text-white"></i>Comprometido</span></td>`;
                     break;
                 case 'Despachado':
-                    table += `<td><span class="badge badge-pill badge-primary"><i class="fas fa-share mr-2 text-white"></i>Despachado</span></td>`;
+                    table += `<td><span class="badge badge-primary"><i class="fas fa-share mr-2 text-white"></i>Despachado</span></td>`;
                     break;
                 default:
-                    table += `<td><span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
+                    table += `<td><span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span></td>`;
                     break;
             };
 

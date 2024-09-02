@@ -94,6 +94,11 @@ function CreateOrder() {
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Si, guardar!',
         cancelButtonText: 'No, cancelar!',
+        html:`<div class="form-group c_form_group">
+            <label for="order_id_c">N° PEDIDO</label>
+            <input type="number" class="form-control" name="order_id_c" id="order_id_c" onclick="$('#order_id_c').focus()">
+        </div>`,
+        footer: '<div class="text-center">Si desea clonar las referencias ingresadas de otro pedido, ingrese el numero del pedido en el campo "N° PEDIDO".</div>'
     }).then((result) => {
         if (result.value) {
             $.ajax({
@@ -101,6 +106,7 @@ function CreateOrder() {
                 type: 'POST',
                 data: {
                     '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'order_id': $('#order_id_c').val() ?? null,
                     'client_id': $('#client_id_c').val(),
                     'dispatch_type': $('#dispatch_type_c').val(),
                     'dispatch_date': ['', 'De inmediato', 'Total', 'Semanal'].includes($('#dispatch_type_c').val()) ? new Date().toISOString().split('T')[0] : $('#dispatch_date_c').val(),

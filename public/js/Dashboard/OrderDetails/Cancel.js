@@ -1,3 +1,45 @@
+function CancelOrderDetails() {
+    let orderDetails = $('input[type="checkbox"].details:checked');
+
+    if (orderDetails.length > 0) {
+        Swal.fire({
+            title: '¿Desea cancelar los detalles seleccionados del pedido?',
+            text: 'Los detalles seleccionados del pedido serán cancelados.',
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: '#DD6B55',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Si, cancelar!',
+            cancelButtonText: 'No, cancelar!',
+        }).then((result) => {
+            if (result.value) {
+                orderDetails.each(function() {
+                    $.ajax({
+                        url: `/Dashboard/Orders/Details/Cancel`,
+                        type: 'PUT',
+                        data: {
+                            '_token': $('meta[name="csrf-token"]').attr('content'),
+                            'id': $(this).attr('id')
+                        },
+                        success: function(response) {
+                            $('#IndexOrderDetail').trigger('click');
+                            CancelOrderDetailAjaxSuccess(response);
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            $('#IndexOrderDetail').trigger('click');
+                            CancelOrderDetailAjaxError(xhr);
+                        }
+                    });
+                });
+            } else {
+                toastr.info('Los detalles seleccionados del pedido no fueron cancelados.');
+            }
+        });
+    } else {
+        toastr.error('No se ha seleccionado ningún detalle del pedido para cancelar.');
+    }
+}
+
 function CancelOrderDetail(id) {
     Swal.fire({
         title: '¿Desea cancelar el detalle del pedido?',

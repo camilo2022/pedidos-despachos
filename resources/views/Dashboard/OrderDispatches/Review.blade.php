@@ -73,7 +73,7 @@
                                             <td class="order">{{ $orderDispatch->client->client_branch_address }}</th>
                                             <th class="order">FECHA ALISTAMIENTO:</th>
                                             <td class="order">
-                                                <span class="badge badge-pill badge-primary">{{ Carbon::parse($orderDispatch->order_picking->picking_date)->format('Y-m-d H:i:s') }}</span>
+                                                <span class="badge badge-primary">{{ Carbon::parse($orderDispatch->order_picking->picking_date)->format('Y-m-d H:i:s') }}</span>
                                             </th>
                                         </tr>
                                         <tr>
@@ -90,31 +90,31 @@
                                                 {{ $orderDispatch->correria->name }} - {{ $orderDispatch->correria->code }} | {{ $orderDispatch->correria->start_date }} - {{ $orderDispatch->correria->end_date }}
                                             </th>
                                             <th class="order">ESTADO:</th>
-                                            <td class="order">                                            
+                                            <td class="order">
                                                 @switch($orderDispatch->dispatch_status)
                                                     @case('Pendiente')
-                                                        <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                        <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                                         @break
                                                     @case('Cancelado')
-                                                        <span class="badge badge-pill badge-danger text-white" style="color:white !important;"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
+                                                        <span class="badge badge-danger text-white" style="color:white !important;"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
                                                         @break
                                                     @case('Alistamiento')
-                                                        <span class="badge badge-pill badge-primary text-white"><i class="fas fa-barcode-read mr-2"></i>Alistamiento</span>
+                                                        <span class="badge badge-primary text-white"><i class="fas fa-barcode-read mr-2"></i>Alistamiento</span>
                                                         @break
                                                     @case('Revision')
-                                                        <span class="badge badge-pill badge-warning" style="color:white !important;"><i class="fas fa-gear mr-2 text-white"></i>Revision</span>
+                                                        <span class="badge badge-warning" style="color:white !important;"><i class="fas fa-gear mr-2 text-white"></i>Revision</span>
                                                         @break
                                                     @case('Empacado')
-                                                        <span class="badge badge-pill badge-secondary"><i class="fas fa-box-open-full mr-2"></i>Empacado</span>
+                                                        <span class="badge badge-secondary"><i class="fas fa-box-open-full mr-2"></i>Empacado</span>
                                                         @break
                                                     @case('Facturacion')
-                                                        <span class="badge badge-pill bg-orange" style="color:white !important;"><i class="fas fa-money-bill mr-2 text-white"></i>Facturacion</span>
+                                                        <span class="badge bg-orange" style="color:white !important;"><i class="fas fa-money-bill mr-2 text-white"></i>Facturacion</span>
                                                         @break
                                                     @case('Despachado')
-                                                        <span class="badge badge-pill badge-success"><i class="fas fa-share-all mr-2"></i>Despachado</span>
+                                                        <span class="badge badge-success"><i class="fas fa-share-all mr-2"></i>Despachado</span>
                                                         @break
                                                     @default
-                                                        <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                        <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                                 @endswitch
                                             </th>
                                         </tr>
@@ -127,7 +127,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="card">
                 <div class="card-header text-center" style="background-color: #343a40; color:white; font-weigth:bold;">
                     DETALLES DE LA ORDEN DE DESPACHO VS ORDEN DE ALISTAMIENTO
@@ -145,7 +145,7 @@
                                         <button type="button" class="mb-2 btn w-100 collapsed btn-info" data-toggle="collapse" data-target="#collapseOrderDispatch" aria-expanded="false" aria-controls="#collapseOrderDispatch">
                                             <b>CURVA FILTRADA PARA DESPACHAR</b>
                                         </button>
-                                        <div class="table-responsive collapse" id="collapseOrderDispatch">                
+                                        <div class="table-responsive collapse" id="collapseOrderDispatch">
                                             <div class="col-12 pt-2">
                                                 <div class="table-responsive">
                                                     <table width="100%" class="table table-bordered dataTable dtr-inline nowrap w-100 text-center" cellpadding="0" cellspacing="0">
@@ -202,13 +202,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>                
+                                </div>
                                 <div class="col-lg-12 pt-4">
                                     <div>
                                         <button type="button" class="mb-2 btn w-100 collapsed btn-primary" data-toggle="collapse" data-target="#collapseOrderPicking" aria-expanded="false" aria-controls="#collapseOrderPicking">
                                             <b>CURVA ALISTADA PARA DESPACHAR</b>
                                         </button>
-                                        <div class="table-responsive collapse" id="collapseOrderPicking">                
+                                        <div class="table-responsive collapse" id="collapseOrderPicking">
                                             <div class="col-12 pt-2">
                                                 <div class="table-responsive">
                                                     <table width="100%" class="table table-bordered dataTable dtr-inline nowrap w-100 text-center" cellpadding="0" cellspacing="0">
@@ -241,7 +241,7 @@
                                                                     <th id="{{ "OA-{$order_picking_detail->order_dispatch_detail->order_detail->product->code}-{$order_picking_detail->order_dispatch_detail->order_detail->color->code}-T{$size->code}-$order_dispatch_detail->id" }}"
                                                                         class="@if ($order_picking_detail->{"T{$size->code}"} == $order_picking_detail->order_dispatch_detail->{"T{$size->code}"}) bg-success @elseif ($order_picking_detail->{"T{$size->code}"} > $order_picking_detail->order_dispatch_detail->{"T{$size->code}"}) bg-primary @elseif ($order_picking_detail->{"T{$size->code}"} < $order_picking_detail->order_dispatch_detail->{"T{$size->code}"}) bg-danger @endif" style="cursor: pointer;"
                                                                         onclick="AddOrderPickingDetailModal({{ $order_picking_detail->id }}, '{{ $order_picking_detail->order_dispatch_detail->order_detail->product->code }}', '{{ $size->code }}', '{{ $order_picking_detail->order_dispatch_detail->order_detail->color->code }}', '{{ $order_picking_detail->order_dispatch_detail->order_detail->color->name }}', '{{ $order_picking_detail->order_dispatch_detail->id }}', '{{ $index }}')">
-                                                                        {{ $order_picking_detail->{"T{$size->code}"} }} 
+                                                                        {{ $order_picking_detail->{"T{$size->code}"} }}
 
                                                                         @php($quantitiesDispatch += $order_picking_detail->order_dispatch_detail->{"T{$size->code}"})
                                                                         @php($quantitiesPicking += $order_picking_detail->{"T{$size->code}"})

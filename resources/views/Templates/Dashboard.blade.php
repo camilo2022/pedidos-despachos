@@ -404,8 +404,17 @@
             timer: 3000
         });
 
-        $('.select2').select2();
+        $('.select2').select2({
+            tags: "true",
+            allowClear: true
+        });
+        
         $('.dropify').dropify();
+
+
+        $("input[data-bootstrap-switch]").each(function(){
+            $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        })
     </script>
     @yield('script')
 

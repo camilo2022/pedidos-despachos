@@ -11,7 +11,7 @@ function GraficDashboardCorreria(correria_id = null) {
         success: function(response) {
             let timestamp = new Date().getTime();
             $('#ChartCorreria').html(`<img src="${response.data.chart}?t=${timestamp}" alt="DISTRIBUCION DE UNIDADES EN ESTADOS POR CORRERIAS" height="300px" style="width: auto;">`);
-            GraficDashboardAjaxSuccess(response);
+            // GraficDashboardAjaxSuccess(response);
         },
         error: function(xhr, textStatus, errorThrown) {
             GraficDashboardAjaxError(xhr);

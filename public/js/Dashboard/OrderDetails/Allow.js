@@ -1,21 +1,21 @@
-function SuspendOrderDetails() {
+function AllowOrderDetails() {
     let orderDetails = $('input[type="checkbox"].details:checked');
 
     if (orderDetails.length > 0) {
         Swal.fire({
-            title: '¿Desea suspender los detalles seleccionados del pedido?',
-            text: 'Los detalles seleccionados del pedido serán suspendidos.',
+            title: '¿Desea permitir la aprobacion de los detalles seleccionados del pedido?',
+            text: 'Los detalles seleccionados del pedido serán permitidos.',
             icon: 'warning',
             showCancelButton: true,
             cancelButtonColor: '#DD6B55',
             confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Si, suspender!',
+            confirmButtonText: 'Si, permitir!',
             cancelButtonText: 'No, cancelar!',
         }).then((result) => {
             if (result.value) {
                 orderDetails.each(function() {
                     $.ajax({
-                        url: `/Dashboard/Orders/Details/Suspend`,
+                        url: `/Dashboard/Orders/Details/Allow`,
                         type: 'PUT',
                         data: {
                             '_token': $('meta[name="csrf-token"]').attr('content'),
@@ -23,37 +23,37 @@ function SuspendOrderDetails() {
                         },
                         success: function(response) {
                             $('#IndexOrderDetail').trigger('click');
-                            SuspendOrderDetailAjaxSuccess(response);
+                            AllowOrderDetailAjaxSuccess(response);
                         },
                         error: function(xhr, textStatus, errorThrown) {
                             $('#IndexOrderDetail').trigger('click');
-                            SuspendOrderDetailAjaxError(xhr);
+                            AllowOrderDetailAjaxError(xhr);
                         }
                     });
                 });
             } else {
-                toastr.info('Los detalles seleccionados del pedido no fueron suspendidos.');
+                toastr.info('Los detalles seleccionados del pedido no fueron permitidos.');
             }
         });
     } else {
-        toastr.error('No se ha seleccionado ningún detalle del pedido para suspender.');
+        toastr.error('No se ha seleccionado ningún detalle del pedido para permitir la aprobacion.');
     }
 }
 
-function SuspendOrderDetail(id) {
+function AllowOrderDetail(id) {
     Swal.fire({
-        title: '¿Desea suspender el detalle del pedido?',
-        text: 'El detalle del pedido será suspendido.',
+        title: '¿Desea permitir la aprobacion del detalle del pedido?',
+        text: 'El detalle del pedido será permitido.',
         icon: 'warning',
         showCancelButton: true,
         cancelButtonColor: '#DD6B55',
         confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Si, suspender!',
+        confirmButtonText: 'Si, permitir!',
         cancelButtonText: 'No, cancelar!',
     }).then((result) => {
         if (result.value) {
             $.ajax({
-                url: `/Dashboard/Orders/Details/Suspend`,
+                url: `/Dashboard/Orders/Details/Allow`,
                 type: 'PUT',
                 data: {
                     '_token': $('meta[name="csrf-token"]').attr('content'),
@@ -61,20 +61,20 @@ function SuspendOrderDetail(id) {
                 },
                 success: function(response) {
                     $('#IndexOrderDetail').trigger('click');
-                    SuspendOrderDetailAjaxSuccess(response);
+                    AllowOrderDetailAjaxSuccess(response);
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     $('#IndexOrderDetail').trigger('click');
-                    SuspendOrderDetailAjaxError(xhr);
+                    AllowOrderDetailAjaxError(xhr);
                 }
             });
         } else {
-            toastr.info('El detalle del pedido seleccionada no fue suspendido.')
+            toastr.info('El detalle del pedido seleccionada no fue permitido.')
         }
     });
 }
 
-function SuspendOrderDetailAjaxSuccess(response) {
+function AllowOrderDetailAjaxSuccess(response) {
     if(response.status === 200) {
         toastr.success(response.message);
     }
@@ -84,7 +84,7 @@ function SuspendOrderDetailAjaxSuccess(response) {
     }
 }
 
-function SuspendOrderDetailAjaxError(xhr) {
+function AllowOrderDetailAjaxError(xhr) {
     if(xhr.status === 403) {
         toastr.error(xhr.responseJSON.error ? xhr.responseJSON.error.message : xhr.responseJSON.message);
     }

@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\OrderDetail;
 
+use App\Models\OrderDetail;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class OrderDetailCancelRequest extends FormRequest
 {
@@ -16,6 +18,17 @@ class OrderDetailCancelRequest extends FormRequest
         ], 422));
     }
 
+    protected function prepareForValidation()
+    {
+        $orderDetail = OrderDetail::with('product', 'color')->findOrFail($this->input('id'));
+
+        $this->merge([
+            'status' => $orderDetail->status,
+            'reference' => $orderDetail->product->code,
+            'color' => $orderDetail->color->code,
+        ]);
+    }
+
     public function authorize()
     {
         return true;
@@ -25,6 +38,7 @@ class OrderDetailCancelRequest extends FormRequest
     {
         return [
             'id' => ['required', 'exists:order_details,id'],
+            'status' => [Rule::in(['Pendiente', 'Suspendido', 'Aprobado', 'Autorizado'])]
         ];
     }
 
@@ -33,6 +47,7 @@ class OrderDetailCancelRequest extends FormRequest
         return [
             'id.required' => 'El campo Detalle del pedido es requerido.',
             'id.exists' => 'El Identificador del detalle del pedido no es valido.',
+            'status.in' => 'El detalle del pedido con referencia ' . $this->input('reference') . ' en el color ' . $this->input('color') . ' no se puede cancelar. Los detalles que se pueden cancelar son aquellos que esten en los siguientes estados: Pendiente, Suspendido, Aprobado, Autorizado.'
         ];
     }
 }

@@ -20,7 +20,6 @@ function EditOrderDetailModal(id) {
 }
 
 function EditOrderDetailModalCleaned(orderDetail) {
-    console.log(orderDetail)
     EditOrderDetailModalResetSelect('product_id_e');
     RemoveIsValidClassEditOrderDetail();
     RemoveIsInvalidClassEditOrderDetail();
@@ -60,7 +59,7 @@ function EditOrderDetailModalProduct(products) {
     });
 
     let product_id = $('#EditOrderDetailButton').attr('data-product_id');
-    
+
     if(product_id != '') {
         $("#product_id_e").val(product_id).trigger('change');
         $('#EditOrderDetailButton').attr('data-product_id', '');
@@ -93,12 +92,12 @@ function EditOrderDetailProductGetColor(select) {
 }
 
 function EditOrderDetailModalColor(colors) {
-    colors.forEach(color => {
+    $.each(colors, function(index, color) {
         $('#color_id_e').append(new Option(`${color.name} - ${color.code}`, color.id, false, false));
     });
 
     let color_id = $('#EditOrderDetailButton').attr('data-color_id');
-    
+
     if(color_id != '') {
         $("#color_id_e").val(color_id).trigger('change');
         $('#EditOrderDetailButton').attr('data-color_id', '');

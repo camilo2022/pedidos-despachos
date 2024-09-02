@@ -108,7 +108,7 @@
                                             <td width="25%" class="order">{{ $orderDispatch->client->client_number_document }}-{{ $orderDispatch->client->client_branch_code }}</td>
                                             <th width="15%" class="order">FECHA FILTRADO:</th>
                                             <td width="18%" class="order">
-                                                <span class="badge badge-pill badge-info">{{ Carbon::parse($orderDispatch->created_at)->format('Y-m-d H:i:s') }}</span>
+                                                <span class="badge badge-info">{{ Carbon::parse($orderDispatch->created_at)->format('Y-m-d H:i:s') }}</span>
                                             </td>
                                             <th width="13%" class="order">FILTRADOR: </th>
                                             <td width="24%" class="order">{{ strtoupper($orderDispatch->dispatch_user->name . ' ' . $orderDispatch->dispatch_user->last_name) }}</td>
@@ -118,7 +118,7 @@
                                             <td class="order">{{ $orderDispatch->client->client_name }}</td>
                                             <th class="order">FECHA ALISTAMIENTO:</th>
                                             <td class="order">
-                                                <span class="badge badge-pill badge-primary">{{ is_null($orderDispatch->order_picking) ? '-' : Carbon::parse($orderDispatch->order_picking->picking_date)->format('Y-m-d H:i:s') }}</span>
+                                                <span class="badge badge-primary">{{ is_null($orderDispatch->order_picking) ? '-' : Carbon::parse($orderDispatch->order_picking->picking_date)->format('Y-m-d H:i:s') }}</span>
                                             </td>
                                             <th class="order">ALISTADOR: </th>
                                             <td class="order">{{ is_null($orderDispatch->order_picking) ? '-' : strtoupper($orderDispatch->order_picking->picking_user->name . ' ' . $orderDispatch->order_picking->picking_user->last_name) }}</td>
@@ -128,7 +128,7 @@
                                             <td class="order">{{ $orderDispatch->client->departament }} - {{ $orderDispatch->client->city }}</td>
                                             <th class="order">FECHA EMPACADO:</th>
                                             <td class="order">
-                                                <span class="badge badge-pill badge-secondary">{{ is_null($orderDispatch->order_packing) ? '-' : Carbon::parse($orderDispatch->order_packing->packing_date)->format('Y-m-d H:i:s') }}</span>
+                                                <span class="badge badge-secondary">{{ is_null($orderDispatch->order_packing) ? '-' : Carbon::parse($orderDispatch->order_packing->packing_date)->format('Y-m-d H:i:s') }}</span>
                                             </td>
                                             <th class="order">EMPACADOR: </th>
                                             <td class="order">{{ is_null($orderDispatch->order_packing) ? '-' : strtoupper($orderDispatch->order_packing->packing_user->name . ' ' . $orderDispatch->order_packing->packing_user->last_name) }}</td>
@@ -138,7 +138,7 @@
                                             <td class="order">{{ $orderDispatch->client->client_branch_address }}</td>
                                             <th class="order">FECHA FACTURACION:</th>
                                             <td class="order">
-                                                <span class="badge badge-pill bg-orange" style="color: white !important;">{{ is_null($orderDispatch->invoice_date) ? '-' : Carbon::parse($orderDispatch->invoice_date)->format('Y-m-d H:i:s') }}</span>
+                                                <span class="badge bg-orange" style="color: white !important;">{{ is_null($orderDispatch->invoice_date) ? '-' : Carbon::parse($orderDispatch->invoice_date)->format('Y-m-d H:i:s') }}</span>
                                             </td>
                                             <th class="order">FACTURADOR: </th>
                                             <td class="order">{{ is_null($orderDispatch->invoice_user) ? '-' : strtoupper($orderDispatch->dispatch_user->name . ' ' . $orderDispatch->dispatch_user->last_name) }}</td>
@@ -149,37 +149,37 @@
                                             <th class="order">FACTURAS:</th>
                                             <td class="order">
                                                 @forelse ($orderDispatch->invoices as $invoice)
-                                                    <span class="badge badge-pill bg-dark">{{ $invoice->reference }}</span>
+                                                    <span class="badge bg-dark">{{ $invoice->reference }}</span>
                                                 @empty
-                                                    <span class="badge badge-pill bg-dark">-</span>
+                                                    <span class="badge bg-dark">-</span>
                                                 @endforelse
                                             </td>
                                             <th class="order">ESTADO:</th>
-                                            <td class="order">                                            
+                                            <td class="order">
                                                 @switch($orderDispatch->dispatch_status)
                                                     @case('Pendiente')
-                                                        <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                        <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                                         @break
                                                     @case('Cancelado')
-                                                        <span class="badge badge-pill badge-danger text-white" style="color:white !important;"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
+                                                        <span class="badge badge-danger text-white" style="color:white !important;"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
                                                         @break
                                                     @case('Alistamiento')
-                                                        <span class="badge badge-pill badge-primary text-white"><i class="fas fa-barcode-read mr-2"></i>Alistamiento</span>
+                                                        <span class="badge badge-primary text-white"><i class="fas fa-barcode-read mr-2"></i>Alistamiento</span>
                                                         @break
                                                     @case('Revision')
-                                                        <span class="badge badge-pill badge-warning" style="color:white !important;"><i class="fas fa-gear mr-2 text-white"></i>Revision</span>
+                                                        <span class="badge badge-warning" style="color:white !important;"><i class="fas fa-gear mr-2 text-white"></i>Revision</span>
                                                         @break
                                                     @case('Empacado')
-                                                        <span class="badge badge-pill badge-secondary"><i class="fas fa-box-open-full mr-2"></i>Empacado</span>
+                                                        <span class="badge badge-secondary"><i class="fas fa-box-open-full mr-2"></i>Empacado</span>
                                                         @break
                                                     @case('Facturacion')
-                                                        <span class="badge badge-pill bg-orange" style="color:white !important;"><i class="fas fa-money-bill mr-2 text-white"></i>Facturacion</span>
+                                                        <span class="badge bg-orange" style="color:white !important;"><i class="fas fa-money-bill mr-2 text-white"></i>Facturacion</span>
                                                         @break
                                                     @case('Despachado')
-                                                        <span class="badge badge-pill badge-success"><i class="fas fa-share-all mr-2"></i>Despachado</span>
+                                                        <span class="badge badge-success"><i class="fas fa-share-all mr-2"></i>Despachado</span>
                                                         @break
                                                     @default
-                                                        <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                        <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                                 @endswitch
                                             </td>
                                         </tr>
@@ -188,7 +188,7 @@
                                             <td class="order">{{ $orderDispatch->client->client_number_phone }} - {{ $orderDispatch->client->client_branch_number_phone }}</td>
                                             <th class="order">{{ $orderDispatch->dispatch_status == 'Cancelado' ? 'FECHA CANCELADO' : 'FECHA DESPACHADO' }}:</th>
                                             <td class="order">
-                                                <span class="badge badge-pill {{ $orderDispatch->dispatch_status == 'Cancelado' ? 'badge-danger' : 'badge-success' }}">{{ is_null($orderDispatch->dispatch_date) ? '-' : Carbon::parse($orderDispatch->dispatch_date)->format('Y-m-d H:i:s') }}</span>
+                                                <span class="badge {{ $orderDispatch->dispatch_status == 'Cancelado' ? 'badge-danger' : 'badge-success' }}">{{ is_null($orderDispatch->dispatch_date) ? '-' : Carbon::parse($orderDispatch->dispatch_date)->format('Y-m-d H:i:s') }}</span>
                                             </td>
                                             <th class="order">{{ $orderDispatch->dispatch_status == 'Cancelado' ? 'CANCELO' : 'DESPACHO' }}:</th>
                                             <td class="order">{{ is_null($orderDispatch->dispatch_date) ? '-' : strtoupper($orderDispatch->dispatch_user->name . ' ' . $orderDispatch->dispatch_user->last_name) }}</td>
@@ -210,7 +210,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="card">
                 <div class="card-header text-center" style="background-color: #343a40; color:white; font-weigth:bold;">
                     DETALLES DE LA ORDEN DE DESPACHO
@@ -219,11 +219,29 @@
                     <div class="card mt-2">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
+                                @if(in_array($orderDispatch->dispatch_status, ['Pendiente']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'FILTRADOR', 'COORDINADOR BODEGA']))
+                                    <li class="nav-item ml-auto">
+                                    </li>
+                                    @if($orderDispatch->order_dispatch_details->whereIn('status', ['Cancelado'])->count() > 0)
+                                    <li class="nav-item ml-2">
+                                        <a class="nav-link active bg-info" type="button" onclick="PendingOrderDispatchDetails()" title="Devolver detalles de pedido.">
+                                            <i class="fas fa-arrows-rotate mr-2"></i> <b>DEVOLVER</b>
+                                        </a>
+                                    </li>
+                                    @endif
+                                    @if($orderDispatch->order_dispatch_details->whereIn('status', ['Pendiente'])->count() > 0)
+                                    <li class="nav-item ml-2">
+                                        <a class="nav-link active bg-danger" type="button" onclick="CancelOrderDispatchDetails()" title="Cancelar detalles de pedido.">
+                                            <i class="fas fa-xmark mr-2"></i> <b>CANCELAR</b>
+                                        </a>
+                                    </li>
+                                    @endif
+                                @endif
                             </ul>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="orderDispatchs" class="table table-bordered table-hover dataTable dtr-inline nowrap w-100">
+                                <table id="details" class="table table-bordered table-hover dataTable dtr-inline nowrap w-100">
                                     <thead id="OrderDispatchDetailHead" style="background-color: #343a40; color: white;">
                                     </thead>
                                     <tbody id="OrderDispatchDetailBody">
@@ -242,9 +260,7 @@
 @endsection
 @section('script')
     <script src="{{ asset('js/Dashboard/OrderDispatchDetails/Index.js') }}"></script>
-    <script src="{{ asset('js/Dashboard/OrderDispatchDetails/Approve.js') }}"></script>
     <script src="{{ asset('js/Dashboard/OrderDispatchDetails/Cancel.js') }}"></script>
-    <script src="{{ asset('js/Dashboard/OrderDispatchDetails/Decline.js') }}"></script>
     <script src="{{ asset('js/Dashboard/OrderDispatchDetails/Pending.js') }}"></script>
 
     <script src="{{ asset('js/Dashboard/OrderDispatches/Approve.js') }}"></script>

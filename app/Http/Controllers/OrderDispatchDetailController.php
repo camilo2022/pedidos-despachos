@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\OrderDispatchDetail\OrderDispatchDetailApproveRequest;
 use App\Http\Requests\OrderDispatchDetail\OrderDispatchDetailCancelRequest;
-use App\Http\Requests\OrderDispatchDetail\OrderDispatchDetailDeclineRequest;
 use App\Http\Requests\OrderDispatchDetail\OrderDispatchDetailIndexQueryRequest;
 use App\Http\Requests\OrderDispatchDetail\OrderDispatchDetailPendingRequest;
 use App\Models\OrderDispatch;
@@ -22,7 +20,7 @@ class OrderDispatchDetailController extends Controller
 {
     use ApiResponser;
     use ApiMessage;
-    
+
     public function __construct()
     {
         $this->middleware('check.order.picking');
@@ -32,16 +30,16 @@ class OrderDispatchDetailController extends Controller
     public function index($id)
     {
         try {
-            $orderDispatch = OrderDispatch::with([ 'invoices',
-                'client' => fn($query) => $query->withTrashed(), 
+            $orderDispatch = OrderDispatch::with([ 'invoices', 'order_dispatch_details',
+                'client' => fn($query) => $query->withTrashed(),
                 'dispatch_user' => fn($query) => $query->withTrashed(),
                 'invoice_user' => fn($query) => $query->withTrashed(),
-                'correria' => fn($query) => $query->withTrashed(), 
+                'correria' => fn($query) => $query->withTrashed(),
                 'business' => fn($query) => $query->withTrashed(),
                 'order_picking.picking_user' => fn($query) => $query->withTrashed(),
                 'order_packing.packing_user' => fn($query) => $query->withTrashed()
             ])->findOrFail($id);
-                
+
             return view('Dashboard.OrderDispatchDetails.Index', compact('orderDispatch'));
         } catch (ModelNotFoundException $e) {
             return back()->with('danger', 'Ocurrió un error al buscar la orden de despacho: ' . $this->getMessage('ModelNotFoundException'));
@@ -55,7 +53,7 @@ class OrderDispatchDetailController extends Controller
         try {
             $orderDispatch = OrderDispatch::with([
                     'order_packing', 'invoices',
-                    'order_dispatch_details.order.seller_user' => fn($query) => $query->withTrashed(), 
+                    'order_dispatch_details.order.seller_user' => fn($query) => $query->withTrashed(),
                     'order_dispatch_details.order.wallet_user' => fn($query) => $query->withTrashed(),
                     'client' => fn($query) => $query->withTrashed(),
                     'correria' => fn($query) => $query->withTrashed(),
@@ -110,10 +108,8 @@ class OrderDispatchDetailController extends Controller
     {
         try {
             $orderDispatchDetail = OrderDispatchDetail::with('order_detail')->findOrFail($request->input('id'));
-
             $orderDispatchDetail->order_detail->status = 'Comprometido';
             $orderDispatchDetail->order_detail->save();
-
             $orderDispatchDetail->status = 'Pendiente';
             $orderDispatchDetail->save();
 
@@ -155,13 +151,11 @@ class OrderDispatchDetailController extends Controller
     {
         try {
             $orderDispatchDetail = OrderDispatchDetail::with('order_detail.order')->findOrFail($request->input('id'));
-
             $orderDispatchDetail->order_detail->status = 'Aprobado';
             $orderDispatchDetail->order_detail->save();
-
             $orderDispatchDetail->status = 'Cancelado';
             $orderDispatchDetail->save();
-                
+
             DB::statement('CALL order_dispatch_status(?)', [$orderDispatchDetail->order_detail->order->id]);
 
             return $this->successResponse(

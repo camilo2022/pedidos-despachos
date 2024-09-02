@@ -215,7 +215,7 @@
                                         <td width="18%" class="order">{{ Carbon::parse($order->created_at)->format('Y-m-d H:i:s') }}</td>
                                         <th width="13%" class="order">TIPO DESPACHO: </th>
                                         <td width="24%" class="order">
-                                            <span class="badge badge-pill badge-info">{{ $order->dispatch_type }}</span>
+                                            <span class="badge badge-info">{{ $order->dispatch_type }}</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -225,7 +225,7 @@
                                         <td class="order">{{ $order->seller_date }}</td>
                                         <th class="order">FECHA DESPACHO: </th>
                                         <td class="order">
-                                            <span class="badge badge-pill bg-dark">{{ $order->dispatch_date }}</span>
+                                            <span class="badge bg-dark">{{ $order->dispatch_date }}</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -237,16 +237,16 @@
                                         <td class="order">
                                             @switch($order->seller_status)
                                                 @case('Pendiente')
-                                                    <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                    <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                                     @break
                                                 @case('Aprobado')
-                                                    <span class="badge badge-pill badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span>
+                                                    <span class="badge badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span>
                                                     @break
                                                 @case('Cancelado')
-                                                    <span class="badge badge-pill badge-danger text-white"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
+                                                    <span class="badge badge-danger text-white"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
                                                     @break
                                                 @default
-                                                    <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                    <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                             @endswitch
                                         </td>
                                     </tr>
@@ -259,28 +259,28 @@
                                         <td class="order">
                                             @switch($order->wallet_status)
                                                 @case('Pendiente')
-                                                    <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                    <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                                     @break
                                                 @case('Cancelado')
-                                                    <span class="badge badge-pill badge-danger text-white"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
+                                                    <span class="badge badge-danger text-white"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
                                                     @break
                                                 @case('Suspendido')
-                                                    <span class="badge badge-pill badge-secondary text-white"><i class="fa-solid fa-solid fa-clock-rotate-left mr-2 text-white"></i>Suspendido</span>
+                                                    <span class="badge badge-secondary text-white"><i class="fa-solid fa-solid fa-clock-rotate-left mr-2 text-white"></i>Suspendido</span>
                                                     @break
                                                 @case('En mora')
-                                                    <span class="badge badge-pill bg-orange" style="color: white !important;"><i class="fas fa-dollar-sign mr-2 text-white"></i>En mora</span>
+                                                    <span class="badge bg-orange" style="color: white !important;"><i class="fas fa-dollar-sign mr-2 text-white"></i>En mora</span>
                                                     @break
                                                 @case('Parcialmente Aprobado')
-                                                    <span class="badge badge-pill badge-warning text-white"><i class="fas fa-check mr-2 text-white"></i>Parcialmente Aprobado</span>
+                                                    <span class="badge badge-warning text-white"><i class="fas fa-check mr-2 text-white"></i>Parcialmente Aprobado</span>
                                                     @break
                                                 @case('Aprobado')
-                                                    <span class="badge badge-pill badge-success"><i class="fas fa-check-double mr-2"></i>Aprobado</span>
+                                                    <span class="badge badge-success"><i class="fas fa-check-double mr-2"></i>Aprobado</span>
                                                     @break
                                                 @case('Autorizado')
-                                                    <span class="badge badge-pill badge-success"><i class="fas fa-check-double mr-2"></i>Autorizado</span>
+                                                    <span class="badge badge-success"><i class="fas fa-check-double mr-2"></i>Autorizado</span>
                                                     @break
                                                 @default
-                                                    <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                    <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                             @endswitch
                                         </td>
                                     </tr>
@@ -293,25 +293,25 @@
                                         <td class="order">
                                             @switch($order->dispatch_status)
                                                 @case('Pendiente')
-                                                    <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                    <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                                     @break
                                                 @case('Cancelado')
-                                                    <span class="badge badge-pill badge-danger text-white" style="color:white !important;"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
+                                                    <span class="badge badge-danger text-white" style="color:white !important;"><i class="fas fa-xmark mr-2 text-white"></i>Cancelado</span>
                                                     @break
                                                 @case('Parcialmente Aprobado')
-                                                    <span class="badge badge-pill badge-warning text-white"><i class="fas fa-check mr-2 text-white"></i>Parcialmente Aprobado</span>
+                                                    <span class="badge badge-warning text-white"><i class="fas fa-check mr-2 text-white"></i>Parcialmente Aprobado</span>
                                                     @break
                                                 @case('Aprobado')
-                                                    <span class="badge badge-pill badge-success"><i class="fas fa-check-double mr-2"></i>Aprobado</span>
+                                                    <span class="badge badge-success"><i class="fas fa-check-double mr-2"></i>Aprobado</span>
                                                     @break
                                                 @case('Parcialmente Despachado')
-                                                    <span class="badge badge-pill badge-secondary text-white" style="color:white !important;"><i class="fas fa-share mr-2 text-white"></i>Parcialmente Despachado</span>
+                                                    <span class="badge badge-secondary text-white" style="color:white !important;"><i class="fas fa-share mr-2 text-white"></i>Parcialmente Despachado</span>
                                                     @break
                                                 @case('Despachado')
-                                                    <span class="badge badge-pill badge-primary"><i class="fas fa-share-all mr-2"></i>Despachado</span>
+                                                    <span class="badge badge-primary"><i class="fas fa-share-all mr-2"></i>Despachado</span>
                                                     @break
                                                 @default
-                                                    <span class="badge badge-pill badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
+                                                    <span class="badge badge-info"><i class="fas fa-arrows-rotate mr-2"></i>Pendiente</span>
                                             @endswitch
                                         </td>
                                     </tr>
@@ -381,18 +381,57 @@
                 <div class="card mt-2">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                            @if((in_array($order->seller_status, ['Pendiente', 'Aprobado']) && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado'])) && (in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA', 'FILTRADOR', 'VENDEDOR']) || $order->seller_user_id == Auth::user()->id))
+                            @if((in_array($order->seller_status, ['Pendiente', 'Aprobado']) && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Suspendido', 'En mora', 'Aprobado'])) && (in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA', 'VENDEDOR']) || $order->seller_user_id == Auth::user()->id))
                                 <li class="nav-item ml-auto">
-                                    <a class="nav-link active" type="button" onclick="CreateOrderDetailModal()" title="Agregar detalle de pedido.">
-                                        <i class="fas fa-plus mr-2"></i> <b>AGREGAR REFERENCIA</b>
+                                </li>
+                                @if($order->order_details->where('status', 'Cancelado')->count() > 0 && in_array($order->seller_status, ['Pendiente', 'Aprobado']) && in_array($order->wallet_status, ['Pendiente']))
+                                <li class="nav-item ml-2">
+                                    <a class="nav-link active bg-info" type="button" onclick="PendingOrderDetails()" title="Devolver detalles de pedido.">
+                                        <i class="fas fa-arrows-rotate mr-2"></i> <b>DEVOLVER</b>
                                     </a>
                                 </li>
+                                @endif
+                                @if($order->order_details->whereIn('status', ['Agotado'])->count() > 0 && in_array($order->seller_status, ['Aprobado']) && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Aprobado']) && !in_array($order->dispatch_status, ['Despachado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                <li class="nav-item ml-2">
+                                    <a class="nav-link active bg-warning" style="color: white !important;" type="button" onclick="AllowOrderDetails()" title="Permitir detalles de pedido.">
+                                        <i class="fas fa-key-skeleton mr-2"></i> <b>PERMITIR</b>
+                                    </a>
+                                </li>
+                                @endif
+                                @if($order->order_details->whereIn('status', ['Pendiente', 'Cancelado', 'Suspendido'])->count() > 0 && in_array($order->wallet_status, ['Parcialmente Aprobado', 'Aprobado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                <li class="nav-item ml-2">
+                                    <a class="nav-link active bg-success" type="button" onclick="ApproveOrderDetails()" title="Aprobar detalles de pedido.">
+                                        <i class="fas fa-check mr-2"></i> <b>APROBAR</b>
+                                    </a>
+                                </li>
+                                @endif
+                                @if($order->order_details->whereIn('status', ['Pendiente', 'Suspendido', 'Aprobado'])->count() > 0)
+                                <li class="nav-item ml-2">
+                                    <a class="nav-link active bg-danger" type="button" onclick="CancelOrderDetails()" title="Cancelar detalles de pedido.">
+                                        <i class="fas fa-xmark mr-2"></i> <b>CANCELAR</b>
+                                    </a>
+                                </li>
+                                @endif
+                                @if($order->order_details->whereIn('status', ['Pendiente', 'Aprobado'])->count() > 0 && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Suspendido', 'En mora']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                <li class="nav-item ml-2">
+                                    <a class="nav-link active bg-secondary" type="button" onclick="SuspendOrderDetails()" title="Suspender detalles de pedido.">
+                                        <i class="fas fa-clock-rotate-left mr-2"></i> <b>SUSPENDER</b>
+                                    </a>
+                                </li>
+                                @endif
+                                @if(in_array($order->seller_status, ['Pendiente']))
+                                <li class="nav-item ml-2">
+                                    <a class="nav-link active" type="button" onclick="CreateOrderDetailModal()" title="Agregar detalle de pedido.">
+                                        <i class="fas fa-plus mr-2"></i> <b>AGREGAR</b>
+                                    </a>
+                                </li>
+                                @endif
                             @endif
                         </ul>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="orders" class="table table-bordered table-hover dataTable dtr-inline nowrap w-100">
+                        <div class="table-responsive" id="orderDetails">
+                            <table id="details" class="table table-bordered table-hover dataTable dtr-inline nowrap w-100">
                                 <thead id="OrderDetailHead" style="background-color: #343a40; color: white;">
                                 </thead>
                                 <tbody id="OrderDetailBody">
@@ -408,15 +447,18 @@
     </div>
     @include('Dashboard.OrderDetails.Create')
     @include('Dashboard.OrderDetails.Edit')
+    @include('Dashboard.OrderDetails.Clone')
 </section>
 @endsection
 @section('script')
     <script src="{{ asset('js/Dashboard/OrderDetails/Index.js') }}"></script>
     <script src="{{ asset('js/Dashboard/OrderDetails/Create.js') }}"></script>
     <script src="{{ asset('js/Dashboard/OrderDetails/Edit.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/OrderDetails/Clone.js') }}"></script>
     <script src="{{ asset('js/Dashboard/OrderDetails/Pending.js') }}"></script>
     <script src="{{ asset('js/Dashboard/OrderDetails/Authorize.js') }}"></script>
     <script src="{{ asset('js/Dashboard/OrderDetails/Approve.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/OrderDetails/Allow.js') }}"></script>
     <script src="{{ asset('js/Dashboard/OrderDetails/Cancel.js') }}"></script>
     <script src="{{ asset('js/Dashboard/OrderDetails/Suspend.js') }}"></script>
 

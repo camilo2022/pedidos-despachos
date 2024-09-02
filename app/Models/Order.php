@@ -83,6 +83,11 @@ class Order extends Model implements Auditable
         return $this->belongsTo(User::class, 'wallet_user_id');
     }
 
+    public function dispatch_user() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dispatch_user_id');
+    }
+
     public function correria() : BelongsTo
     {
         return $this->belongsTo(Correria::class, 'correria_id');

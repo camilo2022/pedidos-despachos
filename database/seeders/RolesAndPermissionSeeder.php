@@ -193,9 +193,12 @@ class RolesAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'Dashboard.Orders.Details.Store'])->syncRoles([$Orders]);
         Permission::create(['name' => 'Dashboard.Orders.Details.Edit'])->syncRoles([$Orders]);
         Permission::create(['name' => 'Dashboard.Orders.Details.Update'])->syncRoles([$Orders]);
+        Permission::create(['name' => 'Dashboard.Orders.Details.Show'])->syncRoles([$Orders]);
+        Permission::create(['name' => 'Dashboard.Orders.Details.Clone'])->syncRoles([$Orders]);
         Permission::create(['name' => 'Dashboard.Orders.Details.Pending'])->syncRoles([$Orders]);
         Permission::create(['name' => 'Dashboard.Orders.Details.Authorize'])->syncRoles([$Orders]);
         Permission::create(['name' => 'Dashboard.Orders.Details.Approve'])->syncRoles([$Orders]);
+        Permission::create(['name' => 'Dashboard.Orders.Details.Allow'])->syncRoles([$Orders]);
         Permission::create(['name' => 'Dashboard.Orders.Details.Cancel'])->syncRoles([$Orders]);
         Permission::create(['name' => 'Dashboard.Orders.Details.Suspend'])->syncRoles([$Orders]);
 
@@ -229,14 +232,14 @@ class RolesAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'Dashboard.Pickings.Review'])->syncRoles([$Pickings]);
         Permission::create(['name' => 'Dashboard.Pickings.Cancel'])->syncRoles([$Pickings]);
         Permission::create(['name' => 'Dashboard.Pickings.Details.Add'])->syncRoles([$Pickings]);
-        
+
         Permission::create(['name' => 'Dashboard.Packings.Index'])->syncRoles([$Packings]);
         Permission::create(['name' => 'Dashboard.Packings.Index.Query'])->syncRoles([$Packings]);
         Permission::create(['name' => 'Dashboard.Packings.Store'])->syncRoles([$Packings]);
         Permission::create(['name' => 'Dashboard.Packings.Open'])->syncRoles([$Packings]);
         Permission::create(['name' => 'Dashboard.Packings.Close'])->syncRoles([$Packings]);
         Permission::create(['name' => 'Dashboard.Packings.Details.Add'])->syncRoles([$Packings]);
-        
+
         Permission::create(['name' => 'Dashboard.Reports.Sales.Index'])->syncRoles([$Reports]);
         Permission::create(['name' => 'Dashboard.Reports.Sales.Index.Query'])->syncRoles([$Reports]);
         Permission::create(['name' => 'Dashboard.Reports.Dispatches.Index'])->syncRoles([$Reports]);

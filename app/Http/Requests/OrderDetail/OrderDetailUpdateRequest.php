@@ -154,7 +154,7 @@ class OrderDetailUpdateRequest extends FormRequest
             'order_id.exists' => 'El Identificador del Pedido no es valido.',
             'product_id.required' => 'El Identificador del Producto es requerido.',
             'product_id.exists' => 'El Identificador del Producto no es valido.',
-            'product_id.unique' => 'El Identificador del Producto ya ha sido tomado en otro detalle.',
+            'product_id.unique' => 'La referencia ya ha sido tomado en otro detalle.',
             'color_id.required' => 'El Identificador del Color es requerido.',
             'color_id.exists' => 'El Identificador del Color no es valido.',
             'price.required' => 'El campo Precio del producto es requerido.',

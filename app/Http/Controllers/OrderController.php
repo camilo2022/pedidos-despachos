@@ -66,7 +66,7 @@ class OrderController extends Controller
         try {
             $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
             $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
-            
+
             $orders = Order::with([
                 'order_details.product' => fn($query) => $query->withTrashed(),
                 'order_details.color' => fn($query) => $query->withTrashed(),
@@ -91,11 +91,11 @@ class OrderController extends Controller
                     ->whereHas('correria', fn($query) => $query->whereNull('deleted_at'));
                 }
             )
-            ->when(in_array(Auth::user()->title, ['CARTERA']),
+            ->when(in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']),
                 function ($query) {
                     $query->where('seller_status', 'Aprobado')
                     ->whereIn('wallet_status', ['Pendiente', 'Suspendido', 'En mora', 'Parcialmente Aprobado', 'Aprobado', 'Autorizado'])
-                    ->whereIn('dispatched_status', ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Parcialmente Empacado', 'Parcialmente Despachado', 'Despachado']);
+                    ->whereIn('dispatch_status', ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Parcialmente Empacado', 'Parcialmente Despachado', 'Despachado']);
                 }
             )
             ->where('business_id', Auth::user()->business_id)
@@ -175,6 +175,47 @@ class OrderController extends Controller
             $order->correria_id = $request->input('correria_id');
             $order->business_id = Auth::user()->business_id;
             $order->save();
+
+            if($request->filled('order_id')) {
+                $items = OrderDetail::where('order_id', $request->input('order_id'))->get();
+                foreach ($items as $item) {
+                    $orderDetail = new OrderDetail();
+                    $orderDetail->order_id = $order->id;
+                    $orderDetail->product_id = $item->product_id;
+                    $orderDetail->color_id = $item->color_id;
+                    $orderDetail->price = $item->price;
+                    $orderDetail->negotiated_price = $item->negotiated_price;
+                    $orderDetail->T04 = $item->T04;
+                    $orderDetail->T06 = $item->T06;
+                    $orderDetail->T08 = $item->T08;
+                    $orderDetail->T10 = $item->T10;
+                    $orderDetail->T12 = $item->T12;
+                    $orderDetail->T14 = $item->T14;
+                    $orderDetail->T16 = $item->T16;
+                    $orderDetail->T18 = $item->T18;
+                    $orderDetail->T20 = $item->T20;
+                    $orderDetail->T22 = $item->T22;
+                    $orderDetail->T24 = $item->T24;
+                    $orderDetail->T26 = $item->T26;
+                    $orderDetail->T28 = $item->T28;
+                    $orderDetail->T30 = $item->T30;
+                    $orderDetail->T32 = $item->T32;
+                    $orderDetail->T34 = $item->T34;
+                    $orderDetail->T36 = $item->T36;
+                    $orderDetail->T38 = $item->T38;
+                    $orderDetail->TXXS = $item->TXXS;
+                    $orderDetail->TXS = $item->TXS;
+                    $orderDetail->TS = $item->TS;
+                    $orderDetail->TM = $item->TM;
+                    $orderDetail->TL = $item->TL;
+                    $orderDetail->TXL = $item->TXL;
+                    $orderDetail->TXXL = $item->TXXL;
+                    $orderDetail->seller_user_id = Auth::user()->id;
+                    $orderDetail->seller_date = Carbon::now()->format('Y-m-d H:i:s');
+                    $orderDetail->seller_observation = $item->seller_observation;
+                    $orderDetail->save();
+                }
+            }
 
             return $this->successResponse(
                 [
@@ -399,79 +440,11 @@ class OrderController extends Controller
             $user = User::with('warehouses')->findOrFail($order->seller_user_id);
 
             $users = User::with('warehouses')->whereHas('warehouses', fn($query) => $query->whereIn('warehouses.id', $user->warehouses->pluck('id')->toArray()))->get();
-            
+
             foreach($order->order_details->whereIn('status', ['Pendiente']) as $order_detail) {
-                $inventory = Inventory::select('products.trademark AS MARCA', 'products.code AS REFERENCIA', 'colors.name AS COLOR');
-                foreach ($sizes as $size) {
-                    $inventory->addSelect(DB::raw("COALESCE(SUM(CASE WHEN sizes.code = '$size->code' THEN inventories.quantity ELSE 0 END), 0) AS T$size->code"));
-                }
-                $inventory->join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
-                ->join('products', 'products.id', 'inventories.product_id')
-                ->join('colors', 'colors.id', 'inventories.color_id')
-                ->join('sizes', 'sizes.id', 'inventories.size_id')
-                ->where('quantity', '>', 0)
-                ->whereIn('warehouse_id', $user->warehouses->pluck('id')->toArray())
-                ->where('product_id', $order_detail->product_id)
-                ->where('color_id', $order_detail->color_id)
-                ->groupBy('products.trademark', 'products.code', 'colors.name');
-                $inventory = $inventory->first();
-                
-                $committed = OrderDetail::select('products.trademark AS MARCA', 'products.code AS REFERENCIA', 'colors.name AS COLOR');
-                foreach ($sizes as $size) {
-                    $committed->addSelect(DB::raw("SUM(T$size->code) as T$size->code"));
-                }
+                $inventory = $this->inventory($user->id, $order_detail->product_id, $order_detail->color_id);
+                $committed = $this->committed($order->seller_user->title, $order->business_id, $order_detail->product_id, $order_detail->color_id, $users->pluck('id')->toArray());
 
-                $committed->join('orders', 'orders.id', 'order_details.order_id')
-                ->join('users', 'users.id', 'orders.seller_user_id')
-                ->join('products', 'products.id', 'order_details.product_id')
-                ->join('colors', 'colors.id', 'order_details.color_id')
-                ->where('product_id', $order_detail->product_id)
-                ->where('color_id', $order_detail->color_id)
-                ->where('orders.business_id', $order->business_id)
-                ->when(in_array($order->seller_user->title, ['VENDEDOR ESPECIAL']),
-                    function ($query) {
-                        $query->whereIn('orders.seller_status', ['Aprobado'])
-                        ->whereIn('orders.wallet_status', ['Pendiente', 'Autorizado'])
-                        ->whereIn('order_details.status', ['Pendiente', 'Autorizado'])
-                        ->where('users.title', 'VENDEDOR ESPECIAL');
-                    }
-                )
-                ->when(!in_array($order->seller_user->title, ['VENDEDOR ESPECIAL']),
-                    function ($query) {
-                        $query->whereIn('orders.seller_status', ['Aprobado'])
-                        ->whereIn('orders.wallet_status', ['Pendiente', 'Aprobado', 'Parcialmente Aprobado'])
-                        ->whereIn('order_details.status', ['Pendiente', 'Aprobado', 'Comprometido'])
-                        ->whereNot('users.title', 'VENDEDOR ESPECIAL');
-                    }
-                )
-                ->whereIn('orders.seller_user_id', $users->pluck('id')->toArray())
-                ->groupBy('products.trademark', 'products.code', 'colors.name');
-                $committed = $committed->first();
-
-                if(empty($committed)) {
-                    $committed = (object) [];
-                    $product = Product::findOrFail($order_detail->product_id);
-                    $color = Color::findOrFail($order_detail->color_id);
-                    $committed->MARCA = $product->trademark;
-                    $committed->REFERENCIA = $product->code;
-                    $committed->COLOR = $color->name;
-                    foreach ($sizes as $size) {
-                        $committed->{"T{$size->code}"} = 0;
-                    }
-                }
-                
-                if(empty($inventory)) {
-                    $inventory = (object) [];
-                    $product = Product::findOrFail($order_detail->product_id);
-                    $color = Color::findOrFail($order_detail->color_id);
-                    $inventory->MARCA = $product->trademark;
-                    $inventory->REFERENCIA = $product->code;
-                    $inventory->COLOR = $color->name;
-                    foreach ($sizes as $size) {
-                        $inventory->{"T{$size->code}"} = 0;
-                    }
-                }
-                
                 $boolean = true;
                 foreach($sizes as $size) {
                     if($order_detail->{"T{$size->code}"} > ($inventory->{"T{$size->code}"} - $committed->{"T{$size->code}"})) {
@@ -484,27 +457,7 @@ class OrderController extends Controller
                 $order_detail->save();
 
                 if($boolean) {
-
-                    foreach($sizes as $size) {
-                        $inventories = Inventory::where('product_id', $order_detail->product_id)->where('size_id', $size->id)->where('color_id', $order_detail->color_id)->where('system', 'PROYECCION')->get();
-                        $quantity = $order_detail->{"T$size->code"};
-                        foreach($inventories as $inventory) {
-                            if($inventory->quantity == $quantity || $inventory->quantity > $quantity) {
-                                $inventory->quantity -= $quantity;
-                                $inventory->save();
-                                $quantity = 0;
-                            } else if($inventory->quantity < $quantity) {
-                                $aux = $quantity - $inventory->quantity;
-                                $inventory->quantity -= $inventory->quantity;
-                                $inventory->save();
-                                $quantity = $aux;
-                            }
-
-                            if($quantity == 0){
-                                break;
-                            }
-                        }
-                    }
+                    $this->discount($order_detail, $order_detail->product_id, $order_detail->color_id);
                 }
             }
 
@@ -512,7 +465,7 @@ class OrderController extends Controller
             $order->seller_status = 'Aprobado';
             $order->save();
 
-            // DB::statement('CALL order_seller_status(?)', [$order->id]); 
+            // DB::statement('CALL order_seller_status(?)', [$order->id]);
 
             $emails = [
                 $order->business->order_notify_email
@@ -753,82 +706,11 @@ class OrderController extends Controller
             $user = User::with('warehouses')->findOrFail($order->seller_user_id);
 
             $users = User::with('warehouses')->whereHas('warehouses', fn($query) => $query->whereIn('warehouses.id', $user->warehouses->pluck('id')->toArray()))->get();
-            
+
             if($order->wallet_status == 'Suspendido') {
                 foreach($order->order_details->whereIn('status', ['Suspendido']) as $order_detail) {
-
-                    $inventory = Inventory::select('products.trademark AS MARCA', 'products.code AS REFERENCIA', 'colors.name AS COLOR');
-                    foreach ($sizes as $size) {
-                        $inventory->addSelect(DB::raw("COALESCE(SUM(CASE WHEN sizes.code = '$size->code' THEN inventories.quantity ELSE 0 END), 0) AS T$size->code"));
-                    }
-                    $inventory->join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
-                    ->join('products', 'products.id', 'inventories.product_id')
-                    ->join('colors', 'colors.id', 'inventories.color_id')
-                    ->join('sizes', 'sizes.id', 'inventories.size_id')
-                    ->where('quantity', '>', 0)
-                    ->whereIn('warehouse_id', $user->warehouses->pluck('id')->toArray())
-                    ->where('product_id', $order_detail->product_id)
-                    ->where('color_id', $order_detail->color_id)
-                    ->groupBy('products.trademark', 'products.code', 'colors.name');
-                    
-                    $inventory = $inventory->first();
-                    
-                    $committed = OrderDetail::select('products.trademark AS MARCA', 'products.code AS REFERENCIA', 'colors.name AS COLOR');
-                    foreach ($sizes as $size) {
-                        $committed->addSelect(DB::raw("SUM(T$size->code) as T$size->code"));
-                    }
-
-                    $committed->join('orders', 'orders.id', 'order_details.order_id')
-                    ->join('users', 'users.id', 'orders.seller_user_id')
-                    ->join('products', 'products.id', 'order_details.product_id')
-                    ->join('colors', 'colors.id', 'order_details.color_id')
-                    ->where('product_id', $order_detail->product_id)
-                    ->where('color_id', $order_detail->color_id)
-                    ->where('orders.business_id', $order->business_id)
-                    ->when(in_array($order->seller_user->title, ['VENDEDOR ESPECIAL']),
-                        function ($query) {
-                            $query->whereIn('orders.seller_status', ['Aprobado'])
-                            ->whereIn('orders.wallet_status', ['Pendiente', 'Autorizado'])
-                            ->whereIn('order_details.status', ['Pendiente', 'Autorizado'])
-                            ->where('users.title', 'VENDEDOR ESPECIAL');
-                        }
-                    )
-                    ->when(!in_array($order->seller_user->title, ['VENDEDOR ESPECIAL']),
-                        function ($query) {
-                            $query->whereIn('orders.seller_status', ['Aprobado'])
-                            ->whereIn('orders.wallet_status', ['Pendiente', 'Aprobado', 'Parcialmente Aprobado'])
-                            ->whereIn('order_details.status', ['Pendiente', 'Aprobado', 'Comprometido'])
-                            ->whereNot('users.title', 'VENDEDOR ESPECIAL');
-                        }
-                    )
-                    ->whereIn('orders.seller_user_id', $users->pluck('id')->toArray())
-                    ->groupBy('products.trademark', 'products.code', 'colors.name');
-
-                    $committed = $committed->first();
-
-                    if(empty($committed)) {
-                        $committed = (object) [];
-                        $product = Product::findOrFail($order_detail->product_id);
-                        $color = Color::findOrFail($order_detail->color_id);
-                        $committed->MARCA = $product->trademark;
-                        $committed->REFERENCIA = $product->code;
-                        $committed->COLOR = $color->name;
-                        foreach ($sizes as $size) {
-                            $committed->{"T{$size->code}"} = 0;
-                        }
-                    }
-                    
-                    if(empty($inventory)) {
-                        $inventory = (object) [];
-                        $product = Product::findOrFail($order_detail->product_id);
-                        $color = Color::findOrFail($order_detail->color_id);
-                        $inventory->MARCA = $product->trademark;
-                        $inventory->REFERENCIA = $product->code;
-                        $inventory->COLOR = $color->name;
-                        foreach ($sizes as $size) {
-                            $inventory->{"T{$size->code}"} = 0;
-                        }
-                    }
+                    $inventory = $this->inventory($user->id, $order_detail->product_id, $order_detail->color_id);
+                    $committed = $this->committed($order->seller_user->title, $order->business_id, $order_detail->product_id, $order_detail->color_id, $users->pluck('id')->toArray());
 
                     $boolean = true;
                     foreach($sizes as $size) {
@@ -896,82 +778,11 @@ class OrderController extends Controller
             $user = User::with('warehouses')->findOrFail($order->seller_user_id);
 
             $users = User::with('warehouses')->whereHas('warehouses', fn($query) => $query->whereIn('warehouses.id', $user->warehouses->pluck('id')->toArray()))->get();
-            
+
             if($order->wallet_status == 'Suspendido') {
                 foreach($order->order_details->whereIn('status', ['Suspendido']) as $order_detail) {
-
-                    $inventory = Inventory::select('products.trademark AS MARCA', 'products.code AS REFERENCIA', 'colors.name AS COLOR');
-                    foreach ($sizes as $size) {
-                        $inventory->addSelect(DB::raw("COALESCE(SUM(CASE WHEN sizes.code = '$size->code' THEN inventories.quantity ELSE 0 END), 0) AS T$size->code"));
-                    }
-                    $inventory->join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
-                    ->join('products', 'products.id', 'inventories.product_id')
-                    ->join('colors', 'colors.id', 'inventories.color_id')
-                    ->join('sizes', 'sizes.id', 'inventories.size_id')
-                    ->where('quantity', '>', 0)
-                    ->whereIn('warehouse_id', $user->warehouses->pluck('id')->toArray())
-                    ->where('product_id', $order_detail->product_id)
-                    ->where('color_id', $order_detail->color_id)
-                    ->groupBy('products.trademark', 'products.code', 'colors.name');
-                    
-                    $inventory = $inventory->first();
-                    
-                    $committed = OrderDetail::select('products.trademark AS MARCA', 'products.code AS REFERENCIA', 'colors.name AS COLOR');
-                    foreach ($sizes as $size) {
-                        $committed->addSelect(DB::raw("SUM(T$size->code) as T$size->code"));
-                    }
-
-                    $committed->join('orders', 'orders.id', 'order_details.order_id')
-                    ->join('users', 'users.id', 'orders.seller_user_id')
-                    ->join('products', 'products.id', 'order_details.product_id')
-                    ->join('colors', 'colors.id', 'order_details.color_id')
-                    ->where('product_id', $order_detail->product_id)
-                    ->where('color_id', $order_detail->color_id)
-                    ->where('orders.business_id', $order->business_id)
-                    ->when(in_array($order->seller_user->title, ['VENDEDOR ESPECIAL']),
-                        function ($query) {
-                            $query->whereIn('orders.seller_status', ['Aprobado'])
-                            ->whereIn('orders.wallet_status', ['Pendiente', 'Autorizado'])
-                            ->whereIn('order_details.status', ['Pendiente', 'Autorizado'])
-                            ->where('users.title', 'VENDEDOR ESPECIAL');
-                        }
-                    )
-                    ->when(!in_array($order->seller_user->title, ['VENDEDOR ESPECIAL']),
-                        function ($query) {
-                            $query->whereIn('orders.seller_status', ['Aprobado'])
-                            ->whereIn('orders.wallet_status', ['Pendiente', 'Aprobado', 'Parcialmente Aprobado'])
-                            ->whereIn('order_details.status', ['Pendiente', 'Aprobado', 'Comprometido'])
-                            ->whereNot('users.title', 'VENDEDOR ESPECIAL');
-                        }
-                    )
-                    ->whereIn('orders.seller_user_id', $users->pluck('id')->toArray())
-                    ->groupBy('products.trademark', 'products.code', 'colors.name');
-
-                    $committed = $committed->first();
-
-                    if(empty($committed)) {
-                        $committed = (object) [];
-                        $product = Product::findOrFail($order_detail->product_id);
-                        $color = Color::findOrFail($order_detail->color_id);
-                        $committed->MARCA = $product->trademark;
-                        $committed->REFERENCIA = $product->code;
-                        $committed->COLOR = $color->name;
-                        foreach ($sizes as $size) {
-                            $committed->{"T{$size->code}"} = 0;
-                        }
-                    }
-                    
-                    if(empty($inventory)) {
-                        $inventory = (object) [];
-                        $product = Product::findOrFail($order_detail->product_id);
-                        $color = Color::findOrFail($order_detail->color_id);
-                        $inventory->MARCA = $product->trademark;
-                        $inventory->REFERENCIA = $product->code;
-                        $inventory->COLOR = $color->name;
-                        foreach ($sizes as $size) {
-                            $inventory->{"T{$size->code}"} = 0;
-                        }
-                    }
+                    $inventory = $this->inventory($user->id, $order_detail->product_id, $order_detail->color_id);
+                    $committed = $this->committed($order->seller_user->title, $order->business_id, $order_detail->product_id, $order_detail->color_id, $users->pluck('id')->toArray());
 
                     $boolean = true;
                     foreach($sizes as $size) {
@@ -1079,7 +890,7 @@ class OrderController extends Controller
             $order = Order::with('client', 'order_details')->findOrFail($request->input('id'));
 
             $order->order_details()->whereIn('status', ['Suspendido'])->update(['status' => 'Cancelado', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
-            
+
             $order->wallet_dispatch_official = $order->wallet_dispatch_official ?? $order->seller_dispatch_official;
             $order->wallet_dispatch_document = $order->wallet_dispatch_document ?? $order->seller_dispatch_document;
             $order->dispatch_status = 'Despachado';
@@ -1095,11 +906,11 @@ class OrderController extends Controller
             $orderDispatch->invoice_user_id = Auth::user()->id;
             $orderDispatch->invoice_date = Carbon::now()->format('Y-m-d H:i:s');
             $orderDispatch->correria_id = $order->correria_id;
-            $orderDispatch->business_id = $order->seller_user->business_id;
+            $orderDispatch->business_id = $order->business_id;
             $orderDispatch->save();
-            
+
             foreach($order->order_details->where('status', 'Autorizado') as $orderDetail) {
-                
+
                 $orderDetail->dispatch_user_id = Auth::user()->id;
                 $orderDetail->dispatch_date = Carbon::now()->format('Y-m-d H:i:s');
                 $orderDetail->status = 'Despachado';
@@ -1174,11 +985,11 @@ class OrderController extends Controller
         }
     }
 
-    public function wallet($id) 
+    public function wallet($id)
     {
         try {
-            $order = Order::with([ 
-                    'seller_user', 'client.wallet', 
+            $order = Order::with([
+                    'seller_user', 'client.wallet',
                     'client' => fn($query) => $query->withTrashed(),
                     'business' => fn($query) => $query->withTrashed()
                 ])->findOrFail($id);
@@ -1195,17 +1006,17 @@ class OrderController extends Controller
                 Storage::disk('public')->delete($path);
             }
 
-            Storage::disk('public')->put($path, $pdf->output()); 
+            Storage::disk('public')->put($path, $pdf->output());
 
             $file = Storage::disk('public')->path($path);
-    
+
             $emails = [
                 $order->client->email
             ];
 
             // return view('Dashboard.Emails.Wallet', compact('order'));
 
-            Mail::to($emails)->send(new EmailWallet($order, $file)); 
+            Mail::to($emails)->send(new EmailWallet($order, $file));
 
             return $this->successResponse(
                 [
@@ -1233,7 +1044,7 @@ class OrderController extends Controller
         }
     }
 
-    public function email($id) 
+    public function email($id)
     {
         try {
             $order = Order::with([
@@ -1245,7 +1056,7 @@ class OrderController extends Controller
                     'business' => fn($query) => $query->withTrashed(),
                 ])
                 ->findOrFail($id);
-            
+
             $orderSizes = collect([]);
 
             $sizes = Size::all();
@@ -1255,7 +1066,7 @@ class OrderController extends Controller
                     $orderSizes = $orderSizes->push($size);
                 }
             }
-            
+
             $pdf = PDF::loadView('Dashboard.Orders.PDF', compact('order', 'orderSizes'))->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
             $pdf->setEncryption($order->client->client_number_document, $order->business->name, ['print']);
@@ -1268,10 +1079,10 @@ class OrderController extends Controller
                 Storage::disk('public')->delete($path);
             }
 
-            Storage::disk('public')->put($path, $pdf->output()); 
+            Storage::disk('public')->put($path, $pdf->output());
 
             $file = Storage::disk('public')->path($path);
-    
+
             $emails = [
                 $order->client->email
             ];
@@ -1279,7 +1090,7 @@ class OrderController extends Controller
             // return view('Dashboard.Emails.Order', compact('order'));
 
             Mail::to($emails)->send(new EmailOrder($order, $file));
-            
+
             return $this->successResponse(
                 [
                     'order' => $order
@@ -1305,7 +1116,7 @@ class OrderController extends Controller
             );
         }
     }
-    
+
     public function download($id)
     {
         try {
@@ -1318,17 +1129,17 @@ class OrderController extends Controller
                     'business' => fn($query) => $query->withTrashed(),
                 ])
                 ->findOrFail($id);
-                
+
             $orderSizes = collect([]);
 
             $sizes = Size::all();
-            
+
             foreach($sizes as $size) {
                 if($order->order_details->pluck("T{$size->code}")->sum() > 0) {
                     $orderSizes = $orderSizes->push($size);
                 }
             }
-                
+
             $pdf = PDF::loadView('Dashboard.Orders.PDF', compact('order', 'orderSizes'))->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
             //return $pdf->download("PEDIDO N° {$order->id}.pdf");
             return $pdf->stream("PEDIDO N° {$order->id}.pdf");
@@ -1336,6 +1147,156 @@ class OrderController extends Controller
             return back()->with('danger', 'Ocurrió un error al cargar el pdf del pedido: ' . $this->getMessage('ModelNotFoundException'));
         } catch (Exception $e) {
             return back()->with('danger', 'Ocurrió un error al cargar la vista: ' . $e->getMessage());
+        }
+    }
+
+    private function inventory($seller_user_id, $product_id, $color_id)
+    {
+        try {
+            $sizes = Size::all();
+            $inventory = Inventory::select('products.trademark AS MARCA', 'products.code AS REFERENCIA', 'colors.name AS COLOR');
+            foreach ($sizes as $size) {
+                $inventory->addSelect(DB::raw("COALESCE(SUM(CASE WHEN sizes.code = '$size->code' THEN inventories.quantity ELSE 0 END), 0) AS T$size->code"));
+            }
+            $inventory->join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
+            ->join('products', 'products.id', 'inventories.product_id')
+            ->join('colors', 'colors.id', 'inventories.color_id')
+            ->join('sizes', 'sizes.id', 'inventories.size_id')
+            ->where('quantity', '>', 0)
+            ->whereIn('warehouse_id', User::with('warehouses')->findOrFail($seller_user_id)->warehouses->pluck('id')->toArray())
+            ->where('product_id', $product_id)
+            ->where('color_id', $color_id)
+            ->groupBy('products.trademark', 'products.code', 'colors.name');
+
+            $inventory = $inventory->first();
+
+            if(empty($inventory)) {
+                $inventory = (object) [];
+                $product = Product::findOrFail($product_id);
+                $color = Color::findOrFail($color_id);
+                $inventory->MARCA = $product->trademark;
+                $inventory->REFERENCIA = $product->code;
+                $inventory->COLOR = $color->name;
+                foreach ($sizes as $size) {
+                    $inventory->{"T$size->code"} = 0;
+                }
+            }
+
+            return $inventory;
+        } catch (Exception $e) {
+            if(empty($inventory)) {
+                $inventory = (object) [];
+                $product = Product::findOrFail($product_id);
+                $color = Color::findOrFail($color_id);
+                $inventory->MARCA = $product->trademark;
+                $inventory->REFERENCIA = $product->code;
+                $inventory->COLOR = $color->name;
+                foreach ($sizes as $size) {
+                    $inventory->{"T$size->code"} = 0;
+                }
+            }
+
+            return $inventory;
+        }
+    }
+
+    private function committed($title, $business_id, $product_id, $color_id, $users_id = [])
+    {
+        try {
+            $sizes = Size::all();
+            $committed = OrderDetail::select('products.trademark AS MARCA', 'products.code AS REFERENCIA', 'colors.name AS COLOR');
+            foreach ($sizes as $size) {
+                $committed->addSelect(DB::raw("SUM(T$size->code) as T$size->code"));
+            }
+            $committed->join('orders', 'orders.id', 'order_details.order_id')
+
+            ->join('users', 'users.id', 'orders.seller_user_id')
+            ->join('products', 'products.id', 'order_details.product_id')
+            ->join('colors', 'colors.id', 'order_details.color_id')
+            ->where('product_id', $product_id)
+            ->where('color_id', $color_id)
+            ->where('orders.business_id', $business_id)
+            ->when(in_array($title, ['VENDEDOR ESPECIAL']),
+                function ($query) {
+                    $query->whereIn('orders.seller_status', ['Aprobado'])
+                    ->whereIn('orders.wallet_status', ['Pendiente', 'Autorizado'])
+                    ->whereIn('order_details.status', ['Pendiente', 'Autorizado'])
+                    ->where('users.title', 'VENDEDOR ESPECIAL');
+                }
+            )
+            ->when(!in_array($title, ['VENDEDOR ESPECIAL']),
+                function ($query) {
+                    $query->whereIn('orders.seller_status', ['Aprobado'])
+                    ->whereIn('orders.wallet_status', ['Pendiente', 'Aprobado', 'Parcialmente Aprobado'])
+                    ->whereIn('order_details.status', ['Pendiente', 'Aprobado', 'Comprometido'])
+                    ->whereNot('users.title', 'VENDEDOR ESPECIAL');
+                }
+            )
+            ->when(count($users_id) > 0,
+                function ($query) use ($users_id) {
+                    $query->whereIn('orders.seller_user_id', $users_id);
+                }
+            )
+            ->groupBy('products.trademark', 'products.code', 'colors.name');
+
+            $committed = $committed->first();
+
+            if(empty($committed)) {
+                $committed = (object) [];
+                $product = Product::findOrFail($product_id);
+                $color = Color::findOrFail($color_id);
+                $committed->MARCA = $product->trademark;
+                $committed->REFERENCIA = $product->code;
+                $committed->COLOR = $color->name;
+                foreach ($sizes as $size) {
+                    $committed->{"T$size->code"} = 0;
+                }
+            }
+
+            return $committed;
+        } catch (Exception $e) {
+            if(empty($committed)) {
+                $committed = (object) [];
+                $product = Product::findOrFail($product_id);
+                $color = Color::findOrFail($color_id);
+                $committed->MARCA = $product->trademark;
+                $committed->REFERENCIA = $product->code;
+                $committed->COLOR = $color->name;
+                foreach ($sizes as $size) {
+                    $committed->{"T$size->code"} = 0;
+                }
+            }
+
+            return $committed;
+        }
+    }
+
+    private function discount($item, $product_id, $color_id)
+    {
+        try {
+            $sizes = Size::all();
+            foreach($sizes as $size) {
+                $inventories = Inventory::where('product_id', $product_id)->where('size_id', $size->id)->where('color_id', $color_id)->where('system', 'PROYECCION')->get();
+                $quantity = $item->{"T$size->code"};
+                foreach($inventories as $inventory) {
+                    if($inventory->quantity == $quantity || $inventory->quantity > $quantity) {
+                        $inventory->quantity -= $quantity;
+                        $inventory->save();
+                        $quantity = 0;
+                    } else if($inventory->quantity < $quantity) {
+                        $aux = $quantity - $inventory->quantity;
+                        $inventory->quantity -= $inventory->quantity;
+                        $inventory->save();
+                        $quantity = $aux;
+                    }
+
+                    if($quantity == 0){
+                        break;
+                    }
+                }
+            }
+        } catch (Exception $e) {
+
         }
     }
 }

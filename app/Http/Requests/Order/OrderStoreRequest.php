@@ -40,6 +40,7 @@ class OrderStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'order_id' => ['nullable', 'exists:orders,id'],
             'client_id' => ['required', 'exists:clients,id'],
             'dispatch_type' => ['required', 'string', 'max:255', Rule::in(['De inmediato', 'Antes de', 'Despues de', 'Total', 'Semanal'])],
             'dispatch_date' => ['required_if:dispatch_type,Antes de', 'required_if:dispatch_type,Despues de', 'date', 'after_or_equal:' . Carbon::parse($this->input('dispatch_date'))->format('Y-m-d')],
@@ -54,6 +55,7 @@ class OrderStoreRequest extends FormRequest
     public function messages()
     {
         return [
+            'order_id.exists' => 'El Identificador del pedido no es valido.',
             'client_id.required' => 'El Identificador del cliente es requerido.',
             'client_id.exists' => 'El Identificador del cliente no es valido.',
             'dispatch_type.required' => 'El Tipo de despacho es requerido.',
