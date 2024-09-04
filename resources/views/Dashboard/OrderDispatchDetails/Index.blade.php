@@ -4,10 +4,10 @@
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         <h1 class="m-0 text-dark">ORDEN N° {{ $orderDispatch->consecutive }} - {{ $orderDispatch->client->client_name }}</h1>
                     </div><!-- /.col -->
-                    <div class="col-sm-6">
+                    <div class="col-sm-3">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">Dashboard</li>
                             <li class="breadcrumb-item">Dispatches</li>
@@ -222,7 +222,7 @@
                                 @if(in_array($orderDispatch->dispatch_status, ['Pendiente']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'FILTRADOR', 'COORDINADOR BODEGA']))
                                     <li class="nav-item ml-auto">
                                     </li>
-                                    @if($orderDispatch->order_dispatch_details->whereIn('status', ['Cancelado'])->count() > 0)
+                                    @if($orderDispatch->order_dispatch_details->whereIn('status', ['Cancelado'])->whereIn('order_detail.status', ['Aprobado'])->count() > 0)
                                     <li class="nav-item ml-2">
                                         <a class="nav-link active bg-info" type="button" onclick="PendingOrderDispatchDetails()" title="Devolver detalles de pedido.">
                                             <i class="fas fa-arrows-rotate mr-2"></i> <b>DEVOLVER</b>

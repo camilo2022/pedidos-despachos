@@ -24,6 +24,7 @@ class OrderDispatchDetailPendingRequest extends FormRequest
 
         $this->merge([
             'status' => $orderDispatchDetail->status,
+            'detail_status' => $orderDispatchDetail->order_detail->status,
             'reference' => $orderDispatchDetail->order_detail->product->code,
             'color' => $orderDispatchDetail->order_detail->color->code,
         ]);
@@ -38,7 +39,8 @@ class OrderDispatchDetailPendingRequest extends FormRequest
     {
         return [
             'id' => ['required', 'exists:order_dispatch_details,id'],
-            'status' => [Rule::in(['Cancelado'])]
+            'status' => [Rule::in(['Cancelado'])],
+            'detail_status' => [Rule::in(['Aprobado'])]
         ];
     }
 
@@ -47,7 +49,8 @@ class OrderDispatchDetailPendingRequest extends FormRequest
         return [
             'id.required' => 'El Identificador del detalle de la orden de despacho es requerido.',
             'id.exists' => 'El Identificador del detalle de la orden de despacho no es válido.',
-            'status.in' => 'El detalle de la orden de despacho con referencia ' . $this->input('reference') . ' en el color ' . $this->input('color') . ' no se puede devolver. Los detalles que se pueden devolver son aquellos que esten en los siguientes estados: Cancelado.'
+            'status.in' => 'El detalle de la orden de despacho con referencia ' . $this->input('reference') . ' en el color ' . $this->input('color') . ' no se puede devolver. Los detalles que se pueden devolver son aquellos que esten en los siguientes estados: Cancelado.',
+            'detail_status.in' => 'El detalle de la orden de despacho con referencia ' . $this->input('reference') . ' en el color ' . $this->input('color') . ' no se puede devolver. Los detalles que se pueden devolver son aquellos que el detalle original esten en los siguientes estados: Aprobado.'
         ];
     }
 }

@@ -661,7 +661,7 @@ class OrderDetailController extends Controller
     {
         try {
             $orderDetail = OrderDetail::with('order')->findOrFail($request->input('id'));
-            $orderDetail->status = 'Aprobado';
+            $orderDetail->status = in_array($orderDetail->order->wallet_status, ['Parcialmente Aprobado', 'Aprobado']) ? 'Aprobado' : 'Autorizado';
             $orderDetail->wallet_user_id = Auth::user()->id;
             $orderDetail->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
             $orderDetail->save();

@@ -30,7 +30,7 @@ class OrderDispatchDetailController extends Controller
     public function index($id)
     {
         try {
-            $orderDispatch = OrderDispatch::with([ 'invoices', 'order_dispatch_details',
+            $orderDispatch = OrderDispatch::with([ 'invoices', 'order_dispatch_details.order_detail',
                 'client' => fn($query) => $query->withTrashed(),
                 'dispatch_user' => fn($query) => $query->withTrashed(),
                 'invoice_user' => fn($query) => $query->withTrashed(),

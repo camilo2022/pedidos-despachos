@@ -4,10 +4,10 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
+                <div class="col-sm-9">
                     <h1 class="m-0 text-dark">PEDIDO N° {{ $order->id }} - {{ $order->client->client_name }}</h1>
                 </div><!-- /.col -->
-                <div class="col-sm-6">
+                <div class="col-sm-3">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">Dashboard</li>
                         <li class="breadcrumb-item">Orders</li>
@@ -41,8 +41,13 @@
                                     <b>ORDEN DE PEDIDO: {{ $order->id }}</b>
                                 </a>
                             </li>
+                            <li class="nav-item ml-auto">
+                                <a class="btn bg-purple text-white" type="button" href=" {{ route('Dashboard.Orders.Download', $order->id) }}" target="_blank" title="Descargar pdf del pedido.">
+                                    <i class="fas fa-file-pdf text-white mr-2"></i> <b>DESCARGAR</b>
+                                </a>
+                            </li>
                             @if ($order->seller_status == 'Pendiente' && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA', 'FILTRADOR', 'VENDEDOR', 'VENDEDOR ESPECIAL']) && $order->seller_user_id == Auth::user()->id)
-                                <li class="nav-item ml-auto">
+                                <li class="nav-item ml-2">
                                     <a class="btn btn-success text-white" type="button" onclick="AssentOrder({{ $order->id }}, false)" title="Realizar pedido.">
                                         <i class="fas fa-check mr-2"></i> <b>REALIZAR</b>
                                     </a>
@@ -53,7 +58,7 @@
                                     </a>
                                 </li>
                             @elseif ($order->seller_status == 'Aprobado' && $order->wallet_status == 'Pendiente' && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
-                                <li class="nav-item ml-auto">
+                                <li class="nav-item ml-2">
                                     <a class="btn btn-info text-white" type="button" onclick="PendingOrder({{ $order->id }}, false)" title="Devolver pedido.">
                                         <i class="fas fa-arrows-rotate mr-2"></i> <b>DEVOLVER</b>
                                     </a>
@@ -93,13 +98,13 @@
                                 </li>
                             @elseif ($order->seller_status == 'Aprobado' && $order->wallet_status == 'Parcialmente Aprobado' && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
                                 @if (in_array($order->seller_user->title, ['VENDEDOR ESPECIAL']))
-                                    <li class="nav-item ml-auto">
+                                    <li class="nav-item ml-2">
                                         <a class="btn btn-success text-white" type="button" onclick="AuthorizeOrder({{ $order->id }}, false)" title="Autorizar pedido.">
                                             <i class="fas fa-check-double mr-2"></i> <b>AUTORIZAR</b>
                                         </a>
                                     </li>
                                 @else
-                                    <li class="nav-item ml-auto">
+                                    <li class="nav-item ml-2">
                                         <a class="btn btn-success text-white" type="button" onclick="ApproveOrder({{ $order->id }}, false)" title="Aprobar pedido.">
                                             <i class="fas fa-check-double mr-2"></i> <b>APROBAR</b>
                                         </a>
@@ -121,7 +126,7 @@
                                     </a>
                                 </li>
                             @elseif ($order->seller_status == 'Aprobado' && $order->wallet_status == 'Suspendido' && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
-                                <li class="nav-item ml-auto">
+                                <li class="nav-item ml-2">
                                     <a class="btn btn-info text-white" type="button" onclick="PendingOrder({{ $order->id }}, false)" title="Devolver pedido.">
                                         <i class="fas fa-arrows-rotate mr-2"></i> <b>DEVOLVER</b>
                                     </a>
@@ -156,13 +161,13 @@
                                 </li>
                             @elseif ($order->seller_status == 'Aprobado' && $order->wallet_status == 'En mora' && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
                                 @if (in_array($order->seller_user->title, ['VENDEDOR ESPECIAL']))
-                                    <li class="nav-item ml-auto">
+                                    <li class="nav-item ml-2">
                                         <a class="btn btn-success text-white" type="button" onclick="AuthorizeOrder({{ $order->id }}, false)" title="Autorizar pedido.">
                                             <i class="fas fa-check-double mr-2"></i> <b>AUTORIZAR</b>
                                         </a>
                                     </li>
                                 @else
-                                    <li class="nav-item ml-auto">
+                                    <li class="nav-item ml-2">
                                         <a class="btn btn-success text-white" type="button" onclick="ApproveOrder({{ $order->id }}, false)" title="Aprobar pedido.">
                                             <i class="fas fa-check-double mr-2"></i> <b>APROBAR</b>
                                         </a>
@@ -178,8 +183,13 @@
                                         <i class="fas fa-xmark mr-2"></i> <b>RECHAZAR</b>
                                     </a>
                                 </li>
+                                <li class="nav-item ml-2">
+                                    <a class="btn btn-secondary text-white" type="button" onclick="SuspendOrder({{ $order->id }}, false)" title="Suspender pedido.">
+                                        <i class="fas fa-solid fa-clock-rotate-left text-white mr-2"></i> <b>SUSPENDER</b>
+                                    </a>
+                                </li>
                             @elseif ($order->seller_status == 'Aprobado' && in_array($order->wallet_status, ['Aprobado', 'Autorizado']) && $order->dispatch_status == 'Pendiente' && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
-                                <li class="nav-item ml-auto">
+                                <li class="nav-item ml-2">
                                     <a class="btn btn-danger text-white" type="button" onclick="DeclineOrder({{ $order->id }}, false)" title="Rechazar pedido.">
                                         <i class="fas fa-xmark mr-2"></i> <b>RECHAZAR</b>
                                     </a>
@@ -325,7 +335,7 @@
                                     </tr>
                                     <tr>
                                         <th class="order">OBSERVACION CARTERA:</th>
-                                        @if ($order->seller_status == 'Aprobado' && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                        @if ($order->seller_status == 'Aprobado' && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Aprobado']) && in_array($order->dispatch_status, ['Pendiente', 'Aprobado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
                                             <td>
                                                 <div class="form-group c_form_group">
                                                     <textarea class="form-control" id="wallet_observation_c" name="wallet_observation_c" cols="30" rows="3">{{ $order->wallet_observation }}</textarea>
@@ -335,7 +345,7 @@
                                             <td class="order">{{ $order->wallet_observation }}</td>
                                         @endif
                                         <th class="order">CAR. OFC - DCO:</th>
-                                        @if ($order->seller_status == 'Aprobado' && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                        @if ($order->seller_status == 'Aprobado' && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Aprobado']) && in_array($order->dispatch_status, ['Pendiente', 'Aprobado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
                                             <td class="order">
                                                 <div class="row">
                                                     <div class="col-lg-6">
@@ -355,7 +365,7 @@
                                         @else
                                             <td class="order">{{ is_null($order->wallet_dispatch_official) || is_null($order->wallet_dispatch_document) ? '-' : $order->wallet_dispatch_official . ' % - ' . $order->wallet_dispatch_document . ' %' }}</td>
                                         @endif
-                                        @if ($order->seller_status == 'Aprobado' && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                        @if ($order->seller_status == 'Aprobado' && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Aprobado']) && in_array($order->dispatch_status, ['Pendiente', 'Aprobado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
                                             <th class="order text-center" colspan="2">
                                                 <button type="button" class="btn btn-primary" id="ObservationOrderButton" onclick="ObservationOrder({{ $order->id }})" title="Guardar observacion y OFC - DCO cartera.">
                                                     <i class="fas fa-floppy-disk mr-2"></i> <b>GUARDAR OBSERVACION OFC - DCO</b>
@@ -381,38 +391,45 @@
                 <div class="card mt-2">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                            @if((in_array($order->seller_status, ['Pendiente', 'Aprobado']) && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Suspendido', 'En mora', 'Aprobado'])) && (in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA', 'VENDEDOR']) || $order->seller_user_id == Auth::user()->id))
+                            @if((in_array($order->seller_status, ['Pendiente', 'Aprobado']) && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Suspendido', 'En mora', 'Aprobado', 'Autorizado'])) && (in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA', 'VENDEDOR']) || $order->seller_user_id == Auth::user()->id))
                                 <li class="nav-item ml-auto">
                                 </li>
-                                @if($order->order_details->where('status', 'Cancelado')->count() > 0 && in_array($order->seller_status, ['Pendiente', 'Aprobado']) && in_array($order->wallet_status, ['Pendiente']))
+                                @if($order->order_details->where('status', 'Cancelado')->count() > 0 && in_array($order->seller_status, ['Pendiente']) && in_array($order->wallet_status, ['Pendiente']))
                                 <li class="nav-item ml-2">
                                     <a class="nav-link active bg-info" type="button" onclick="PendingOrderDetails()" title="Devolver detalles de pedido.">
                                         <i class="fas fa-arrows-rotate mr-2"></i> <b>DEVOLVER</b>
                                     </a>
                                 </li>
                                 @endif
-                                @if($order->order_details->whereIn('status', ['Agotado'])->count() > 0 && in_array($order->seller_status, ['Aprobado']) && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Aprobado']) && !in_array($order->dispatch_status, ['Despachado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                @if($order->order_details->whereIn('status', ['Agotado'])->count() > 0 && in_array($order->seller_status, ['Aprobado']) && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Autorizado']) && !in_array($order->dispatch_status, ['Despachado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
                                 <li class="nav-item ml-2">
                                     <a class="nav-link active bg-warning" style="color: white !important;" type="button" onclick="AllowOrderDetails()" title="Permitir detalles de pedido.">
                                         <i class="fas fa-key-skeleton mr-2"></i> <b>PERMITIR</b>
                                     </a>
                                 </li>
                                 @endif
-                                @if($order->order_details->whereIn('status', ['Pendiente', 'Cancelado', 'Suspendido'])->count() > 0 && in_array($order->wallet_status, ['Parcialmente Aprobado', 'Aprobado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                @if($order->order_details->whereIn('status', ['Pendiente', 'Cancelado', 'Suspendido'])->count() > 0 && in_array($order->wallet_status, ['Parcialmente Aprobado', 'Aprobado']) && !in_array($order->dispatch_status, ['Despachado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
                                 <li class="nav-item ml-2">
                                     <a class="nav-link active bg-success" type="button" onclick="ApproveOrderDetails()" title="Aprobar detalles de pedido.">
                                         <i class="fas fa-check mr-2"></i> <b>APROBAR</b>
                                     </a>
                                 </li>
                                 @endif
-                                @if($order->order_details->whereIn('status', ['Pendiente', 'Suspendido', 'Aprobado'])->count() > 0)
+                                @if($order->order_details->whereIn('status', ['Pendiente', 'Cancelado', 'Suspendido'])->count() > 0 && in_array($order->wallet_status, ['Autorizado']) && !in_array($order->dispatch_status, ['Despachado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                <li class="nav-item ml-2">
+                                    <a class="nav-link active bg-success" type="button" onclick="AuthorizeOrderDetails()" title="Autorizar detalles de pedido.">
+                                        <i class="fas fa-check mr-2"></i> <b>AUTORIZAR</b>
+                                    </a>
+                                </li>
+                                @endif
+                                @if($order->order_details->whereIn('status', ['Pendiente', 'Suspendido', 'Aprobado', 'Autorizado'])->count() > 0)
                                 <li class="nav-item ml-2">
                                     <a class="nav-link active bg-danger" type="button" onclick="CancelOrderDetails()" title="Cancelar detalles de pedido.">
                                         <i class="fas fa-xmark mr-2"></i> <b>CANCELAR</b>
                                     </a>
                                 </li>
                                 @endif
-                                @if($order->order_details->whereIn('status', ['Pendiente', 'Aprobado'])->count() > 0 && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Suspendido', 'En mora']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
+                                @if($order->order_details->whereIn('status', ['Pendiente', 'Aprobado', 'Autorizado'])->count() > 0 && in_array($order->seller_status, ['Aprobado']) && in_array($order->wallet_status, ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Suspendido', 'En mora', 'Autorizado']) && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']))
                                 <li class="nav-item ml-2">
                                     <a class="nav-link active bg-secondary" type="button" onclick="SuspendOrderDetails()" title="Suspender detalles de pedido.">
                                         <i class="fas fa-clock-rotate-left mr-2"></i> <b>SUSPENDER</b>

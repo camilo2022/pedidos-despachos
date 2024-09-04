@@ -98,10 +98,12 @@ function IndexOrderDetailModalCleaned(order, sizes) {
         } else if ((isAdministrador() || isCartera()) && ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Autorizado', 'Suspendido', 'En mora'].includes(order.wallet_status) && order.dispatch_status != 'Despachado') {
             switch (order_detail.status) {
                 case 'Agotado':
-                    btn += `<a onclick="AllowOrderDetail(${order_detail.id})" type="button"
-                    class="btn btn-warning btn-sm mr-2 btn-order" title="Permitir detalle de pedido.">
-                        <i class="fas fa-key-skeleton text-white"></i>
-                    </a>`;
+                    if(['Aprobado', 'Autorizado', 'Parcialmente Aprobado'].includes(order.wallet_status)) {
+                        btn += `<a onclick="AllowOrderDetail(${order_detail.id})" type="button"
+                        class="btn btn-warning btn-sm mr-2 btn-order" title="Permitir detalle de pedido.">
+                            <i class="fas fa-key-skeleton text-white"></i>
+                        </a>`;
+                    }
 
                     btn += `<a onclick="EditOrderDetailModal(${order_detail.id})" type="button"
                     class="btn btn-primary btn-sm mr-2 btn-order" title="Editar detalle de pedido.">
@@ -115,12 +117,12 @@ function IndexOrderDetailModalCleaned(order, sizes) {
                     </a>`;
 
                     if(['Parcialmente Aprobado', 'Aprobado', 'Autorizado'].includes(order.wallet_status)) {
-                        if(order.seller_user.title == 'VENDEDOR ESPECIAL') {
+                        if(['Autorizado'].includes(order.wallet_status)) {
                             btn += `<a onclick="AuthorizeOrderDetail(${order_detail.id})" type="button"
                             class="btn btn-success btn-sm mr-2 btn-order" title="Autorizar detalle de pedido.">
                                 <i class="fas fa-check text-white"></i>
                             </a>`;
-                        } else {
+                        } else if(['Aprobado', 'Parcialmente Aprobado'].includes(order.wallet_status)) {
                             btn += `<a onclick="ApproveOrderDetail(${order_detail.id})" type="button"
                             class="btn btn-success btn-sm mr-2 btn-order" title="Aprobar detalle de pedido.">
                                 <i class="fas fa-check text-white"></i>
@@ -140,10 +142,17 @@ function IndexOrderDetailModalCleaned(order, sizes) {
                     break;
                 case 'Cancelado':
                     if(['Parcialmente Aprobado', 'Aprobado', 'Autorizado'].includes(order.wallet_status)) {
-                        btn += `<a onclick="ApproveOrderDetail(${order_detail.id})" type="button"
-                        class="btn btn-success btn-sm mr-2 btn-order" title="Aprobar detalle de pedido.">
-                            <i class="fas fa-check text-white"></i>
-                        </a>`;
+                        if(['Autorizado'].includes(order.wallet_status)) {
+                            btn += `<a onclick="AuthorizeOrderDetail(${order_detail.id})" type="button"
+                            class="btn btn-success btn-sm mr-2 btn-order" title="Autorizar detalle de pedido.">
+                                <i class="fas fa-check text-white"></i>
+                            </a>`;
+                        } else if(['Aprobado', 'Parcialmente Aprobado'].includes(order.wallet_status)) {
+                            btn += `<a onclick="ApproveOrderDetail(${order_detail.id})" type="button"
+                            class="btn btn-success btn-sm mr-2 btn-order" title="Aprobar detalle de pedido.">
+                                <i class="fas fa-check text-white"></i>
+                            </a>`;
+                        }
                     }
                     break;
                 case 'Suspendido':

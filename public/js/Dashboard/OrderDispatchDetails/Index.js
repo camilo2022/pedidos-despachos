@@ -84,7 +84,7 @@ function IndexOrderDispatchDetailModalCleaned(orderDispatch, sizes) {
                 }
                 break;
             case 'Cancelado':
-                if(['Pendiente'].includes(orderDispatch.dispatch_status)) {
+                if(['Pendiente'].includes(orderDispatch.dispatch_status) && ['Aprobado'].includes(order_dispatch_detail.order_detail.status)) {
                     btn += `<a onclick="PendingOrderDispatchDetail(${order_dispatch_detail.id})" type="button"
                     class="btn btn-info btn-sm mr-2" title="Habilitar detalle de la orden de despacho.">
                         <i class="fas fa-arrows-rotate text-white"></i>

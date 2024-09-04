@@ -889,7 +889,7 @@ class OrderController extends Controller
         try {
             $order = Order::with('client', 'order_details')->findOrFail($request->input('id'));
 
-            $order->order_details()->whereIn('status', ['Suspendido'])->update(['status' => 'Cancelado', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
+            $order->order_details()->whereNotIn('status', ['Autorizado', 'Agotado'])->update(['status' => 'Cancelado', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
 
             $order->wallet_dispatch_official = $order->wallet_dispatch_official ?? $order->seller_dispatch_official;
             $order->wallet_dispatch_document = $order->wallet_dispatch_document ?? $order->seller_dispatch_document;
