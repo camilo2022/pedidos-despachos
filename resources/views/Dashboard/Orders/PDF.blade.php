@@ -173,7 +173,7 @@
                     @php($quantities = 0)
                     <tr>
                         <td class="cell fz-10">
-                            <a href="https://catalogo.orgbless.com/{{ $order_detail->product->code }}">{{ $order_detail->product->code }}</a>
+                            <a href="{{ route('Public.Catalogo.Referencia', ['referecia' => $order_detail->product->code]) }}">{{ $order_detail->product->code }}</a>
                         </td>
                         <td class="cell fz-10">
                             {{ $order_detail->color->name . ' - ' . $order_detail->color->code }}

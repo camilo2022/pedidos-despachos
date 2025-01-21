@@ -1,6 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
-use Carbon\Carbon;
+
 use App\Models\User;
 use App\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
@@ -19,6 +20,7 @@ use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\ModelWarehouse;
 use App\Models\Warehouse;
+use App\Services\UserService;
 use App\Traits\ApiMessage;
 use App\Traits\Titles;
 use App\Traits\Zones;
@@ -36,6 +38,13 @@ class UserController extends Controller
     use Titles;
     use Zones;
 
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index()
     {
         try {
@@ -48,26 +57,7 @@ class UserController extends Controller
     public function indexQuery(UserIndexQueryRequest $request)
     {
         try {
-            $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
-            $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
-
-            $users = User::with('roles', 'permissions', 'business')
-                ->when($request->filled('search'),
-                    function ($query) use ($request) {
-                        $query->search($request->input('search'));
-                    }
-                )
-                ->when($request->filled('start_date') && $request->filled('end_date'),
-                    function ($query) use ($start_date, $end_date) {
-                        $query->filterByDate($start_date, $end_date);
-                    }
-                )
-                ->withTrashed()
-                ->when(Auth::user()->title !== 'SUPER ADMINISTRADOR', function ($query) {
-                    $query->where('business_id', Auth::user()->business_id);
-                })
-                ->orderBy($request->input('column'), $request->input('dir'))
-                ->paginate($request->input('perPage'));
+            $users = $this->userService->getAllUsers($request);
 
             return $this->successResponse(
                 new UserIndexQueryCollection($users),
@@ -121,18 +111,7 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
         try {
-            $user = new User();
-            $user->name = $request->input('name');
-            $user->last_name = $request->input('last_name');
-            $user->document_number = $request->input('document_number');
-            $user->phone_number = $request->input('phone_number');
-            $user->address = $request->input('address');
-            $user->email = $request->input('email');
-            $user->password = Hash::make($request->input('password'));
-            $user->title = $request->input('title');
-            $user->zone = $request->input('zone');
-            $user->business_id = Auth::user()->business_id;
-            $user->save();
+            $user = $this->userService->createUser($request);
 
             $user->assignRole(['Dashboard']);
             $user->givePermissionTo('Dashboard');
@@ -172,7 +151,7 @@ class UserController extends Controller
     public function edit($id)
     {
         try {
-            $user = User::findOrFail($id);
+            $user = $this->userService->getUserById($id);
             $titles = $this->titles();
             $zones = $this->zones();
 
@@ -207,16 +186,7 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, $id)
     {
         try {
-            $user = User::findOrFail($id);
-            $user->name = $request->input('name');
-            $user->last_name = $request->input('last_name');
-            $user->document_number = $request->input('document_number');
-            $user->phone_number = $request->input('phone_number');
-            $user->address = $request->input('address');
-            $user->email = $request->input('email');
-            $user->title = $request->input('title');
-            $user->zone = $request->input('zone');
-            $user->save();
+            $user = $this->userService->updateUser($request, $id);
 
             return $this->successResponse(
                 $user,
@@ -253,7 +223,7 @@ class UserController extends Controller
     public function show($id)
     {
         try {
-            $user = User::findOrFail($id);
+            $user = $this->userService->getUserById($id);
 
             return $this->successResponse(
                 [
@@ -284,9 +254,7 @@ class UserController extends Controller
     public function password(UserPasswordRequest $request, $id)
     {
         try {
-            $user = User::findOrFail($id);
-            $user->password = Hash::make($request->input('password'));
-            $user->save();
+            $user = $this->userService->passwordUser($request, $id);
 
             return $this->successResponse(
                 $user,
@@ -323,7 +291,8 @@ class UserController extends Controller
     public function delete(UserDeleteRequest $request)
     {
         try {
-            $user = User::findOrFail($request->input('id'))->delete();
+            $user = $this->userService->deleteUser($request);
+
             return $this->successResponse(
                 $user,
                 'El usuario fue eliminado exitosamente.',
@@ -351,7 +320,8 @@ class UserController extends Controller
     public function restore(UserRestoreRequest $request)
     {
         try {
-            $user = User::withTrashed()->findOrFail($request->input('id'))->restore();
+            $user = $this->userService->restoreUser($request);
+
             return $this->successResponse(
                 $user,
                 'El usuario fue restaurado exitosamente.',

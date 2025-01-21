@@ -4,10 +4,10 @@ namespace App\Traits;
 
 trait Trademark
 {
-	private function trademark($string) : string
+	private function trademark(string $string) : string
     {
         $codeMayuscula = strtoupper($string);
-    
+
         $mappingCodeTrademark = [
             '1' => 'ZARETH PREMIUM',
             '2' => 'STARA GIRLS',
@@ -18,6 +18,7 @@ trait Trademark
             '7' => 'ZARETH',
             '8' => 'BLESS 23',
             '9' => 'SHIREL',
+            'R' => 'ZARETH REBEL`S',
             'H' => 'STARA MEN',
             'E' => function($code) {
                 if (substr($code, 0, 2) == 'EL') {
@@ -129,16 +130,16 @@ trait Trademark
             'A' => 'ALPHA LEGACY',
             'O' => 'BLESS ORIGINAL'
         ];
-    
+
         $firstChart = $codeMayuscula[0];
-    
+
         if (array_key_exists($firstChart, $mappingCodeTrademark)) {
             $trademark = $mappingCodeTrademark[$firstChart];
-    
+
             if (is_callable($trademark)) {
                 $trademark = $trademark($codeMayuscula);
             }
-    
+
             return $trademark;
         } else {
             return 'SIN DEFINIR';

@@ -36,28 +36,6 @@ class BusinessController extends Controller
     public function index()
     {
         try {
-            /* $cities = DB::connection('firebird')->table('CIUDANE')->select('PAIS.NOMBRE AS PAIS', 'CIUDANE.DEPARTAMENTO AS DEPARTAMENTO', 'CIUDANE.NOMBRE AS CIUDAD', 'CIUDANE.CODIGO AS CODIGO')
-            ->where('CIUDANEID', '>', 12)
-            ->where('CIUDANEID', '<>', 1133)
-            ->join('PAIS', 'PAIS.PAISID', '=', 'CIUDANE.PAISID')->get();
-            
-            foreach($cities->groupBy('DEPARTAMENTO') as $departament => $items) {
-                $depa = Departament::where('name', $departament)->first();
-                $depa = $depa ? $depa : new Departament();
-                $depa->name = mb_convert_encoding($departament, 'ISO-8859-1', 'UTF-8');
-                $depa->country_id = 1;
-                $depa->save();
-
-                foreach($items as $item){
-                    $city = City::where('name', $item->CIUDAD)->where('departament_id', $depa->id)->first();
-                    $city = $city ? $city : new City();
-                    $city->departament_id = $depa->id;
-                    $city->name = mb_convert_encoding($item->CIUDAD, 'ISO-8859-1', 'UTF-8');
-                    $city->code = $item->CODIGO;
-                    $city->save();
-                }
-            } */
-
             return view('Dashboard.Businesses.Index');
         } catch (Exception $e) {
             return back()->with('danger', 'Ocurrió un error al cargar la vista: ' . $e->getMessage());
@@ -112,7 +90,7 @@ class BusinessController extends Controller
         try {
             if($request->filled('country')) {
                 $departaments = Departament::with('country')->whereHas('country', fn($query) => $query->where('name', $request->input('country')))->get();
-                
+
                 return $this->successResponse(
                     [
                         'departaments' => $departaments
@@ -124,7 +102,7 @@ class BusinessController extends Controller
 
             if($request->filled('departament')) {
                 $cities = City::with('departament')->whereHas('departament', fn($query) => $query->where('name', $request->input('departament')))->get();
-                
+
                 return $this->successResponse(
                     [
                         'cities' => $cities
@@ -169,7 +147,7 @@ class BusinessController extends Controller
             $business->order_notify_email = $request->input('order_notify_email');
             $business->dispatch_footer = $request->input('dispatch_footer');
             $business->packing_footer = $request->input('packing_footer');
-            $business->save();            
+            $business->save();
 
             if ($request->hasFile('letterhead')) {
                 $file = new File();

@@ -29,6 +29,7 @@ class BusinessSeeder extends Seeder
                 gestiondecobranza@organizacionbless.com.co o llame al +57 321 7770013.
                 Vendedor Asignado: Para consultas sobre productos o para realizar pedidos adicionales, comuniquese
                 directamente con su vendedor asignado.',
+            'order_notify_email' => 'gestiondecobranza@organizacionbless.com.co',
             'dispatch_footer' => '',
             'packing_footer' => 'Está caja es propiedad de la ORGANIZACIÓN BLESS S.A.S, en caso de pérdida favor comunicarse a los siguientes números de contacto
                 Tel:  (7) 5956487           Cel:  3107506812 - 3112520687'
@@ -48,6 +49,7 @@ class BusinessSeeder extends Seeder
                 carteramed@organizacionbless.com.co o llame al +57 313 5563653.
                 Vendedor Asignado: Para consultas sobre productos o para realizar pedidos adicionales, comuniquese
                 directamente con su vendedor asignado.',
+            'order_notify_email' => 'carteramed@organizacionbless.com.co',
             'dispatch_footer' => '',
             'packing_footer' => 'Está caja es propiedad de la ORGANIZACIÓN BLESS S.A.S, en caso de pérdida favor comunicarse a los siguientes números de contacto
                 Tel:  (7) 5956487           Cel:  3144167512 - 3135563653'

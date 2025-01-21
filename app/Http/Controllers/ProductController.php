@@ -63,7 +63,7 @@ class ProductController extends Controller
                         $query->filterByDate($start_date, $end_date);
                     }
                 )
-                ->withTrashed()                 
+                ->withTrashed()
                 ->orderBy($request->input('column'), $request->input('dir'))
                 ->paginate($request->input('perPage'));
 
@@ -143,14 +143,14 @@ class ProductController extends Controller
                 $response = $this->file($request->file('photo'), $request->input('product_id'), 'PORTADA', 'Products/');
                 array_push($messages->{$response->type}, $response->message);
             }
-            
+
             if ($request->hasFile('photos')) {
                 foreach ($request->file('photos') as $photo) {
                     $response = $this->file($photo, $request->input('product_id'), 'IMAGEN', 'Products/');
                     array_push($messages->{$response->type}, $response->message);
                 }
             }
-            
+
             if ($request->hasFile('videos')) {
                 foreach ($request->file('videos') as $video) {
                     $response = $this->file($video, $request->input('product_id'), 'VIDEO', 'Products/');
@@ -190,7 +190,7 @@ class ProductController extends Controller
                 500
             );
         }
-    }    
+    }
 
     private function file($document, $model_id, $type, $folder)
     {
@@ -349,18 +349,18 @@ class ProductController extends Controller
             $user = env('API_SIESA_USER');
             $password = env('API_SIESA_PASSWORD');
 
-            $guzzleHttpClient = new GuzzleHttpClient(['base_uri' => 'http://45.76.251.153']);
+            $guzzleHttpClient = new GuzzleHttpClient(['base_uri' => 'http://45.76.251.153/API_GT/api']);
 
-            $auth = $guzzleHttpClient->request('POST', '/API_GT/api/login/authenticate', [
+            $auth = $guzzleHttpClient->request('POST', '/login/authenticate', [
                 'form_params' => [
                     'Username' => $user,
                     'Password' => $password,
                 ]
             ]);
-            
+
             $token = str_replace('"', '', $auth->getBody()->getContents());
 
-            $query = $guzzleHttpClient->request('GET', "http://45.76.251.153/API_GT/api/orgBless/getInvPorBodega?Referencia={$referencia}&CentroOperacion=001", [
+            $query = $guzzleHttpClient->request('GET', "/orgBless/getInvPorBodega?Referencia={$referencia}&CentroOperacion=001", [
                 'headers' => [ 'Authorization' => "Bearer {$token}"],
             ]);
 
@@ -373,19 +373,19 @@ class ProductController extends Controller
             });
 
             $codes = $items->pluck('Referencia')->unique()->values();
-            
+
             foreach($codes as $code) {
 
-                $auth = $guzzleHttpClient->request('POST', '/API_GT/api/login/authenticate', [
+                $auth = $guzzleHttpClient->request('POST', '/login/authenticate', [
                     'form_params' => [
                         'Username' => $user,
                         'Password' => $password,
                     ]
                 ]);
-                
+
                 $token = str_replace('"', '', $auth->getBody()->getContents());
 
-                $query = $guzzleHttpClient->request('GET', "http://45.76.251.153/API_GT/api/orgBless/getInfoReferencia?Referencia={$referencia}", [
+                $query = $guzzleHttpClient->request('GET', "/orgBless/getInfoReferencia?Referencia={$referencia}", [
                     'headers' => [ 'Authorization' => "Bearer {$token}"],
                 ]);
 
@@ -394,7 +394,7 @@ class ProductController extends Controller
                 $item = empty($item->detail) ? collect([]) : collect($item->detail);
 
                 $search = $items->where('Referencia', $code)->first();
-                
+
                 $product = Product::where('code', $this->cleaned($code))->withTrashed()->first();
                 $product = $product ? $product : new Product();
                 $product->item = $item->first() ? $item->first()->Item : $search->Item;
@@ -412,7 +412,7 @@ class ProductController extends Controller
                 $sizes = Size::whereIn('code', $sizesProduct)->get();
                 $colors = Color::whereIn('code', $colorsProduct)->get();
                 $warehouses = Warehouse::whereIn('code', $warehousesProduct)->where(fn($query) => $query->where('to_transit', true)->orWhere('to_discount', true))->get();
-    
+
                 Inventory::with('warehouse')->where('product_id', $product->id)->whereHas('warehouse', fn($query) => $query->where('code', '<>', 'CUTCOR'))->where('system', 'SIESA')->update(['quantity' => 0]);
 
                 foreach($warehouses as $warehouse) {
@@ -475,7 +475,7 @@ class ProductController extends Controller
             foreach($codes as $code) {
 
                 $search = $items->where('REFERENCIA', $code)->first();
-                
+
                 $product = Product::where('code', $this->cleaned($code))->withTrashed()->first();
                 $product = $product ? $product : new Product();
                 $product->item = is_null($product->item) ? '-' : $product->item;
@@ -485,7 +485,7 @@ class ProductController extends Controller
                 $product->price = is_null($product->price) ? 79900.00 : $product->price;
                 $product->description = $search ? trim(mb_convert_encoding($search->DESCRIPCION, 'ISO-8859-1', 'UTF-8')) : 'NO ENCONTRADO';
                 $product->save();
-                
+
                 $sizesProduct = $items->where('REFERENCIA', $code)->pluck('TALLA')->unique()->values();
                 $colorsProduct = $items->where('REFERENCIA', $code)->pluck('COLOR')->unique()->values();
                 $warehousesProduct = $items->where('REFERENCIA', $code)->pluck('CODBOD')->unique()->values();
@@ -493,7 +493,7 @@ class ProductController extends Controller
                 $sizes = Size::whereIn('code', $sizesProduct)->get();
                 $colors = Color::whereIn('code', $colorsProduct)->get();
                 $warehouses = Warehouse::whereIn('code', $warehousesProduct)->where(fn($query) => $query->where('to_transit', true)->orWhere('to_discount', true))->get();
-    
+
                 Inventory::with('warehouse')->where('product_id', $product->id)->whereHas('warehouse', fn($query) => $query->where('code', '<>', 'CUTCOR'))->where('system', 'VISUAL TNS')->update(['quantity' => 0]);
 
                 foreach($warehouses as $warehouse) {
@@ -530,7 +530,7 @@ class ProductController extends Controller
         }
     }
 
-    private function cleaned($string)
+    private function cleaned(string $string) : string
     {
         try {
             $string = strtoupper($string);
@@ -544,21 +544,21 @@ class ProductController extends Controller
         }
     }
 
-    private function transformDataSiesa($item) 
+    private function transformDataSiesa(object $item) : object
     {
         try {
             $item->Referencia = $this->cleaned($item->Referencia);
             $item->Categoria = $this->cleaned($item->Categoria);
             $item->Marca = $this->trademark($this->cleaned($item->Referencia));
             $item->Precio = $item->Precio == 0 || !$item->Precio ? 79900.00 : $item->Precio;
-            
+
             return $item;
         } catch (Exception $e) {
             return $item;
         }
     }
 
-    private function transformDataTns($item) 
+    private function transformDataTns(object $item) : object
     {
         try {
             $item->CODIGO = $this->cleaned($item->CODIGO);
@@ -580,13 +580,13 @@ class ProductController extends Controller
             }
             $item->TALLA = $array[$item->CONTAR_GUION - 1];
             $item->COLOR = $array[$item->CONTAR_GUION];
-            
+
             return $item;
         } catch (Exception $e) {
             return $item;
         }
     }
-    
+
     public function sync()
     {
         try {
@@ -604,7 +604,7 @@ class ProductController extends Controller
                         'Password' => $password,
                     ]
                 ]);
-                
+
                 $token = str_replace('"', '', $auth->getBody()->getContents());
 
                 $query = $guzzleHttpClient->request('GET', "http://45.76.251.153/API_GT/api/orgBless/getInfoReferencia?Referencia={$code}", [
@@ -625,7 +625,7 @@ class ProductController extends Controller
                     $product->description = trim($items->first()->DescItem);
                     $product->save();
                 }
-            }            
+            }
 
             return 'SUCCESS';
         } catch (Exception $e) {

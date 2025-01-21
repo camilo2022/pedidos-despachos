@@ -3,7 +3,6 @@
 use App\Models\Color;
 use App\Models\Product;
 use App\Models\Size;
-use App\Models\Tone;
 use App\Models\Warehouse;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -20,12 +19,14 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
+            //$table->morphs('model');
             $table->foreignIdFor(Warehouse::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(Product::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(Size::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(Color::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('quantity')->default(0);
-            $table->enum('system', ['SIESA', 'VISUAL TNS', 'BMI', 'PROYECCION'])->nullable();
+            $table->enum('system', ['SIESA', 'VISUAL TNS', 'PORTAL TNS', 'PROYECCION', 'OUTLET'])->nullable()->default(null);
+            $table->index([/*'model_type', 'model_id',*/ 'warehouse_id', 'product_id', 'size_id', 'color_id', 'system'], 'inv_wrh_id_prd_id_sz_id_clr_id_sys_index`')->unique();
             $table->timestamps();
         });
     }

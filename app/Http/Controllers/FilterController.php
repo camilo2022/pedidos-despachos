@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Filter\FilterQueryRequest;
 use App\Http\Requests\Filter\FilterSaveRequest;
 use App\Http\Requests\Filter\FilterUploadRequest;
-use App\Imports\Filter\FilterImport;
+use App\Imports\ExcelImport;
 use App\Models\Color;
 use App\Models\Inventory;
 use App\Models\OrderDetail;
@@ -74,7 +74,7 @@ class FilterController extends Controller
 
                 $products = $products->push($object);
             }
-        
+
             return $this->successResponse(
                 [
                     'products' => $products->sortByDesc('inventory')->values()
@@ -196,7 +196,7 @@ class FilterController extends Controller
                 $orderDetail = OrderDetail::with('order.client', 'order.seller_user', 'order.correria')->findOrFail($detail->order_detail_id);
                 $orderDetail->status = 'Comprometido';
                 $orderDetail->save();
-                
+
                 DB::statement('CALL order_dispatch_status(?)', [$orderDetail->order->id]);
 
                 $orderDispatch = OrderDispatch::where('client_id', $orderDetail->order->client_id)->where('business_id', $orderDetail->order->seller_user->business_id)->where('correria_id', $orderDetail->order->correria_id)->where('dispatch_status', 'Pendiente')->first();
@@ -297,10 +297,10 @@ class FilterController extends Controller
                     'Password' => $password,
                 ]
             ]);
-            
+
             $token = str_replace('"', '', $auth->getBody()->getContents());
 
-            $query = $guzzleHttpClient->request('GET', "http://45.76.251.153/API_GT/api/orgBless/getInvPorBodega?Referencia={$product->code}&CentroOperacion=001&Extension2={$color->code}", [
+            $query = $guzzleHttpClient->request('GET', "/API_GT/api/orgBless/getInvPorBodega?Referencia={$product->code}&CentroOperacion=001&Extension2={$color->code}", [
                 'headers' => [ 'Authorization' => "Bearer {$token}"],
             ]);
 
@@ -361,7 +361,7 @@ class FilterController extends Controller
             ->where('color_id', $color->id)
             ->where('system', 'SIESA')
             ->groupBy('products.code', 'colors.name', 'inventories.warehouse_id');
-            
+
             $items = $items->get();
 
             $processedProduct = $items->whereIn('warehouse', $warehouses->where('to_transit', true)->pluck('id')->toArray());
@@ -472,7 +472,7 @@ class FilterController extends Controller
             ->where('color_id', $color->id)
             ->where('system', 'VISUAL TNS')
             ->groupBy('products.code', 'colors.name', 'inventories.warehouse_id');
-            
+
             $items = $items->get();
 
             $processedProduct = $items->whereIn('warehouse', $warehouses->where('to_transit', true)->pluck('id')->toArray());
@@ -531,7 +531,7 @@ class FilterController extends Controller
             ->where('color_id', $color->id)
             ->where('system', 'BMI')
             ->groupBy('products.code', 'colors.name', 'inventories.warehouse_id');
-            
+
             $items = $items->get();
 
             $processedProduct = $items->whereIn('warehouse', $warehouses->where('to_transit', true)->pluck('id')->toArray());
@@ -613,7 +613,7 @@ class FilterController extends Controller
             ->where('product_id', $product->id)
             ->where('color_id', $color->id)
             ->groupBy('products.code', 'colors.name');
-            
+
             $items = $items->get();
 
             $cutted = (object) [
@@ -781,7 +781,7 @@ class FilterController extends Controller
         }
     }
 
-    private function transformDataSiesa($item) 
+    private function transformDataSiesa($item)
     {
         try {
             $object = (object) [
@@ -792,14 +792,14 @@ class FilterController extends Controller
                 'TALLA' => $this->cleaned($item->IdExtension1),
                 'COLOR' => $this->cleaned($item->IdExtension2)
             ];
-            
+
             return $object;
         } catch (Exception $e) {
             return $item;
         }
     }
 
-    private function transformDataTns($item) 
+    private function transformDataTns($item)
     {
         try {
             $item->CODIGO = $this->cleaned($item->CODIGO);
@@ -821,7 +821,7 @@ class FilterController extends Controller
             }
             $item->TALLA = $array[$item->CONTAR_GUION - 1];
             $item->COLOR = $array[$item->CONTAR_GUION];
-            
+
             return $item;
         } catch (Exception $e) {
             return $item;
@@ -830,7 +830,7 @@ class FilterController extends Controller
 
     public function grafic(Request $request)
     {
-        try {            
+        try {
             $sizes = json_encode($request->input('chosenSizes'));
             $cutted = json_encode($request->input('cutted'));
             $filtered = json_encode($request->input('filtered'));
@@ -932,7 +932,7 @@ class FilterController extends Controller
     public function upload(FilterUploadRequest $request)
     {
         try {
-            $items = Excel::toCollection(new FilterImport, $request->file('cuts'))->first();
+            $items = Excel::toCollection(new ExcelImport, $request->file('cuts'))->first();
 
             $warehouse = Warehouse::with('businesses')->where('to_cut', true)->whereHas('businesses', fn($query) => $query->where('businesses.id', Auth::user()->business_id))->firstOrFail();
 

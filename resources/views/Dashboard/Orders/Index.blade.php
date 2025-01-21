@@ -33,9 +33,9 @@
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
                                 @if(in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA', 'FILTRADOR']))
-                                    <li class="nav-item">
+                                    <li class="nav-item ml-auto">
                                         <a class="nav-link active" type="button" onclick="CreateOrderModal()" title="Agregar pedido.">
-                                            <i class="fas fa-plus"></i>
+                                            <i class="fas fa-plus mr-2"></i> <b>AGREGAR PEDIDO</b>
                                         </a>
                                     </li>
                                 @endif
@@ -82,6 +82,6 @@
     <script src="{{ asset('js/Dashboard/Orders/Edit.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Orders/Assent.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Orders/Cancel.js') }}"></script>
-    
+
     <script src="{{ asset('js/Dashboard/Clients/Data.js') }}"></script>
 @endsection

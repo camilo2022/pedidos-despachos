@@ -33,7 +33,7 @@ function AssentOrder(id, status = true) {
                             },
                             success: function(response) {
                                 AssentOrderAjaxSuccess(response);
-                                setTimeout(() => { status ? tableOrders.ajax.reload() : location.reload(); }, 5000);                                
+                                setTimeout(() => { status ? tableOrders.ajax.reload() : location.reload(); }, 5000);
                             },
                             error: function(xhr, textStatus, errorThrown) {
                                 AssentOrderAjaxError(xhr);
@@ -42,6 +42,13 @@ function AssentOrder(id, status = true) {
                     }
                     if(response.data.urlDownload != null) {
                         window.open(response.data.urlDownload, '_blank');
+                    }
+                    if(response.data.hasOwnProperty('error')) {
+                        $(document).Toasts('create', {
+                            class: 'bg-danger',
+                            title: 'ERROR NOTIFICACION DE PEDIDO CARTERA',
+                            body: response.data.message.toUpperCase() + 'Error: ' + response.data.error.toUpperCase()
+                        });
                     }
                     AssentOrderAjaxSuccess(response);
                 },

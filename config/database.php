@@ -97,7 +97,7 @@ return [
             'driver'   => 'firebird',
             'host'     => env('DB_FIREBIRD_HOST', 'localhost'),
             'port'     => env('DB_FIREBIRD_PORT', '3050'),
-            'database' => env('DB_FIREBIRD_DATABASE', 'C:\laragon\www\BLESS2024.GDB'),
+            'database' => env('DB_FIREBIRD_DATABASE', 'C:\laragon\www\BLESS2025.GDB'),
             'username' => env('DB_FIREBIRD_USERNAME', 'sysdba'),
             'password' => env('DB_FIREBIRD_PASSWORD', 'masterkey'),
             'charset'  => env('DB_FIREBIRD_CHARSET', 'UTF8'),

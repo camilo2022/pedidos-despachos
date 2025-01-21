@@ -8,13 +8,11 @@ use App\Http\Requests\Inventory\InventoryIndexQueryRequest;
 use App\Http\Requests\Inventory\InventorySyncBmiRequest;
 use App\Http\Requests\Inventory\InventoryUploadRequest;
 use App\Http\Resources\Inventory\InventoryIndexQueryCollection;
-use App\Imports\Inventory\InventoryImport;
-use App\Imports\Inventory\InventorySyncBmi;
+use App\Imports\ExcelImport;
 use App\Models\Color;
 use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\Size;
-use App\Models\User;
 use App\Models\Warehouse;
 use App\Traits\ApiMessage;
 use App\Traits\ApiResponser;
@@ -37,7 +35,7 @@ class InventoryController extends Controller
     public function index()
     {
         try {
-            $sizes = Size::all();               
+            $sizes = Size::all();
 
             return view('Dashboard.Inventories.Index', compact('sizes'));
         } catch (Exception $e) {
@@ -50,11 +48,11 @@ class InventoryController extends Controller
         try {
             $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
             $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
-            
-            $sizes = Size::all();  
+
+            $sizes = Size::all();
             $inventories = Inventory::select(
-                'warehouses.name AS BODEGA', 'warehouses.code AS CODBOD', 
-                'products.trademark AS MARCA', 'products.code AS REFERENCIA', 
+                'warehouses.name AS BODEGA', 'warehouses.code AS CODBOD',
+                'products.trademark AS MARCA', 'products.code AS REFERENCIA',
                 'colors.name AS COLOR', 'colors.code AS CODCOL', 'inventories.system AS SISTEMA'
             );
             foreach ($sizes as $size) {
@@ -71,6 +69,7 @@ class InventoryController extends Controller
                 }
             )
             ->join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
+            /* ->join('warehouses', 'warehouses.id', 'inventories.model_id') */
             ->join('products', 'products.id', 'inventories.product_id')
             ->join('colors', 'colors.id', 'inventories.color_id')
             ->join('sizes', 'sizes.id', 'inventories.size_id')
@@ -78,13 +77,14 @@ class InventoryController extends Controller
             ->where('quantity', '>', 0)
             ->when(in_array(Auth::user()->title, ['VENDEDOR', 'VENDEDOR ESPECIAL']),
                 function ($query) {
-                    $query->whereIn('warehouse_id', User::with('warehouses')->findOrFail(Auth::user()->id)->warehouses->pluck('id')->toArray());
+                    $query->whereIn('warehouse_id', Auth::user()->warehouses->pluck('id')->toArray());
+                    /* ->whereIn('model_id', Auth::user()->warehouses->pluck('id')->toArray())
+                    ->whereMorphedTo('model', [Warehouse::class]); */
                 }
             )
             ->groupBy(
-                'warehouses.name', 'warehouses.code', 
-                'products.trademark', 'products.code', 
-                'colors.name', 'colors.code', 'inventories.system'
+                'warehouses.name', 'warehouses.code', 'products.trademark',
+                'products.code', 'colors.name', 'colors.code', 'inventories.system'
             );
             $inventories = $inventories->orderBy($request->input('column'), $request->input('dir'))
             ->paginate($request->input('perPage'));
@@ -136,19 +136,21 @@ class InventoryController extends Controller
     public function upload(InventoryUploadRequest $request)
     {
         try {
-            $items = Excel::toCollection(new InventoryImport, $request->file('inventories'))->first();
+            $items = Excel::toCollection(new ExcelImport, $request->file('inventories'))->first();
 
             $sizes = Size::all();
 
             foreach ($items as $item) {
                 $product = Product::where('code', $item['referencia'])->first();
                 $color = Color::where('code', $item['color'])->first();
-                $warehouse = Warehouse::with('businesses')->where('to_discount', true)->where('code', $item['bodega'])->whereHas('businesses', fn($query) => $query->where('businesses.id', Auth::user()->business_id))->firstOrFail();
+                $warehouse = Warehouse::with('businesses')->where('to_discount', true)->where('code', $item['bodega'])->whereHas('businesses', fn($query) => $query->where('businesses.id', Auth::user()->business_id))->first();
 
                 if($product && $color && $warehouse) {
                     foreach ($sizes as $size) {
                         $inventory = Inventory::where('warehouse_id', $warehouse->id)->where('product_id', $product->id)->where('size_id', $size->id)->where('color_id', $color->id)->where('system', 'PROYECCION')->first();
                         $inventory = $inventory ? $inventory : new Inventory();
+                        /* $inventory->model_type = Warehouse::class;
+                        $inventory->model_id = $warehouse->id; */
                         $inventory->warehouse_id = $warehouse->id;
                         $inventory->product_id = $product->id;
                         $inventory->size_id = $size->id;
@@ -190,15 +192,17 @@ class InventoryController extends Controller
     {
         try {
             $inventories = Inventory::select(
-                    'warehouses.name AS BODEGA', 'warehouses.code AS CODBOD', 'products.trademark AS MARCA', 'products.code AS REFERENCIA', 
+                    'warehouses.name AS BODEGA', 'warehouses.code AS CODBOD', 'products.trademark AS MARCA', 'products.code AS REFERENCIA',
                     'colors.name AS COLOR', 'colors.code AS CODCOL', 'sizes.code AS TALLA', 'inventories.quantity AS CANTIDAD', 'inventories.system AS SISTEMA'
                 )
                 ->join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
+                /* ->join('warehouses', 'warehouses.id', 'inventories.model_id') */
                 ->join('products', 'products.id', 'inventories.product_id')
                 ->join('colors', 'colors.id', 'inventories.color_id')
                 ->join('sizes', 'sizes.id', 'inventories.size_id')
                 ->where('warehouses.to_cut', false)
                 ->where('quantity', '>', 0)
+                /* ->whereMorphedTo('model_typr', [Warehouse::class]) */
                 ->get();
 
             return Excel::download(new InventoryExport($inventories), "INVENTARIOS.xlsx");
@@ -236,9 +240,9 @@ class InventoryController extends Controller
                     'Password' => $password,
                 ]
             ]);
-            
+
             $token = str_replace('"', '', $auth->getBody()->getContents());
-            
+
             $query = $guzzleHttpClient->request('GET', 'http://45.76.251.153/API_GT/api/orgBless/getInvPorBodega?CentroOperacion=001', [
                 'headers' => [ 'Authorization' => "Bearer {$token}"],
             ]);
@@ -252,7 +256,7 @@ class InventoryController extends Controller
             });
 
             $codes = $items->pluck('Referencia')->unique()->values();
-            
+
             foreach($codes as $code) {
                 $referencia = trim(collect(explode('-', $code))->last());
 
@@ -262,7 +266,7 @@ class InventoryController extends Controller
                         'Password' => $password,
                     ]
                 ]);
-                
+
                 $token = str_replace('"', '', $auth->getBody()->getContents());
 
                 $query = $guzzleHttpClient->request('GET', "http://45.76.251.153/API_GT/api/orgBless/getInfoReferencia?Referencia={$referencia}", [
@@ -271,12 +275,12 @@ class InventoryController extends Controller
 
                 $item = json_decode($query->getBody()->getContents());
 
-                $item = empty($item->detail) ? collect([]) : collect($item->detail); 
+                $item = empty($item->detail) ? collect([]) : collect($item->detail);
 
                 /* $item = collect([]); */
 
                 $search = $items->where('Referencia', $code)->first();
-                
+
                 $product = Product::where('code', $this->cleaned($code))->first();
                 $product = $product ? $product : new Product();
                 $product->item = $item->first() ? $item->first()->Item : $search->Item;
@@ -354,7 +358,7 @@ class InventoryController extends Controller
             foreach($codes as $code) {
 
                 $search = $items->where('REFERENCIA', $code)->first();
-                
+
                 $product = Product::where('code', $this->cleaned($code))->first();
                 $product = $product ? $product : new Product();
                 $product->item = is_null($product->item) ? '-' : $product->item;
@@ -364,7 +368,7 @@ class InventoryController extends Controller
                 $product->price = is_null($product->price) ? 79900.00 : $product->price;
                 $product->description = $search ? trim(mb_convert_encoding($search->DESCRIPCION, 'ISO-8859-1', 'UTF-8')) : 'NO ENCONTRADO';
                 $product->save();
-                
+
                 $sizesProduct = $items->where('REFERENCIA', $code)->pluck('TALLA')->unique()->values();
                 $colorsProduct = $items->where('REFERENCIA', $code)->pluck('COLOR')->unique()->values();
                 $warehousesProduct = $items->where('REFERENCIA', $code)->pluck('CODBOD')->unique()->values();
@@ -433,27 +437,31 @@ class InventoryController extends Controller
         try {
             Inventory::with('warehouse')->whereHas('warehouse', fn($query) => $query->where('to_discount', true))->where('system', 'BMI')->update(['quantity' => 0]);
 
-            $items = Excel::toCollection(new InventorySyncBmi, $request->file('inventories'))->first();
+            $items = Excel::toCollection(new ExcelImport, $request->file('inventories'))->first();
 
             $items = $items->map(function ($item) {
                 return (object) json_decode(json_encode($this->transformDataBmi($item)), true);
             });
-            
+
             $codes = $items->pluck('Referencia')->unique()->values();
-            
+
             foreach($codes as $code) {
-                
+
                 $product = Product::where('code', $this->cleaned($code))->first();
+
+                if(!$product) {
+                    $product = $this->sync($code);
+                }
 
                 if($product) {
                     $sizesProduct = $items->where('Referencia', $code)->pluck('Talla')->unique()->values();
                     $colorsProduct = $items->where('Referencia', $code)->pluck('Color')->unique()->values();
                     $warehousesProduct = $items->where('Referencia', $code)->pluck('CodBodega')->unique()->values();
-    
+
                     $sizes = Size::whereIn('code', $sizesProduct)->get();
                     $colors = Color::whereIn('code', $colorsProduct)->get();
                     $warehouses = Warehouse::whereIn('code', $warehousesProduct)->where(fn($query) => $query->where('to_transit', true)->orWhere('to_discount', true))->get();
-    
+
                     foreach($warehouses as $warehouse) {
                         foreach($sizes as $size) {
                             foreach($colors as $color) {
@@ -488,7 +496,49 @@ class InventoryController extends Controller
         }
     }
 
-    private function cleaned($string)
+    private function sync(string $code) : object|bool
+    {
+        try {
+            $user = env('API_SIESA_USER');
+            $password = env('API_SIESA_PASSWORD');
+
+            $guzzleHttpClient = new GuzzleHttpClient(['base_uri' => 'http://45.76.251.153/API_GT/api']);
+
+            $auth = $guzzleHttpClient->request('POST', '/login/authenticate', [
+                'form_params' => [
+                    'Username' => $user,
+                    'Password' => $password,
+                ]
+            ]);
+
+            $token = str_replace('"', '', $auth->getBody()->getContents());
+
+            $query = $guzzleHttpClient->request('GET', "/orgBless/getInfoReferencia?Referencia={$code}", [
+                'headers' => [ 'Authorization' => "Bearer {$token}" ],
+            ]);
+
+            $items = json_decode($query->getBody()->getContents());
+
+            $items = empty($items->detail) ? collect([]) : collect($items->detail);
+
+            if($items->first()) {
+                $product = Product::where('code', $this->cleaned($code))->withTrashed()->first();
+                $product = $product ? $product : new Product();
+                $product->item = $items->first()->Item;
+                $product->code = $this->cleaned($code);
+                $product->category = '';
+                $product->trademark = $this->trademark($this->cleaned($code));
+                $product->description = trim($items->first()->DescItem);
+                $product->save();
+            }
+
+            return $product;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    private function cleaned(string $string) : string
     {
         try {
             $string = strtoupper($string);
@@ -502,21 +552,21 @@ class InventoryController extends Controller
         }
     }
 
-    private function transformDataSiesa($item) 
+    private function transformDataSiesa(object $item) : object
     {
         try {
             $item->Referencia = $this->cleaned($item->Referencia);
             $item->Categoria = $this->cleaned($item->Categoria);
             $item->Marca = $this->trademark($this->cleaned($item->Referencia));
             $item->Precio = $item->Precio == 0 ? 79900.00 : $item->Precio;
-            
+
             return $item;
         } catch (Exception $e) {
             return $item;
         }
     }
 
-    private function transformDataTns($item) 
+    private function transformDataTns(object $item) : object
     {
         try {
             $item->CODIGO = $this->cleaned($item->CODIGO);
@@ -544,14 +594,14 @@ class InventoryController extends Controller
                     $item->COLOR = '';
                     break;
             }
-            
+
             return $item;
         } catch (Exception $e) {
             return $item;
         }
     }
 
-    private function transformDataBmi($item) 
+    private function transformDataBmi(array $item) : array
     {
         try {
             $item['Item'] = $this->cleaned($item['Item']);

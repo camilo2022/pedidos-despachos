@@ -35,8 +35,6 @@ class WarehouseController extends Controller
     public function indexQuery(WarehouseIndexQueryRequest $request)
     {
         try {
-            $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
-            $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
             $warehouses = Warehouse::when($request->filled('search'),
                     function ($query) use ($request) {
                         $query->search($request->input('search'));
@@ -48,11 +46,6 @@ class WarehouseController extends Controller
                         ->orWhere('to_transit', true)
                         ->orWhere('to_discount', true)
                         ->orWhere('to_exclusive', true);
-                    }
-                )
-                ->when($request->filled('start_date') && $request->filled('end_date'),
-                    function ($query) use ($start_date, $end_date) {
-                        $query->filterByDate($start_date, $end_date);
                     }
                 )
                 ->withTrashed()
@@ -287,17 +280,17 @@ class WarehouseController extends Controller
                     'Password' => $password,
                 ]
             ]);
-            
+
             $token = str_replace('"', '', $auth->getBody()->getContents());
 
-            $query = $guzzleHttpClient->request('GET', 'http://45.76.251.153/API_GT/api/orgBless/getBodegas?CentroOperacion=001', [
+            $query = $guzzleHttpClient->request('GET', '/API_GT/api/orgBless/getBodegas?CentroOperacion=001', [
                 'headers' => [ 'Authorization' => "Bearer {$token}"],
             ]);
 
             $items = json_decode($query->getBody()->getContents());
 
             $items = empty($items->detail) ? [] : $items->detail;
-            
+
             foreach($items as $item) {
                 $warehouse = Warehouse::withTrashed()->where('code', $item->CodigoBodega)->first();
                 $warehouse = $warehouse ? $warehouse : new Warehouse();
@@ -330,7 +323,7 @@ class WarehouseController extends Controller
     {
         try {
             $items = DB::connection('firebird')->table('BODEGA')->get();
-            
+
             foreach($items as $item) {
                 $warehouse = Warehouse::withTrashed()->where('code', $item->CODIGO)->first();
                 $warehouse = $warehouse ? $warehouse : new Warehouse();
@@ -342,7 +335,7 @@ class WarehouseController extends Controller
                 $warehouse->to_exclusive = in_array($item->CODIGO, ['BCAR']);
                 $warehouse->save();
             }
-            
+
             return $this->successResponse(
                 '',
                 'Las bodegas de Tns fueron sincronizados exitosamente.',

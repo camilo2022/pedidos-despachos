@@ -50,7 +50,6 @@ class RolesAndPermissionSeeder extends Seeder
         $Reports = Role::create(['name' => 'Reports']);
 
         Permission::create(['name' => 'Dashboard'])->syncRoles([$Dashboard]);
-        Permission::create(['name' => 'Dashboard.Chart.Correria'])->syncRoles([$Dashboard]);
 
         Permission::create(['name' => 'Dashboard.Users.Index'])->syncRoles([$Users]);
         Permission::create(['name' => 'Dashboard.Users.Index.Query'])->syncRoles([$Users]);
@@ -137,6 +136,7 @@ class RolesAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'Dashboard.Products.Download'])->syncRoles([$Products]);
         Permission::create(['name' => 'Dashboard.Products.SyncSiesa'])->syncRoles([$Products]);
         Permission::create(['name' => 'Dashboard.Products.SyncTns'])->syncRoles([$Products]);
+        Permission::create(['name' => 'Dashboard.Products.SyncPortal'])->syncRoles([$Products]);
 
         Permission::create(['name' => 'Dashboard.Inventories.Index'])->syncRoles([$Inventories]);
         Permission::create(['name' => 'Dashboard.Inventories.Index.Query'])->syncRoles([$Inventories]);
@@ -145,8 +145,7 @@ class RolesAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'Dashboard.Inventories.Download'])->syncRoles([$Inventories]);
         Permission::create(['name' => 'Dashboard.Inventories.SyncSiesa'])->syncRoles([$Inventories]);
         Permission::create(['name' => 'Dashboard.Inventories.SyncTns'])->syncRoles([$Inventories]);
-        Permission::create(['name' => 'Dashboard.Inventories.SyncBmi.Query'])->syncRoles([$Inventories]);
-        Permission::create(['name' => 'Dashboard.Inventories.SyncBmi'])->syncRoles([$Inventories]);
+        Permission::create(['name' => 'Dashboard.Inventories.SyncPortal'])->syncRoles([$Inventories]);
 
         Permission::create(['name' => 'Dashboard.Clients.Index'])->syncRoles([$Clients]);
         Permission::create(['name' => 'Dashboard.Clients.Index.Query'])->syncRoles([$Clients]);
@@ -246,11 +245,5 @@ class RolesAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'Dashboard.Reports.Dispatches.Index.Query'])->syncRoles([$Reports]);
         Permission::create(['name' => 'Dashboard.Reports.Productions.Index'])->syncRoles([$Reports]);
         Permission::create(['name' => 'Dashboard.Reports.Productions.Index.Query'])->syncRoles([$Reports]);
-        Permission::create(['name' => 'Dashboard.Reports.Trademarks.Index'])->syncRoles([$Reports]);
-        Permission::create(['name' => 'Dashboard.Reports.Trademarks.Index.Query'])->syncRoles([$Reports]);
-        Permission::create(['name' => 'Dashboard.Reports.Trademarks.Download'])->syncRoles([$Reports]);
-        Permission::create(['name' => 'Dashboard.Reports.Products.Index'])->syncRoles([$Reports]);
-        Permission::create(['name' => 'Dashboard.Reports.Products.Index.Query'])->syncRoles([$Reports]);
-        Permission::create(['name' => 'Dashboard.Reports.Products.Download'])->syncRoles([$Reports]);
     }
 }

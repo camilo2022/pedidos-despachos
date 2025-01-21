@@ -74,87 +74,6 @@
         </div>
 
         <div class="row">
-          <section class="col-md-12 col-sm-12 col-lg-6 connectedSortable">
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="fas fa-chart-simple mr-1"></i>
-                  <b>VENTAS VENDEDORES</b>
-                </h3>
-                <div class="card-tools">
-
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="tab-content p-0">
-
-                  <div class="chart tab-pane active" id="revenue-chart" style="position: relative; text-align: center; vertical-align: middle;">
-                    <div class="table-responsive">
-                      <img src="{{ $chartSellers }}" height="300px" style="width: auto%;">
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-          </section>
-          <section class="col-lg-3 col-md-6 col-sm-12 connectedSortable">
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="fas fa-chart-pie mr-1"></i>
-                  <b>VENTAS MARCAS</b>
-                </h3>
-                <div class="card-tools">
-
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="tab-content p-0">
-
-                  <div class="chart tab-pane active" id="revenue-chart" style="position: relative; text-align: center; vertical-align: middle;">
-                    <div class="table-responsive">
-                      <img src="{{ $chartTrademarks }}" height="300px" style="width: auto;">
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-          </section>
-          <section class="col-lg-3 col-md-6 col-sm-12 connectedSortable">
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="fas fa-chart-pie mr-1"></i>
-                  <b>VENTAS ESTADOS</b>
-                </h3>
-                <div class="card-tools">
-
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="tab-content p-0">
-
-                  <div class="chart tab-pane active" id="revenue-chart" style="position: relative; text-align: center; vertical-align: middle;">
-                    <div class="table-responsive">
-                      <img src="{{ $chartStatus }}" height="300px" style="width: auto;">
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-          </section>
-        </div>
-
-        <div class="row">
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
               <span class="info-box-icon bg-info"><i class="far fa-arrows-rotate"></i></span>
@@ -231,50 +150,9 @@
             </div>
           </div>
         </div>
-
-        <div class="row">
-          <section class="col-md-12 col-sm-12 col-lg-12 connectedSortable">
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="fas fa-chart-network mr-1"></i>
-                  <b>REPORTE CORRERIA</b>
-                </h3>
-                <div class="card-tools">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">
-                      <i class="fas fa-bars"></i>
-                    </button>
-                    <div class="dropdown-menu" role="menu">
-                      <a type="button" class="dropdown-item" onclick="GraficDashboardCorreria()">TODAS LAS CORRERIAS</a>
-                      <div class="dropdown-divider"></div>
-                      @foreach ($correrias as $correria)
-                      <a type="button" class="dropdown-item" onclick="GraficDashboardCorreria({{ $correria->id }})">{{ $correria->name }} | {{ $correria->code }}</a>
-                      @endforeach
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="tab-content p-0">
-
-                  <div class="chart tab-pane active" id="revenue-chart" style="position: relative;">
-                    <div class="table-responsive" id="ChartCorreria">
-                      <img src="{{ $chartCorreria }}" height="300px" style="width: auto;">
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-          </section>
-        </div>
     </div>
 </section>
 @endsection
 @section('script')
-  <script src="{{ asset('js/Dashboard/Dashboard/Grafic.js') }}"></script>
     {{-- <script src="{{ asset('js/dist/js/pages/dashboard.js') }}"></script> --}}
 @endsection

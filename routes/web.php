@@ -21,9 +21,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ReportDispatchesController;
 use App\Http\Controllers\ReportProductionsController;
-use App\Http\Controllers\ReportProductsController;
 use App\Http\Controllers\ReportSalesController;
-use App\Http\Controllers\ReportTrademarksController;
 use App\Http\Controllers\RolesAndPermissionsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
@@ -50,7 +48,7 @@ Route::get('/', function () {
     if (Auth::check()) {
         return redirect('/Dashboard');
     } else {
-        return redirect('/Catalogo');
+        return redirect('/login');
     }
 
 });
@@ -62,7 +60,7 @@ Auth::routes(['register' => false]);
 Route::controller(PublicController::class)->group(function () {
     Route::get('/Packages/Detail/{token}', 'packageDetail')->name('Public.Packages.Detail');
     Route::get('/Catalogo', 'catalogo')->name('Public.Catalogo.Index');
-    Route::get('/Catalogo/{referecia}', 'referencia')->name('Public.Catalogo.Referencia');
+    Route::get('/Catalogo/{referecia}/{business_id?}', 'referencia')->name('Public.Catalogo.Referencia');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -71,7 +69,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::controller(HomeController::class)->group(function () {
             Route::get('/', 'index')->middleware('can:Dashboard')->name('Dashboard');
-            Route::post('/Chart/Correria', 'chartCorreria')->middleware('can:Dashboard.Chart.Correria')->name('Dashboard.Chart.Correria');
         });
 
         Route::prefix('/Users')->group(function () {
@@ -202,8 +199,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/Download', 'download')->middleware('can:Dashboard.Inventories.Download')->name('Dashboard.Inventories.Download');
                 Route::post('/SyncSiesa', 'syncSiesa')->middleware('can:Dashboard.Inventories.SyncSiesa')->name('Dashboard.Inventories.SyncSiesa');
                 Route::post('/SyncTns', 'syncTns')->middleware('can:Dashboard.Inventories.SyncTns')->name('Dashboard.Inventories.SyncTns');
-                Route::post('/SyncBmi/Query', 'syncBmiQuery')->middleware('can:Dashboard.Inventories.SyncBmi.Query')->name('Dashboard.Inventories.SyncBmi.Query');
-                Route::post('/SyncBmi', 'syncBmi')->middleware('can:Dashboard.Inventories.SyncBmi')->name('Dashboard.Inventories.SyncBmi');
+                Route::post('/SyncPortal', 'syncPortal')->middleware('can:Dashboard.Inventories.SyncPortal')->name('Dashboard.Inventories.SyncPortal');
             });
         });
 
@@ -356,20 +352,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::prefix('/Productions')->group(function () {
                     Route::get('/Index', 'index')->middleware('can:Dashboard.Reports.Productions.Index')->name('Dashboard.Reports.Productions.Index');
                     Route::post('/Index/Query', 'indexQuery')->middleware('can:Dashboard.Reports.Productions.Index.Query')->name('Dashboard.Reports.Productions.Index.Query');
-                });
-            });
-            Route::controller(ReportTrademarksController::class)->group(function () {
-                Route::prefix('/Trademarks')->group(function () {
-                    Route::get('/Index', 'index')->middleware('can:Dashboard.Reports.Trademarks.Index')->name('Dashboard.Reports.Trademarks.Index');
-                    Route::post('/Index/Query', 'indexQuery')->middleware('can:Dashboard.Reports.Trademarks.Index.Query')->name('Dashboard.Reports.Trademarks.Index.Query');
-                    Route::get('/Download', 'download')->middleware('can:Dashboard.Reports.Trademarks.Download')->name('Dashboard.Reports.Trademarks.Download');
-                });
-            });
-            Route::controller(ReportProductsController::class)->group(function () {
-                Route::prefix('/Products')->group(function () {
-                    Route::get('/Index', 'index')->middleware('can:Dashboard.Reports.Products.Index')->name('Dashboard.Reports.Products.Index');
-                    Route::post('/Index/Query', 'indexQuery')->middleware('can:Dashboard.Reports.Products.Index.Query')->name('Dashboard.Reports.Products.Index.Query');
-                    Route::get('/Download', 'download')->middleware('can:Dashboard.Reports.Products.Download')->name('Dashboard.Reports.Products.Download');
                 });
             });
         });

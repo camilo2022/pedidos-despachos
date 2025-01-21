@@ -17,7 +17,7 @@ use App\Http\Requests\Client\ClientUploadRequest;
 use App\Http\Requests\Client\ClientWalletRequest;
 use App\Http\Requests\Client\ClientWalletsRequest;
 use App\Http\Resources\Client\ClientIndexQueryCollection;
-use App\Imports\Client\ClientImport;
+use App\Imports\ExcelImport;
 use App\Models\City;
 use App\Models\Client;
 use App\Models\Country;
@@ -103,7 +103,7 @@ class ClientController extends Controller
         try {
             if($request->filled('country')) {
                 $departaments = Departament::with('country')->whereHas('country', fn($query) => $query->where('name', $request->input('country')))->get();
-                
+
                 return $this->successResponse(
                     [
                         'departaments' => $departaments
@@ -115,7 +115,7 @@ class ClientController extends Controller
 
             if($request->filled('departament')) {
                 $cities = City::with('departament')->whereHas('departament', fn($query) => $query->where('name', $request->input('departament')))->get();
-                
+
                 return $this->successResponse(
                     [
                         'cities' => $cities
@@ -204,7 +204,7 @@ class ClientController extends Controller
         try {
             if($request->filled('country')) {
                 $departaments = Departament::with('country')->whereHas('country', fn($query) => $query->where('name', $request->input('country')))->get();
-                
+
                 return $this->successResponse(
                     [
                         'departaments' => $departaments
@@ -216,7 +216,7 @@ class ClientController extends Controller
 
             if($request->filled('departament')) {
                 $cities = City::with('departament')->whereHas('departament', fn($query) => $query->where('name', $request->input('departament')))->get();
-                
+
                 return $this->successResponse(
                     [
                         'cities' => $cities
@@ -362,7 +362,7 @@ class ClientController extends Controller
     {
         try {
             $client = Client::withTrashed()->findOrFail($request->input('client_id'));
-            
+
             $wallet = Wallet::where('number_document', $client->client_number_document)->first();
             $wallet = $wallet ? $wallet : new Wallet();
             $wallet->number_document = $client->client_number_document;
@@ -413,7 +413,7 @@ class ClientController extends Controller
 
     public function data(ClientDataRequest $request)
     {
-        try {            
+        try {
             $client = Client::withTrashed()->findOrFail($request->input('client_id'));
             $messages = (object) array('success' => array(), 'warning' => array(), 'error' => array());
 
@@ -423,7 +423,7 @@ class ClientController extends Controller
                 'identity_card' => 'DOCUMENTO DE IDENTIFICACION',
                 'signature_warranty' => 'FIRMA GARANTIA',
             ];
-            
+
             foreach ($fileTypes as $field => $type) {
                 if ($request->hasFile($field)) {
                     $response = $this->file($request->file($field), $request->input('client_id'), $type, 'Clients/');
@@ -477,7 +477,7 @@ class ClientController extends Controller
 
     private function file($document, $model_id, $type, $folder)
     {
-        try {            
+        try {
             $file = File::where('model_type', Client::class)->where('model_id', $model_id)->where('type', $type)->first();
             if ($file) {
                 if (Storage::disk('public')->exists($file->path)) {
@@ -519,7 +519,7 @@ class ClientController extends Controller
 
     private function person($object, $client, $type)
     {
-        try {            
+        try {
             $person = Person::where('client_number_document', $client->client_number_document)->where('type', $type)->first();
             $person = $person ? $person : new Person();
             $person->client_number_document = $client->client_number_document;
@@ -529,7 +529,7 @@ class ClientController extends Controller
             $person->phone_number = $object['phone_number'];
             $person->email = $object['email'];
             $person->save();
-            
+
             return (object) [
                 'type' => 'success',
                 'message' => "La referencia personal/comercial de tipo $type fue guardada exitosamente. "
@@ -551,7 +551,7 @@ class ClientController extends Controller
     {
         try {
             $person = Person::withTrashed()->findOrFail($request->input('id'))->delete();
-            
+
             return $this->successResponse(
                 $person,
                 'La referencia personal/comercial del cliente fue removida exitosamente.',
@@ -685,11 +685,11 @@ class ClientController extends Controller
             );
         }
     }
-    
+
     public function upload(ClientUploadRequest $request)
     {
         try {
-            $wallets = Excel::toCollection(new ClientImport, $request->file('wallets'))->first();
+            $wallets = Excel::toCollection(new ExcelImport, $request->file('wallets'))->first();
 
             $walletsValidate = new ClientWalletsRequest();
             $walletsValidate->merge([
@@ -752,7 +752,7 @@ class ClientController extends Controller
         try {
             $user = env('API_SIESA_USER');
             $password = env('API_SIESA_PASSWORD');
-            
+
             $guzzleHttpClient = new GuzzleHttpClient(['base_uri' => 'http://45.76.251.153']);
 
             $auth = $guzzleHttpClient->request('POST', '/API_GT/api/login/authenticate', [
@@ -761,7 +761,7 @@ class ClientController extends Controller
                     'Password' => $password,
                 ]
             ]);
-            
+
             $token = str_replace('"', '', $auth->getBody()->getContents());
             //?CentroOperacion=001
             $query = $guzzleHttpClient->request('GET', 'http://45.76.251.153/API_GT/api/orgBless/getClientes', [
@@ -822,7 +822,7 @@ class ClientController extends Controller
         try {
             $items = DB::connection('firebird')->table('TERCEROS')
                 ->select(
-                    'TERCEROS.NIT', 'TERCEROS.NITTRI', 'TERCEROS.NOMBRE', 'TERCEROS.DIRECC1', 'TERCEROS.DIRECC2', 'TERCEROS.EMAIL', 'TERCEROS.TELEF1', 'TERCEROS.NOMREGTRI', 
+                    'TERCEROS.NIT', 'TERCEROS.NITTRI', 'TERCEROS.NOMBRE', 'TERCEROS.DIRECC1', 'TERCEROS.DIRECC2', 'TERCEROS.EMAIL', 'TERCEROS.TELEF1', 'TERCEROS.NOMREGTRI',
                     'TERCEROS.TELEF2', 'TERCEROS.CELULAR', 'TERCEROS.EMAIL', 'ZONAS.NOMBRE AS ZONA', 'CIUDANE.NOMBRE AS CIUDANE', 'CIUDANE.DEPARTAMENTO AS DEPARDANE', 'PAIS.NOMBRE as PAISDANE'
                 )
                 ->join('ZONAS', 'ZONAS.ZONAID', 'TERCEROS.ZONA1')
@@ -832,7 +832,7 @@ class ClientController extends Controller
                 ->get()->map(function ($item) {
                     return $this->transformDataTns($item);
                 });
-                
+
             foreach($items as $item) {
                 $item->DIRECC1 = !empty($this->cleaned($item->DIRECC1)) ? $this->cleaned($item->DIRECC1) : (!empty($this->cleaned($item->DIRECC2)) ? $this->cleaned($item->DIRECC2) : 'N/A') ;
                 $item->DIRECC2 = !empty($this->cleaned($item->DIRECC2)) ? $this->cleaned($item->DIRECC2) : $item->DIRECC1 ;
@@ -901,7 +901,7 @@ class ClientController extends Controller
         }
     }
 
-    private function transformDataTns($item) 
+    private function transformDataTns($item)
     {
         $array = explode('-', $item->NIT);
         switch (count($array)) {
@@ -918,7 +918,7 @@ class ClientController extends Controller
                 $item->SUC = "{$array[count($array)-1]}";
                 break;
         }
-        
+
         return $item;
     }
 }

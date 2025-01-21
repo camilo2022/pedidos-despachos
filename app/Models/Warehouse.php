@@ -48,9 +48,4 @@ class Warehouse extends Model implements Auditable
         ->orWhere('name', 'LIKE', '%' . $search . '%')
         ->orWhere('code', 'LIKE', '%' . $search . '%');
     }
-
-    public function scopeFilterByDate($query, $start_date, $end_date)
-    {
-        return $query->whereBetween('created_at', [$start_date, $end_date]);
-    }
 }

@@ -150,6 +150,14 @@ class OrderController extends Controller
                 'Ingrese los datos para hacer la validacion y registro.',
                 204
             );
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('ModelNotFoundException'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
         } catch (Exception $e) {
             return $this->errorResponse(
                 [
@@ -259,7 +267,10 @@ class OrderController extends Controller
             $clients = Client::all();
 
             if($request->filled('client_id')) {
-                $client = Client::with('wallet', 'compra', 'cartera', 'bodega', 'administrador', 'chamber_of_commerce','rut', 'identity_card', 'signature_warranty')->findOrFail($request->input('client_id'));
+                $client = Client::with([
+                    'wallet', 'compra', 'cartera', 'bodega', 'administrador',
+                    'chamber_of_commerce', 'rut', 'identity_card', 'signature_warranty'
+                ])->findOrFail($request->input('client_id'));
 
                 return $this->successResponse(
                     [
@@ -455,10 +466,6 @@ class OrderController extends Controller
 
                 $order_detail->status = $boolean ? 'Pendiente' : 'Agotado';
                 $order_detail->save();
-
-                if($boolean) {
-                    $this->discount($order_detail, $order_detail->product_id, $order_detail->color_id);
-                }
             }
 
             $order->seller_date = Carbon::now()->format('Y-m-d H:i:s');
@@ -478,6 +485,20 @@ class OrderController extends Controller
                     'order' => $order,
                     'urlEmail' => $request->input('email') ? URL::route('Dashboard.Orders.Email', ['id' => $order->id]) : null,
                     'urlDownload' => $request->input('download') ? URL::route('Dashboard.Orders.Download', ['id' => $order->id]) : null
+                ],
+                'El pedido fue asentado exitosamente.',
+                200
+            );
+        } catch (TransportException $e) {
+            return $this->successResponse(
+                [
+                    'order' => $order,
+                    'urlEmail' => $request->input('email') ? URL::route('Dashboard.Orders.Email', ['id' => $order->id]) : null,
+                    'urlDownload' => $request->input('download') ? URL::route('Dashboard.Orders.Download', ['id' => $order->id]) : null,
+                    'error' => [
+                        'message' => $this->getMessage('TransportException'),
+                        'error' => $e->getMessage()
+                    ]
                 ],
                 'El pedido fue asentado exitosamente.',
                 200
@@ -889,7 +910,7 @@ class OrderController extends Controller
         try {
             $order = Order::with('client', 'order_details')->findOrFail($request->input('id'));
 
-            $order->order_details()->whereNotIn('status', ['Autorizado', 'Agotado'])->update(['status' => 'Cancelado', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
+            $order->order_details()->whereNotIn('status', ['Autorizado', 'Agotado', 'Despachado'])->update(['status' => 'Cancelado', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
 
             $order->wallet_dispatch_official = $order->wallet_dispatch_official ?? $order->seller_dispatch_official;
             $order->wallet_dispatch_document = $order->wallet_dispatch_document ?? $order->seller_dispatch_document;
@@ -1232,7 +1253,7 @@ class OrderController extends Controller
                     ->whereNot('users.title', 'VENDEDOR ESPECIAL');
                 }
             )
-            ->when(count($users_id) > 0,
+            ->when(collect($users_id)->isNotEmpty(),
                 function ($query) use ($users_id) {
                     $query->whereIn('orders.seller_user_id', $users_id);
                 }

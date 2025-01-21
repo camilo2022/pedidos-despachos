@@ -24,8 +24,7 @@ class UserIndexQueryRequest extends FormRequest
     public function rules()
     {
         return [
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'column' => ['required', 'in:id,name,last_name,document_number,phone_number,address,email,password,title,zone,business_id,created_at,updated_at,deleted_at'],
             'perPage' => ['required', 'numeric'],
         ];
     }
@@ -33,10 +32,6 @@ class UserIndexQueryRequest extends FormRequest
     public function messages()
     {
         return [
-            'start_date.required' => 'El campo Fecha de inicio es requerido.',
-            'start_date.date' => 'El campo Fecha de inicio debe ser una fecha válida.',
-            'end_date.date' => 'El campo Fecha de fin debe ser una fecha válida.',
-            'end_date.after_or_equal' => 'El campo Fecha de fin debe ser igual o posterior a la Fecha de inicio.',
             'perPage.numeric' => 'El campo Numero de registros por página debe ser un valor numérico.',
             'perPage.required' => 'El campo Numero de registros por página es requerido.'
         ];
@@ -45,8 +40,7 @@ class UserIndexQueryRequest extends FormRequest
     public function attributes()
     {
         return [
-            'start_date' => 'fecha de inicio',
-            'end_date' => 'fecha de fin',
+            'column' => 'columna de la tabla usuarios',
             'perPage' => 'numero de páginas',
         ];
     }

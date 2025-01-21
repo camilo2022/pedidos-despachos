@@ -126,7 +126,7 @@ class OrderDetailController extends Controller
             if($request->filled('product_id')) {
 
                 $product = Product::findOrFail($request->input('product_id'));
-                $colors = Color::with('inventories')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', User::with('warehouses')->findOrFail(Auth::user()->id)->warehouses->pluck('id')->toArray())->where('product_id', $request->input('product_id')))->get();
+                $colors = Color::with('inventories')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', Auth::user()->warehouses->pluck('id')->toArray())->where('product_id', $request->input('product_id')))->get();
 
                 return $this->successResponse(
                     [
@@ -138,7 +138,7 @@ class OrderDetailController extends Controller
                 );
             }
 
-            $products = Product::with('inventories')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', User::with('warehouses')->findOrFail(Auth::user()->id)->warehouses->pluck('id')->toArray()))->orderBy('code', 'ASC')->get();
+            $products = Product::with('inventories')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', Auth::user()->warehouses->pluck('id')->toArray()))->orderBy('code', 'ASC')->get();
 
             return $this->successResponse(
                 [
@@ -163,10 +163,6 @@ class OrderDetailController extends Controller
     {
         try {
             $order = Order::findOrFail($request->input('order_id'));
-
-            if($order->seller_status == 'Aprobado') {
-                $this->discount($request,  $request->input('product_id'), $request->input('color_id'));
-            }
 
             $orderDetail = new OrderDetail();
             $orderDetail->order_id = $request->input('order_id');
@@ -265,7 +261,7 @@ class OrderDetailController extends Controller
             if($request->filled('product_id')) {
 
                 $product = Product::findOrFail($request->input('product_id'));
-                $colors = Color::with('inventories')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', User::with('warehouses')->findOrFail(Auth::user()->id)->warehouses->pluck('id')->toArray())->where('product_id', $request->input('product_id')))->get();
+                $colors = Color::with('inventories')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', Auth::user()->warehouses->pluck('id')->toArray())->where('product_id', $request->input('product_id')))->get();
 
                 return $this->successResponse(
                     [
@@ -277,7 +273,7 @@ class OrderDetailController extends Controller
                 );
             }
 
-            $products = Product::with('inventories')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', User::with('warehouses')->findOrFail(Auth::user()->id)->warehouses->pluck('id')->toArray()))->orderBy('code', 'ASC')->get();
+            $products = Product::with('inventories')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', Auth::user()->warehouses->pluck('id')->toArray()))->orderBy('code', 'ASC')->get();
 
             return $this->successResponse(
                 [
@@ -380,7 +376,7 @@ class OrderDetailController extends Controller
     public function show($id)
     {
         try {
-            $products = Product::with('inventories.color')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', User::with('warehouses')->findOrFail(Auth::user()->id)->warehouses->pluck('id')->toArray()))
+            $products = Product::with('inventories.color')->whereHas('inventories', fn($subQuery) => $subQuery->whereIn('warehouse_id', Auth::user()->warehouses->pluck('id')->toArray()))
             ->orderBy('code', 'ASC')->get()->map(function ($item) {
                 $item->colors = $item->inventories->pluck('color')->unique();
                 return $item;
@@ -611,10 +607,6 @@ class OrderDetailController extends Controller
                         break;
                     }
                 }
-
-                if($boolean) {
-                    $this->discount($orderDetail,  $orderDetail->product_id, $orderDetail->color_id);
-                }
             }
 
             $orderDetail->status = $boolean ? 'Aprobado' : 'Agotado';
@@ -665,8 +657,6 @@ class OrderDetailController extends Controller
             $orderDetail->wallet_user_id = Auth::user()->id;
             $orderDetail->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
             $orderDetail->save();
-
-            $this->discount($orderDetail,  $orderDetail->product_id, $orderDetail->color_id);
 
             DB::statement('CALL order_wallet_status(?)', [$orderDetail->order->id]);
 
@@ -875,7 +865,7 @@ class OrderDetailController extends Controller
                     ->whereNot('users.title', 'VENDEDOR ESPECIAL');
                 }
             )
-            ->when(count($users_id) > 0,
+            ->when(collect($users_id)->isNotEmpty(),
                 function ($query) use ($users_id) {
                     $query->whereIn('orders.seller_user_id', $users_id);
                 }
@@ -911,35 +901,6 @@ class OrderDetailController extends Controller
             }
 
             return $committed;
-        }
-    }
-
-    private function discount($item, $product_id, $color_id)
-    {
-        try {
-            $sizes = Size::all();
-            foreach($sizes as $size) {
-                $inventories = Inventory::where('product_id', $product_id)->where('size_id', $size->id)->where('color_id', $color_id)->where('system', 'PROYECCION')->get();
-                $quantity = $item->{"T$size->code"};
-                foreach($inventories as $inventory) {
-                    if($inventory->quantity == $quantity || $inventory->quantity > $quantity) {
-                        $inventory->quantity -= $quantity;
-                        $inventory->save();
-                        $quantity = 0;
-                    } else if($inventory->quantity < $quantity) {
-                        $aux = $quantity - $inventory->quantity;
-                        $inventory->quantity -= $inventory->quantity;
-                        $inventory->save();
-                        $quantity = $aux;
-                    }
-
-                    if($quantity == 0){
-                        break;
-                    }
-                }
-            }
-        } catch (Exception $e) {
-
         }
     }
 }

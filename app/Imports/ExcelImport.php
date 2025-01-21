@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Imports\Filter;
+namespace App\Imports;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -16,7 +16,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 
 HeadingRowFormatter::default('none');
 
-class FilterImport implements ToCollection, WithHeadingRow, WithEvents
+class ExcelImport implements ToCollection, WithHeadingRow, WithEvents
 {
     public $sheetNames;
     public $sheetData;
