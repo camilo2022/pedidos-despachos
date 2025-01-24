@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Exports\InventoryExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\InventoryIndexQueryRequest;
-use App\Http\Requests\Inventory\InventorySyncBmiRequest;
 use App\Http\Requests\Inventory\InventoryUploadRequest;
 use App\Http\Resources\Inventory\InventoryIndexQueryCollection;
 use App\Imports\ExcelImport;
@@ -243,7 +242,7 @@ class InventoryController extends Controller
 
             $token = str_replace('"', '', $auth->getBody()->getContents());
 
-            $query = $guzzleHttpClient->request('GET', 'http://45.76.251.153/API_GT/api/orgBless/getInvPorBodega?CentroOperacion=001', [
+            $query = $guzzleHttpClient->request('GET', '/API_GT/api/orgBless/getInvPorBodega?CentroOperacion=001', [
                 'headers' => [ 'Authorization' => "Bearer {$token}"],
             ]);
 
@@ -320,7 +319,7 @@ class InventoryController extends Controller
 
             return $this->successResponse(
                 '',
-                'Los productos de Siesa fueron sincronizados exitosamente.',
+                'El inventario de Siesa fueron sincronizados exitosamente.',
                 200
             );
         } catch (Exception $e) {
@@ -398,11 +397,10 @@ class InventoryController extends Controller
 
             return $this->successResponse(
                 '',
-                'Los productos de Tns fueron sincronizados exitosamente.',
+                'El inventario de Visual Tns fueron sincronizados exitosamente.',
                 200
             );
         } catch (Exception $e) {
-            return$e->getMessage();
             return $this->errorResponse(
                 [
                     'message' => $this->getMessage('Exception'),
@@ -413,128 +411,47 @@ class InventoryController extends Controller
         }
     }
 
-    public function syncBmiQuery()
+    public function syncPortal()
     {
         try {
-            return $this->successResponse(
-                '',
-                'Cargue el archivo para hacer la validacion y registro.',
-                204
-            );
-        } catch (Exception $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('Exception'),
-                    'error' => $e->getMessage()
+            $user = env('API_PORTAL_TNS_USER');
+            $password = env('API_PORTAL_TNS_PASSWORD');
+
+            $enterprises = [
+                'BMI' => (object) [
+                    'nit' => env('API_PORTAL_TNS_NIT_BMI'),
+                    'token' => env('API_PORTAL_TNS_TOKEN_BMI')
                 ],
-                500
-            );
-        }
-    }
-
-    public function syncBmi(InventorySyncBmiRequest $request)
-    {
-        try {
-            Inventory::with('warehouse')->whereHas('warehouse', fn($query) => $query->where('to_discount', true))->where('system', 'BMI')->update(['quantity' => 0]);
-
-            $items = Excel::toCollection(new ExcelImport, $request->file('inventories'))->first();
-
-            $items = $items->map(function ($item) {
-                return (object) json_decode(json_encode($this->transformDataBmi($item)), true);
-            });
-
-            $codes = $items->pluck('Referencia')->unique()->values();
-
-            foreach($codes as $code) {
-
-                $product = Product::where('code', $this->cleaned($code))->first();
-
-                if(!$product) {
-                    $product = $this->sync($code);
-                }
-
-                if($product) {
-                    $sizesProduct = $items->where('Referencia', $code)->pluck('Talla')->unique()->values();
-                    $colorsProduct = $items->where('Referencia', $code)->pluck('Color')->unique()->values();
-                    $warehousesProduct = $items->where('Referencia', $code)->pluck('CodBodega')->unique()->values();
-
-                    $sizes = Size::whereIn('code', $sizesProduct)->get();
-                    $colors = Color::whereIn('code', $colorsProduct)->get();
-                    $warehouses = Warehouse::whereIn('code', $warehousesProduct)->where(fn($query) => $query->where('to_transit', true)->orWhere('to_discount', true))->get();
-
-                    foreach($warehouses as $warehouse) {
-                        foreach($sizes as $size) {
-                            foreach($colors as $color) {
-                                $inventory = Inventory::where('warehouse_id', $warehouse->id)->where('product_id', $product->id)->where('size_id', $size->id)->where('color_id', $color->id)->where('system', 'BMI')->first();
-                                $inventory = $inventory ? $inventory : new Inventory();
-                                $inventory->warehouse_id = $warehouse->id;
-                                $inventory->product_id = $product->id;
-                                $inventory->size_id = $size->id;
-                                $inventory->color_id = $color->id;
-                                $inventory->quantity = $items->where('CodBodega', $warehouse->code)->where('Referencia', $code)->where('Talla', $size->code)->where('Color', $color->code)->pluck('Disponible')->sum();
-                                $inventory->system = 'BMI';
-                                $inventory->save();
-                            }
-                        }
-                    }
-                }
-            }
-
-            return $this->successResponse(
-                '',
-                'El inventario de Bmi fueron cargados exitosamente.',
-                201
-            );
-        } catch (Exception $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('Exception'),
-                    'error' => $e->getMessage()
+                'GROUP' => (object) [
+                    'nit' => env('API_PORTAL_TNS_NIT_GROUP'),
+                    'token' => env('API_PORTAL_TNS_TOKEN_GROUP')
                 ],
-                500
-            );
-        }
-    }
-
-    private function sync(string $code) : object|bool
-    {
-        try {
-            $user = env('API_SIESA_USER');
-            $password = env('API_SIESA_PASSWORD');
-
-            $guzzleHttpClient = new GuzzleHttpClient(['base_uri' => 'http://45.76.251.153/API_GT/api']);
-
-            $auth = $guzzleHttpClient->request('POST', '/login/authenticate', [
-                'form_params' => [
-                    'Username' => $user,
-                    'Password' => $password,
+                'KATINA' => (object) [
+                    'nit' => env('API_PORTAL_TNS_NIT_KATINA'),
+                    'token' => env('API_PORTAL_TNS_TOKEN_KATINA')
                 ]
-            ]);
+            ];
 
-            $token = str_replace('"', '', $auth->getBody()->getContents());
+            foreach($enterprises as $enterprise){
+                $guzzleHttpClient = new GuzzleHttpClient(['base_uri' => 'https://api.tns.co']);
 
-            $query = $guzzleHttpClient->request('GET', "/orgBless/getInfoReferencia?Referencia={$code}", [
-                'headers' => [ 'Authorization' => "Bearer {$token}" ],
-            ]);
-
-            $items = json_decode($query->getBody()->getContents());
-
-            $items = empty($items->detail) ? collect([]) : collect($items->detail);
-
-            if($items->first()) {
-                $product = Product::where('code', $this->cleaned($code))->withTrashed()->first();
-                $product = $product ? $product : new Product();
-                $product->item = $items->first()->Item;
-                $product->code = $this->cleaned($code);
-                $product->category = '';
-                $product->trademark = $this->trademark($this->cleaned($code));
-                $product->description = trim($items->first()->DescItem);
-                $product->save();
+                $query = $guzzleHttpClient->request('GET', "api/Material/Listar?empresa={$enterprise->nit}&usuario={$user}&password={$password}&tnsapitoken={$enterprise->token}&codsuc=00&filtro=O51");
+                return $items = json_decode($query->getBody()->getContents());
             }
 
-            return $product;
+            return $this->successResponse(
+                '',
+                'Los productos de Portal Tns fueron sincronizados exitosamente.',
+                200
+            );
         } catch (Exception $e) {
-            return null;
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('Exception'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
         }
     }
 

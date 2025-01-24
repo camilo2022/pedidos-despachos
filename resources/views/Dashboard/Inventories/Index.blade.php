@@ -39,11 +39,6 @@
                                 </li>
                                 @if(in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'COORDINADOR BODEGA', 'FILTRADOR']))
                                     <li class="nav-item ml-2">
-                                        <a class="nav-link active" type="button" onclick="SyncBmiInventoryModal()" title="Sincronizar inventarios BMI.">
-                                            <i class="fas fa-arrows-spin"></i>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item ml-2">
                                         <a class="nav-link active" type="button" onclick="UploadInventoryModal()" title="Cargar proyecciones.">
                                             <i class="fas fa-upload"></i>
                                         </a>
@@ -84,13 +79,11 @@
             </div>
         </div>
         @include('Dashboard.Inventories.Upload')
-        @include('Dashboard.Inventories.SyncBmi')
     </section>
 @endsection
 @section('script')
     <script src="{{ asset('js/Dashboard/Inventories/DataTableIndex.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Inventories/Upload.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Inventories/Download.js') }}"></script>
-    <script src="{{ asset('js/Dashboard/Inventories/SyncBmi.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Inventories/Sync.js') }}"></script>
 @endsection

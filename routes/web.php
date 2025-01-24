@@ -186,6 +186,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/Download', 'download')->middleware('can:Dashboard.Products.Download')->name('Dashboard.Products.Download');
                 Route::post('/SyncSiesa', 'syncSiesa')->middleware('can:Dashboard.Products.SyncSiesa')->name('Dashboard.Products.SyncSiesa');
                 Route::post('/SyncTns', 'syncTns')->middleware('can:Dashboard.Products.SyncTns')->name('Dashboard.Products.SyncTns');
+                Route::post('/SyncPortal', 'syncPortal')->middleware('can:Dashboard.Products.SyncPortal')->name('Dashboard.Products.SyncPortal');
                 Route::get('/Sync', 'sync')->name('Dashboard.Products.Sync');
             });
         });
@@ -199,7 +200,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/Download', 'download')->middleware('can:Dashboard.Inventories.Download')->name('Dashboard.Inventories.Download');
                 Route::post('/SyncSiesa', 'syncSiesa')->middleware('can:Dashboard.Inventories.SyncSiesa')->name('Dashboard.Inventories.SyncSiesa');
                 Route::post('/SyncTns', 'syncTns')->middleware('can:Dashboard.Inventories.SyncTns')->name('Dashboard.Inventories.SyncTns');
-                Route::post('/SyncPortal', 'syncPortal')->middleware('can:Dashboard.Inventories.SyncPortal')->name('Dashboard.Inventories.SyncPortal');
+                Route::get('/SyncPortal', 'syncPortal')->middleware('can:Dashboard.Inventories.SyncPortal')->name('Dashboard.Inventories.SyncPortal');
             });
         });
 

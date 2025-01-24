@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('number_phone')->nullable();
             $table->string('email')->nullable();
             $table->string('zone')->default('N/A');
-            $table->enum('type', ['DEBITO', 'CREDITO'])->nullable()->default(null);
+            $table->enum('type', ['DEBITO', 'CREDITO', 'MINORISTA', 'MAYORISTA', 'EMPLEADO'])->nullable()->default(null);
             $table->index(['client_number_document', 'client_branch_code'])->unique();
             $table->timestamps();
             $table->softDeletes();
