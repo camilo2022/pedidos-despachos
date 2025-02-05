@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Auditable as Auditing;
@@ -19,8 +20,10 @@ class Person extends Model implements Auditable
         'type',
         'name',
         'last_name',
+        'number_document',
         'phone_number',
-        'email'
+        'email',
+        'address'
     ];
 
     protected $auditInclude = [
@@ -28,12 +31,19 @@ class Person extends Model implements Auditable
         'type',
         'name',
         'last_name',
+        'number_document',
         'phone_number',
-        'email'
+        'email',
+        'address'
     ];
 
     public function clients() : HasMany
     {
         return $this->hasMany(Client::class, 'client_number_document', 'number_document');
+    }
+
+    public function employee() : HasOne
+    {
+        return $this->hasOne(Employee::class, 'person_id');
     }
 }

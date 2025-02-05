@@ -1,8 +1,8 @@
 function SyncClient() {
     toastr.info('Inicia la sincronizacion de los clientes en el sistema de Siesa. Por favor espere...');
     SyncSiesaClient();
-    toastr.info('Inicia la sincronizacion de los clientes en el sistema de Tns. Por favor espere...');
-    SyncTnsClient();
+    /*toastr.info('Inicia la sincronizacion de los clientes en el sistema de Tns. Por favor espere...');
+    SyncTnsClient();*/
 }
 
 function SyncSiesaClient() {

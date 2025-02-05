@@ -411,50 +411,6 @@ class InventoryController extends Controller
         }
     }
 
-    public function syncPortal()
-    {
-        try {
-            $user = env('API_PORTAL_TNS_USER');
-            $password = env('API_PORTAL_TNS_PASSWORD');
-
-            $enterprises = [
-                'BMI' => (object) [
-                    'nit' => env('API_PORTAL_TNS_NIT_BMI'),
-                    'token' => env('API_PORTAL_TNS_TOKEN_BMI')
-                ],
-                'GROUP' => (object) [
-                    'nit' => env('API_PORTAL_TNS_NIT_GROUP'),
-                    'token' => env('API_PORTAL_TNS_TOKEN_GROUP')
-                ],
-                'KATINA' => (object) [
-                    'nit' => env('API_PORTAL_TNS_NIT_KATINA'),
-                    'token' => env('API_PORTAL_TNS_TOKEN_KATINA')
-                ]
-            ];
-
-            foreach($enterprises as $enterprise){
-                $guzzleHttpClient = new GuzzleHttpClient(['base_uri' => 'https://api.tns.co']);
-
-                $query = $guzzleHttpClient->request('GET', "api/Material/Listar?empresa={$enterprise->nit}&usuario={$user}&password={$password}&tnsapitoken={$enterprise->token}&codsuc=00&filtro=O51");
-                return $items = json_decode($query->getBody()->getContents());
-            }
-
-            return $this->successResponse(
-                '',
-                'Los productos de Portal Tns fueron sincronizados exitosamente.',
-                200
-            );
-        } catch (Exception $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('Exception'),
-                    'error' => $e->getMessage()
-                ],
-                500
-            );
-        }
-    }
-
     private function cleaned(string $string) : string
     {
         try {

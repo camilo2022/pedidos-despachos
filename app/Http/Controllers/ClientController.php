@@ -763,8 +763,8 @@ class ClientController extends Controller
             ]);
 
             $token = str_replace('"', '', $auth->getBody()->getContents());
-            //?CentroOperacion=001
-            $query = $guzzleHttpClient->request('GET', 'http://45.76.251.153/API_GT/api/orgBless/getClientes', [
+            
+            $query = $guzzleHttpClient->request('GET', 'http://45.76.251.153/API_GT/api/orgBless/getClientes?CentroOperacion=001', [
                 'headers' => [ 'Authorization' => "Bearer {$token}"],
             ]);
 
