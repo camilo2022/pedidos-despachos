@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('to_transit')->default(false);
             $table->boolean('to_discount')->default(false);
             $table->boolean('to_exclusive')->default(false);
+            $table->boolean('to_sale')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

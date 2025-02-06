@@ -20,7 +20,8 @@ class Warehouse extends Model implements Auditable
         'to_cut',
         'to_transit',
         'to_discount',
-        'to_exclusive'
+        'to_exclusive',
+        'to_sale'
     ];
 
     protected $auditInclude = [
@@ -29,7 +30,8 @@ class Warehouse extends Model implements Auditable
         'to_cut',
         'to_transit',
         'to_discount',
-        'to_exclusive'
+        'to_exclusive',
+        'to_sale'
     ];
 
     public function users(): BelongsToMany

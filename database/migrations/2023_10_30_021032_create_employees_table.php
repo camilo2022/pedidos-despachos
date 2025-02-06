@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Person::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(Person::class)->unique()->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->enum('gender', ['M', 'F']);
             $table->date('birth_date');
             $table->string('department');
@@ -29,6 +29,7 @@ return new class extends Migration
             $table->dateTime('admission_date');
             $table->dateTime('termination_date')->nullable();
             $table->string('shift')->nullable();
+            $table->unsignedBigInteger('quota')->default(200000);
             $table->timestamps();
             $table->softDeletes();
         });
