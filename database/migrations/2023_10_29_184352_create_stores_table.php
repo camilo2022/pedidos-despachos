@@ -15,6 +15,14 @@ return new class extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('document_number');
+            $table->string('phone_number');
+            $table->string('address');
+            $table->string('email');
+            $table->string('prefix', 3)->unique();
+            $table->string('consecutive', 6)->default(0);
+            $table->enum('status', ['Abierta', 'Cerrada']);
             $table->timestamps();
         });
     }

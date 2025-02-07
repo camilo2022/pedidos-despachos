@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CashRegister;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,7 +19,9 @@ return new class extends Migration
             $table->id();
             $table->morphs('model');
             $table->string('reference');
+            $table->enum('status', ['Pendiente', 'Pagado', 'Anulado'])->default('Pendiente');
             $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(CashRegister::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

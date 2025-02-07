@@ -35,7 +35,7 @@ class OrderDispatchController extends Controller
 {
     use ApiResponser;
     use ApiMessage;
-    
+
     public function __construct()
     {
         $this->middleware('check.order.picking');
@@ -230,7 +230,7 @@ class OrderDispatchController extends Controller
 
                 $order_dispatch_detail->status = 'Cancelado';
                 $order_dispatch_detail->save();
-                
+
                 DB::statement('CALL order_dispatch_status(?)', [$order_dispatch_detail->order_detail->order->id]);
             }
 
@@ -329,10 +329,10 @@ class OrderDispatchController extends Controller
     {
         try {
             $orderDispatch = OrderDispatch::with([
-                    'client' => fn($query) => $query->withTrashed(), 
+                    'client' => fn($query) => $query->withTrashed(),
                     'dispatch_user' => fn($query) => $query->withTrashed(),
                     'invoice_user' => fn($query) => $query->withTrashed(),
-                    'correria' => fn($query) => $query->withTrashed(), 
+                    'correria' => fn($query) => $query->withTrashed(),
                     'business' => fn($query) => $query->withTrashed(),
                     'order_picking.picking_user' => fn($query) => $query->withTrashed(),
                     'order_packing.packing_user' => fn($query) => $query->withTrashed(),
@@ -348,7 +348,7 @@ class OrderDispatchController extends Controller
             $orderDispatchSizes = collect([]);
 
             $sizes = Size::all();
-            
+
             foreach($sizes as $size) {
                 if($orderDispatch->order_dispatch_details->pluck("T{$size->code}")->sum() > 0) {
                     $orderDispatchSizes = $orderDispatchSizes->push($size);
@@ -368,7 +368,7 @@ class OrderDispatchController extends Controller
         try {
             $orderDispatch = OrderDispatch::with('order_dispatch_details')->findOrFail($request->input('id'));
 
-            $orderPacking = new OrderPacking();            
+            $orderPacking = new OrderPacking();
             $orderPacking->order_dispatch_id = $orderDispatch->id;
             $orderPacking->packing_user_id = Auth::user()->id;
             $orderPacking->packing_date = Carbon::now()->format('Y-m-d H:i:s');
@@ -413,10 +413,10 @@ class OrderDispatchController extends Controller
     {
         try {
             $orderDispatch = OrderDispatch::with([
-                    'client' => fn($query) => $query->withTrashed(), 
+                    'client' => fn($query) => $query->withTrashed(),
                     'dispatch_user' => fn($query) => $query->withTrashed(),
                     'invoice_user' => fn($query) => $query->withTrashed(),
-                    'correria' => fn($query) => $query->withTrashed(), 
+                    'correria' => fn($query) => $query->withTrashed(),
                     'business' => fn($query) => $query->withTrashed(),
                 ])->findOrFail($id);
 
@@ -456,6 +456,7 @@ class OrderDispatchController extends Controller
                 $invoice->model_id = $request->input('id');
                 $invoice->model_type = OrderDispatch::class;
                 $invoice->reference = strtoupper($item['reference']);
+                $invoice->user_id = Auth::user()->id;
                 $invoice->save();
                 if(!is_null($request->invoices[$index]['supports'])) {
                     foreach($request->invoices[$index]['supports'] as $support) {
@@ -484,7 +485,7 @@ class OrderDispatchController extends Controller
                 $order_dispatch_detail->status = 'Despachado';
                 $order_dispatch_detail->date = Carbon::now()->format('Y-m-d H:i:s');
                 $order_dispatch_detail->save();
-                
+
                 DB::statement('CALL order_dispatch_status(?)', [$order_dispatch_detail->order_detail->order->id]);
             }
 
@@ -543,11 +544,11 @@ class OrderDispatchController extends Controller
                     'correria' => fn($query) => $query->withTrashed(),
                 ])
                 ->findOrFail($id);
-                
+
             $orderDispatchSizes = collect([]);
-    
+
             $sizes = Size::all();
-                
+
             foreach($sizes as $size) {
                 if($orderDispatch->order_dispatch_details->pluck("T{$size->code}")->sum() > 0) {
                     $orderDispatchSizes = $orderDispatchSizes->push($size);
@@ -578,7 +579,7 @@ class OrderDispatchController extends Controller
                     'business' => fn($query) => $query->withTrashed()
                 ])
                 ->findOrFail($id);
-    
+
             $sizes = Size::all();
 
             foreach($orderDispatch->order_packing->order_packages as $index => $orderPackage) {

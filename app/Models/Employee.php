@@ -27,7 +27,8 @@ class Employee extends Model implements Auditable
         'compensation_fund',
         'admission_date',
         'termination_date',
-        'shift'
+        'shift',
+        'quota'
     ];
 
     protected $auditInclude = [
@@ -43,7 +44,8 @@ class Employee extends Model implements Auditable
         'compensation_fund',
         'admission_date',
         'termination_date',
-        'shift'
+        'shift',
+        'quota'
     ];
 
     public function person() : BelongsTo

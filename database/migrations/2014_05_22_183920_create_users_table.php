@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique()->comment('Correo del usuario.');
             $table->timestamp('email_verified_at')->nullable()->comment('Verificacion del correo del usuario.');
             $table->string('password')->comment('Contraseña del usuario.');
-            $table->enum('title', ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'VENDEDOR', 'VENDEDOR ESPECIAL', 'CARTERA', 'FILTRADOR', 'BODEGA', 'COORDINADOR BODEGA', 'FACTURADOR', 'PROMOTORA', 'COORDINADOR PROMOTORA', 'USUARIO', 'CAJERO VENDEDOR', 'CAJERO SUPERVISOR'])->default('USUARIO')->comment('Titulo del usuario.');
+            $table->enum('title', ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'VENDEDOR', 'VENDEDOR ESPECIAL', 'CARTERA', 'FILTRADOR', 'BODEGA', 'COORDINADOR BODEGA', 'FACTURADOR', 'PROMOTORA', 'COORDINADOR PROMOTORA', 'USUARIO', 'TIENDAS', 'CAJERO VENDEDOR', 'CAJERO SUPERVISOR', 'REPORTES'])->default('USUARIO')->comment('Titulo del usuario.');
             $table->enum('zone', ['N/A', 'NACIONAL', 'MEDELLIN', 'PERIFERIA'])->default('N/A')->comment('Zona del usuario.');
             $table->foreignIdFor(Business::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->rememberToken();

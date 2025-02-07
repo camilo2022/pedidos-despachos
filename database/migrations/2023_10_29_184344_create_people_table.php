@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('last_name');
             $table->string('number_document')->nullable();
-            $table->string('phone_number');
-            $table->string('email');
+            $table->string('phone_number')->nullable();
+            $table->string('email')->nullable();
             $table->string('address')->nullable();
             $table->timestamps();
             $table->softDeletes();

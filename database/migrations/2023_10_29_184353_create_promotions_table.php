@@ -13,8 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('invoice_detail_payments', function (Blueprint $table) {
+        Schema::create('promotions', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->boolean('apply_category')->default(false);
+            $table->boolean('apply_product')->default(false);
+            $table->boolean('apply_quantity')->default(false);
+            $table->boolean('apply_percentage')->default(false);
+            $table->json('settings');
             $table->timestamps();
         });
     }
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoice_detail_payments');
+        Schema::dropIfExists('promotions');
     }
 };
