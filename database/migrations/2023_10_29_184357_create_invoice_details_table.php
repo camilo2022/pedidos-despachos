@@ -28,10 +28,10 @@ return new class extends Migration
             $table->foreignIdFor(Color::class)->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('quantity')->default(0);
             $table->foreignIdFor(Promotion::class)->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->float('price', 8, 2);
-            $table->float('discount', 8, 2);
-            $table->float('subtotal', 8, 2);
-            $table->float('total', 8, 2);
+            $table->float('price');
+            $table->float('discount');
+            $table->float('subtotal');
+            $table->float('total');
             $table->timestamps();
         });
     }

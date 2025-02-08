@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('category');
             $table->string('trademark');
-            $table->float('price', 8, 2)->default(79900.00);
+            $table->float('price')->default(89900.00);
             $table->string('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

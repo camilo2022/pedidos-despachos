@@ -21,6 +21,7 @@ class ReportProductionsController extends Controller
     {
         try {
             $sizes = Size::all();
+
             return view('Dashboard.Reports.IndexProductions', compact('sizes'));
         } catch (Exception $e) {
             return back()->with('danger', 'Ocurrió un error al cargar la vista: ' . $e->getMessage());
@@ -42,7 +43,7 @@ class ReportProductionsController extends Controller
             ->get();
 
             return datatables()->of($productions)->toJson();
-            
+
         } catch (QueryException $e) {
             return $this->errorResponse(
                 [

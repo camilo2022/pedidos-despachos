@@ -20,8 +20,9 @@ class ReportDispatchesController extends Controller
 
     public function index()
     {
-        try {  
+        try {
             $sizes = Size::all();
+
             return view('Dashboard.Reports.IndexDispatches', compact('sizes'));
         } catch (Exception $e) {
             return back()->with('danger', 'Ocurrió un error al cargar la vista: ' . $e->getMessage());
@@ -41,9 +42,9 @@ class ReportDispatchesController extends Controller
                 ])
                 ->whereHas('order', fn($query) => $query->where('business_id', Auth::user()->business_id))
                 ->get();
-                
+
             return datatables()->of($dispatches)->toJson();
-            
+
         } catch (QueryException $e) {
             return $this->errorResponse(
                 [

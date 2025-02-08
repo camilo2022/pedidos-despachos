@@ -27,6 +27,10 @@ class RolesAndPermissionSeeder extends Seeder
 
         $Correrias = Role::create(['name' => 'Correrias']);
 
+        $PackageTypes = Role::create(['name' => 'PackageTypes']);
+
+        $PaymentMethods = Role::create(['name' => 'PaymentMethods']);
+
         $Warehouses = Role::create(['name' => 'Warehouses']);
 
         $Colors = Role::create(['name' => 'Colors']);

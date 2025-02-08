@@ -19,8 +19,9 @@ class ReportSalesController extends Controller
 
     public function index()
     {
-        try {            
+        try {
             $sizes = Size::all();
+            
             return view('Dashboard.Reports.IndexSales', compact('sizes'));
         } catch (Exception $e) {
             return back()->with('danger', 'Ocurrió un error al cargar la vista: ' . $e->getMessage());
@@ -34,14 +35,14 @@ class ReportSalesController extends Controller
                 'order_details.*', DB::raw("(T04 + T06 + T08 + T10 + T12 + T14 + T16 + T18 + T20 + T22 + T24 + T26 + T28 + T30 + T32 + T34 + T36 + T38 + TXXS + TXS + TS + TM + TL + TXL + TXXL) AS TOTAL")
             )
             ->with([
-                'product', 'color', 'seller_user', 'wallet_user', 'dispatch_user', 
+                'product', 'color', 'seller_user', 'wallet_user', 'dispatch_user',
                 'order.client', 'order.seller_user', 'order.wallet_user', 'order.correria'
             ])
             ->whereHas('order', fn($query) => $query->where('business_id', Auth::user()->business_id))
             ->get();
 
             return datatables()->of($sales)->toJson();
-            
+
         } catch (QueryException $e) {
             return $this->errorResponse(
                 [

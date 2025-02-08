@@ -25,7 +25,7 @@ return new class extends Migration
             $table->decimal('end_balance', 10, 2)->nullable();
             $table->time('end_time')->nullable();
             $table->enum('status', ['Abierta', 'Cerrada'])->default('Abierta');
-            $table->index([])->unique();
+            $table->index(['store_id', 'date'])->unique();
             $table->timestamps();
         });
     }
