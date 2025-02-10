@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->string('client_number_document')->nullable();
-            $table->enum('type', ['REFERENCIA PERSONAL', 'SERVICIO AL CLIENTE', 'SOPORTE TECNICO', 'VENTAS', 'FACTURACION', 'RECURSOS HUMANOS', 'MARKETING', 'COMPRAS', 'CARTERA', 'BODEGA', 'ADMINISTRADOR', 'EMPLEADO', 'NATURAL'])->nullable();
+            $table->enum('type', ['REFERENCIA PERSONAL', 'SERVICIO AL CLIENTE', 'SOPORTE TECNICO', 'VENTAS', 'FACTURACION', 'RECURSOS HUMANOS', 'MARKETING', 'COMPRAS', 'CARTERA', 'BODEGA', 'ADMINISTRADOR', 'NATURAL'])->default('NATURAL');
             $table->string('name');
             $table->string('last_name');
             $table->string('number_document')->nullable();

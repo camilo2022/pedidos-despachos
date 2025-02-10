@@ -109,6 +109,22 @@ class RolesAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'Dashboard.Correrias.Update'])->syncRoles([$Correrias]);
         Permission::create(['name' => 'Dashboard.Correrias.Delete'])->syncRoles([$Correrias]);
 
+        Permission::create(['name' => 'Dashboard.PackageTypes.Index'])->syncRoles([$PackageTypes]);
+        Permission::create(['name' => 'Dashboard.PackageTypes.Index.Query'])->syncRoles([$PackageTypes]);
+        Permission::create(['name' => 'Dashboard.PackageTypes.Create'])->syncRoles([$PackageTypes]);
+        Permission::create(['name' => 'Dashboard.PackageTypes.Store'])->syncRoles([$PackageTypes]);
+        Permission::create(['name' => 'Dashboard.PackageTypes.Edit'])->syncRoles([$PackageTypes]);
+        Permission::create(['name' => 'Dashboard.PackageTypes.Update'])->syncRoles([$PackageTypes]);
+        Permission::create(['name' => 'Dashboard.PackageTypes.Delete'])->syncRoles([$PackageTypes]);
+
+        Permission::create(['name' => 'Dashboard.PaymentMethods.Index'])->syncRoles([$PaymentMethods]);
+        Permission::create(['name' => 'Dashboard.PaymentMethods.Index.Query'])->syncRoles([$PaymentMethods]);
+        Permission::create(['name' => 'Dashboard.PaymentMethods.Create'])->syncRoles([$PaymentMethods]);
+        Permission::create(['name' => 'Dashboard.PaymentMethods.Store'])->syncRoles([$PaymentMethods]);
+        Permission::create(['name' => 'Dashboard.PaymentMethods.Edit'])->syncRoles([$PaymentMethods]);
+        Permission::create(['name' => 'Dashboard.PaymentMethods.Update'])->syncRoles([$PaymentMethods]);
+        Permission::create(['name' => 'Dashboard.PaymentMethods.Delete'])->syncRoles([$PaymentMethods]);
+
         Permission::create(['name' => 'Dashboard.Warehouses.Index'])->syncRoles([$Warehouses]);
         Permission::create(['name' => 'Dashboard.Warehouses.Index.Query'])->syncRoles([$Warehouses]);
         Permission::create(['name' => 'Dashboard.Warehouses.Create'])->syncRoles([$Warehouses]);

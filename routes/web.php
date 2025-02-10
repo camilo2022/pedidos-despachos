@@ -17,6 +17,9 @@ use App\Http\Controllers\OrderPackingController;
 use App\Http\Controllers\OrderPackingDetailController;
 use App\Http\Controllers\OrderPickingController;
 use App\Http\Controllers\OrderPickingDetailController;
+use App\Http\Controllers\PackageTypeController;
+use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\POSController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ReportDispatchesController;
@@ -145,6 +148,30 @@ Route::middleware(['auth'])->group(function () {
             });
         });
 
+        Route::prefix('/PackageTypes')->group(function () {
+            Route::controller(PackageTypeController::class)->group(function () {
+                Route::get('/Index', 'index')->middleware('can:Dashboard.PackageTypes.Index')->name('Dashboard.PackageTypes.Index');
+                Route::post('/Index/Query', 'indexQuery')->middleware('can:Dashboard.PackageTypes.Index.Query')->name('Dashboard.PackageTypes.Index.Query');
+                Route::post('/Create', 'create')->middleware('can:Dashboard.PackageTypes.Create')->name('Dashboard.PackageTypes.Create');
+                Route::post('/Store', 'store')->middleware('can:Dashboard.PackageTypes.Store')->name('Dashboard.PackageTypes.Store');
+                Route::post('/Edit/{id}', 'edit')->middleware('can:Dashboard.PackageTypes.Edit')->name('Dashboard.PackageTypes.Edit');
+                Route::put('/Update/{id}', 'update')->middleware('can:Dashboard.PackageTypes.Update')->name('Dashboard.PackageTypes.Update');
+                Route::delete('/Delete', 'delete')->middleware('can:Dashboard.PackageTypes.Delete')->name('Dashboard.PackageTypes.Delete');
+            });
+        });
+
+        Route::prefix('/PaymentMethods')->group(function () {
+            Route::controller(PaymentMethodController::class)->group(function () {
+                Route::get('/Index', 'index')->middleware('can:Dashboard.PaymentMethods.Index')->name('Dashboard.PaymentMethods.Index');
+                Route::post('/Index/Query', 'indexQuery')->middleware('can:Dashboard.PaymentMethods.Index.Query')->name('Dashboard.PaymentMethods.Index.Query');
+                Route::post('/Create', 'create')->middleware('can:Dashboard.PaymentMethods.Create')->name('Dashboard.PaymentMethods.Create');
+                Route::post('/Store', 'store')->middleware('can:Dashboard.PaymentMethods.Store')->name('Dashboard.PaymentMethods.Store');
+                Route::post('/Edit/{id}', 'edit')->middleware('can:Dashboard.PaymentMethods.Edit')->name('Dashboard.PaymentMethods.Edit');
+                Route::put('/Update/{id}', 'update')->middleware('can:Dashboard.PaymentMethods.Update')->name('Dashboard.PaymentMethods.Update');
+                Route::delete('/Delete', 'delete')->middleware('can:Dashboard.PaymentMethods.Delete')->name('Dashboard.PaymentMethods.Delete');
+            });
+        });
+
         Route::prefix('/Warehouses')->group(function () {
             Route::controller(WarehouseController::class)->group(function () {
                 Route::get('/Index', 'index')->middleware('can:Dashboard.Warehouses.Index')->name('Dashboard.Warehouses.Index');
@@ -223,6 +250,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/Download', 'download')->middleware('can:Dashboard.Clients.Download')->name('Dashboard.Clients.Download');
                 Route::post('/SyncSiesa', 'syncSiesa')->middleware('can:Dashboard.Clients.SyncSiesa')->name('Dashboard.Clients.SyncSiesa');
                 Route::post('/SyncTns', 'syncTns')->middleware('can:Dashboard.Clients.SyncTns')->name('Dashboard.Clients.SyncTns');
+            });
+        });
+
+        Route::prefix('/POS')->group(function () {
+            Route::controller(POSController::class)->group(function () {
+                Route::get('/Index', 'index')->name('Dashboard.POS.Index');
             });
         });
 

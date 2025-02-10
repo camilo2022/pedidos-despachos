@@ -59,6 +59,22 @@ class ModulesAndSubmodulesSeeder extends Seeder
             'permission_id' => 44
         ]);
 
+        Submodule::create([
+            'name' => 'Empaques',
+            'url' => '/Dashboard/PackageTypes/Index',
+            'icon' => 'fas fa-box',
+            'module_id' => $Configuracion->id,
+            'permission_id' => 45
+        ]);
+
+        Submodule::create([
+            'name' => 'Metodos de Pago',
+            'url' => '/Dashboard/PaymentMethods/Index',
+            'icon' => 'fas fa-credit-card',
+            'module_id' => $Configuracion->id,
+            'permission_id' => 46
+        ]);
+
         $Administracion = Module::create(['name' => 'Administración', 'icon' => 'fas fa-folder']);
 
         $Administracion->roles()->sync([7, 8, 9, 10]);
