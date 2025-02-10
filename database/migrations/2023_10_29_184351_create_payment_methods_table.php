@@ -20,6 +20,7 @@ return new class extends Migration
             $table->boolean('is_libranza')->default(false);
             $table->boolean('is_transfer')->default(false);
             $table->boolean('is_card')->default(false);
+            $table->json('settings')->default(json_encode([]));
             $table->timestamps();
             $table->softDeletes();
         });

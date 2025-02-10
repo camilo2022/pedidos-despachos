@@ -18,7 +18,8 @@ class PaymentMethod extends Model implements Auditable
         'is_cash',
         'is_libranza',
         'is_transfer',
-        'is_card'
+        'is_card',
+        'settings'
     ];
 
     protected $auditInclude = [
@@ -26,7 +27,8 @@ class PaymentMethod extends Model implements Auditable
         'is_cash',
         'is_libranza',
         'is_transfer',
-        'is_card'
+        'is_card',
+        'settings'
     ];
 
     public function payments() : HasMany
