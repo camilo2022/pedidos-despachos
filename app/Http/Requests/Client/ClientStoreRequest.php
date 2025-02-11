@@ -21,7 +21,7 @@ class ClientStoreRequest extends FormRequest
     {
         $this->merge([
             'client_branch_name' => $this->input('client_branch_name') ?? $this->input('client_name'),
-            'client_branch_code' => sprintf('%03d', $this->input('client_branch_code')),
+            'client_branch_code' => sprintf('%03d', $this->input('client_branch_code', '1')),
             'client_branch_address' => $this->input('client_branch_address') ?? $this->input('client_address')
         ]);
     }
@@ -69,7 +69,7 @@ class ClientStoreRequest extends FormRequest
             'client_branch_code.required' => 'El campo Codigo de la sucursal es requerido.',
             'client_branch_code.string' => 'El campo Codigo de la sucursal debe ser una cadena de caracteres.',
             'client_branch_code.max' => 'El campo Codigo de la sucursal debe tener 3 digitos.',
-            'client_branch_code.unique' => 'El Codigo de la sucursal ya ha sido tomado.',            
+            'client_branch_code.unique' => 'El Codigo de la sucursal ya ha sido tomado.',
             'client_branch_name.required' => 'El campo Nombre de la sucursal es requerido.',
             'client_branch_name.string' => 'El campo Nombre de la sucursal debe ser una cadena de caracteres.',
             'client_branch_name.max' => 'El campo Nombre de la sucursal no debe exceder los 255 caracteres.',
@@ -83,7 +83,7 @@ class ClientStoreRequest extends FormRequest
             'departament.required' => 'El campo Departamento es requerido.',
             'departament.exists' => 'El Departamento no es valido.',
             'city.required' => 'El campo Ciudad es requerido.',
-            'city.exists' => 'La ciudad no es valido.',            
+            'city.exists' => 'La ciudad no es valido.',
             'number_phone.min' => 'El campo Numero de telefono debe tener minimo 5 digitos.',
             'number_phone.max' => 'El campo Numero de telefono no debe exceder los 15 digitos.',
             'email.email' => 'El campo Correo electronico debe ser una dirección de correo electrónico válida.',

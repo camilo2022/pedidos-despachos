@@ -122,20 +122,26 @@
                                                     <i class="fa fa-search"></i>
                                                 </span>
                                             </div>
-                                            <input type="text" id="search_person" class="form-control input-search"
-                                                placeholder="Buscar cliente" autocomplete="off">
-                                            <ul id="autocompleteventa" tabindex='1' class="list-group"></ul>
+                                            <div class="typeahead__container" style="width: 90% !important;">
+                                                <div class="typeahead__field" style="width: 100% !important;">
+                                                    <div class="typeahead__query">
+                                                        <input type="text" id="search_person" class="form-control input-search"  style="width: 100% !important;"
+                                                            placeholder="Buscar cliente" autocomplete="off" onkeyup="IndexSearchPerson()">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-md-4 text-center">
                                     <div class="form-group py-2">
                                         <div class="form-check form-switch">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" id="search_client_document"
+                                                <input class="form-check-input" type="checkbox" id="search_client_number_document"
                                                     data-bootstrap-switch data-off-color="danger" data-on-color="success">
                                                 <label class="form-check-label"
-                                                    for="search_client_document">Documento</label>
+                                                    for="search_client_number_document">Documento</label>
                                             </div>
                                         </div>
                                     </div>
@@ -220,7 +226,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Cupo:</label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" disabled id="employee_quota">
+                                            <input type="number" class="form-control" disabled id="employee_quota">
                                             <small class="form-control-feedback"> Monto aprobado para libranza. </small>
                                         </div>
                                     </div>
@@ -230,7 +236,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Deuda:</label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" disabled id="employee_debt">
+                                            <input type="number" class="form-control" disabled id="employee_debt">
                                             <small class="form-control-feedback"> Monto por pagar en libranza. </small>
                                         </div>
                                     </div>
@@ -240,7 +246,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Disponible:</label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" disabled id="employee_available">
+                                            <input type="number" class="form-control" disabled id="employee_available">
                                             <small class="form-control-feedback"> Monto disponible para comprar. </small>
                                         </div>
                                     </div>
@@ -253,7 +259,7 @@
                                             <h2 id="green" style="display: none;">✔</h2>
                                             <h2 id="red" style="display: none;">❌</h2>
                                             <h2 id="black" style="display: block;">➖</h2>
-                                            <small class="form-control-feedback"> Puede solicitar libranza. </small>
+                                            <small class="form-control-feedback" id="text"> No es empleado. </small>
                                         </div>
                                     </div>
                                 </div>
@@ -417,4 +423,5 @@
     </section>
 @endsection
 @section('script')
+    <script src="{{ asset('js/Dashboard/POS/Index.js') }}"></script>
 @endsection
