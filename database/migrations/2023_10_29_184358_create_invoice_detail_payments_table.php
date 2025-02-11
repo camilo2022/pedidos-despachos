@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(InvoiceDetail::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(PaymentMethod::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->float('payment');
-            $table->index(['invoice_detail_id', 'payment_method_id'])->unique();
+            $table->index(['invoice_detail_id', 'payment_method_id'], 'inv_det_pays_inv_det_id_pay_met_id_index')->unique();
             $table->timestamps();
         });
     }

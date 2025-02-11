@@ -256,6 +256,8 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/POS')->group(function () {
             Route::controller(POSController::class)->group(function () {
                 Route::get('/Index', 'index')->name('Dashboard.POS.Index');
+                Route::get('/Person', 'person')->name('Dashboard.POS.Person');
+                Route::get('/Product', 'product')->name('Dashboard.POS.Product');
             });
         });
 

@@ -15,9 +15,10 @@ class PaymentMethodSeeder extends Seeder
             'is_libranza' => false,
             'is_transfer' => false,
             'is_card' => false,
-            'settings' => json_encode((object) [
+            'settings' => json_encode([
                 'name' => 'Efectivo',
                 'default' => true,
+                'icon' => 'fas fa-cash-register',
                 'employee' => false
             ])
         ]);
@@ -28,9 +29,10 @@ class PaymentMethodSeeder extends Seeder
             'is_libranza' => true,
             'is_transfer' => false,
             'is_card' => false,
-            'settings' => json_encode((object) [
+            'settings' => json_encode([
                 'name' => 'Libranza',
-                'default' => true,
+                'default' => false,
+                'icon' => 'fas fa-receipt',
                 'path' => '',
                 'employee' => true
             ])
@@ -42,11 +44,12 @@ class PaymentMethodSeeder extends Seeder
             'is_libranza' => false,
             'is_transfer' => true,
             'is_card' => false,
-            'settings' => json_encode((object) [
+            'settings' => json_encode([
                 'name' => 'Nequi',
                 'default' => false,
+                'icon' => 'fas fa-credit-card',
                 'path' => '',
-                'employee' => false,
+                'verify' => true,
                 'auth' => (object) [
                     'name' => 'Autorizacion',
                     'description' => 'Servicio de Autorización OAuth2',
@@ -54,7 +57,7 @@ class PaymentMethodSeeder extends Seeder
                 ],
                 'options' => [
                     (object) [
-                        'name' => 'Noti. Push',
+                        'name' => 'Noti Push',
                         'description' => 'Notificacion de pago directo al nequi de la persona.',
                         'default' => true,
                         'settings' => (object) [
