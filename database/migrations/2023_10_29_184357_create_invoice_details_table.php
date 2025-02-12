@@ -29,7 +29,7 @@ return new class extends Migration
             $table->unsignedBigInteger('quantity')->default(0);
             $table->foreignIdFor(Promotion::class)->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->float('price');
-            $table->float('discount');
+            $table->float('discount')->default(0);
             $table->float('subtotal');
             $table->float('total');
             $table->timestamps();

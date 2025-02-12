@@ -54,7 +54,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
                                                     <div class="icheck-warning d-inline">
-                                                        <input type="checkbox" id="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)).'_check' }}" {{ $payment_method->settings->default ? 'checked' : '' }} onchange="ChangePaymentMethodPOS(this, '{{ str_replace(' ', '_', strtolower($payment_method->settings->name)).'_div' }}')">
+                                                        <input type="checkbox" id="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)).'_check' }}" {{ $payment_method->settings->default ? 'checked' : '' }} {{ $payment_method->is_libranza ? 'disabled' : '' }} onchange="IndexPOSChangePaymentMethod('{{ str_replace(' ', '_', strtolower($payment_method->settings->name)) }}', '{{ $payment_method->is_cash ? 'cash' : '' }}')">
                                                         <label for="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)).'_check' }}"></label>
                                                     </div>
                                                 </span>
@@ -84,7 +84,7 @@
                                     <h3>Información del cliente</h3>
                                 </li>
                                 <li class="nav-item ml-auto">
-                                    <button type="button" class="btn btn-primary" id="CreatePersonButton" onclick="CreatePersonModal(false)" title="Agregar persona.">
+                                    <button type="button" class="btn btn-primary" id="CreatePerson" onclick="CreatePersonModal(false)" title="Agregar persona.">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </li>
@@ -122,11 +122,11 @@
                                                     <i class="fa fa-search"></i>
                                                 </span>
                                             </div>
-                                            <div class="typeahead__container" style="width: 90% !important;">
+                                            <div class="typeahead__container client" style="width: 90% !important;">
                                                 <div class="typeahead__field" style="width: 100% !important;">
                                                     <div class="typeahead__query">
                                                         <input type="text" id="search_person" class="form-control input-search"  style="width: 100% !important;"
-                                                            placeholder="Buscar cliente" autocomplete="off" onkeyup="IndexSearchPerson()">
+                                                            placeholder="Buscar cliente" autocomplete="off" onkeyup="IndexPOSSearchPerson()">
                                                     </div>
                                                 </div>
                                             </div>
@@ -157,7 +157,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Documento:</label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" disabled id="person_number_document">
+                                            <input type="text" class="form-control" disabled id="person_number_document" data-person_id="">
                                             <small class="form-control-feedback"> Número de documento del cliente. </small>
                                         </div>
                                     </div>
@@ -289,9 +289,14 @@
                                                     <i class="fa fa-search"></i>
                                                 </span>
                                             </div>
-                                            <input type="text" id="search_person" class="form-control input-search"
-                                                placeholder="Buscar producto" autocomplete="off">
-                                            <ul id="autocompleteventa" tabindex='1' class="list-group"></ul>
+                                            <div class="typeahead__container product" style="width: 90% !important;">
+                                                <div class="typeahead__field" style="width: 100% !important;">
+                                                    <div class="typeahead__query">
+                                                        <input type="text" id="search_product" class="form-control input-search"  style="width: 100% !important;"
+                                                            placeholder="Buscar producto" autocomplete="off" onkeyup="IndexPOSSearchProduct()">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -300,9 +305,9 @@
                                         <div class="form-check form-switch">
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox"
-                                                    id="search_client_document" data-bootstrap-switch
+                                                    id="search_product_code_bar" data-bootstrap-switch
                                                     data-off-color="danger" data-on-color="success">
-                                                <label class="form-check-label" for="search_client_document">Codigo
+                                                <label class="form-check-label" for="search_product_code_bar">Codigo
                                                     Barras</label>
                                             </div>
                                         </div>
@@ -313,21 +318,19 @@
                                 <div class="col-lg-12">
                                     <table id="detalles" style="width:100%"
                                         class="table table-bordered table-sm table-hover text-center">
-                                        <thead>
+                                        <thead class="bg-dark">
                                             <tr>
-                                                <th scope="col">Cod</th>
-                                                <th scope="col">Ref</th>
-                                                <th scope="col">Talla</th>
-                                                <th scope="col">Color</th>
-                                                <th scope="col">Cant</th>
-                                                <th scope="col">Desc</th>
-                                                <th scope="col">Tipo. Desc</th>
-                                                <th scope="col">Subtotal</th>
-                                                <th scope="col">Total</th>
-                                                <th scope="col">Acciones</th>
+                                                <th scope="col" width="15%">Cod</th>
+                                                <th scope="col" width="10%">Precio</th>
+                                                <th scope="col" width="10%">Cant</th>
+                                                <th scope="col" width="15%">Desc</th>
+                                                <th scope="col" width="10%">Tipo. Desc</th>
+                                                <th scope="col" width="15%">Subtotal</th>
+                                                <th scope="col" width="15%">Total</th>
+                                                <th scope="col" width="10%">Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="invoice_details">
                                         </tbody>
                                     </table>
                                 </div>
@@ -337,14 +340,14 @@
                                 <div class="col-lg-12">
 
                                     <div class="pull-right m-t-30 text-right">
-                                        <h4><p>Sub - Total: $ <span id="subtotal">0</span></p></h4>
-                                        <h4><p>Descuento: $ <span id="descuento">0</span></p></h4>
-                                        <h3><b>Total :</b> $<span id="total">0</span></h3>
+                                        <h4><p>Sub - Total: <span id="invoice_subtotal">$ 0</span></p></h4>
+                                        <h4><p>Descuento: <span id="invoice_descuento">$ 0</span></p></h4>
+                                        <h3><b>Total :</b> <span id="invoice_total">$ 0</span></h3>
                                     </div>
                                     <div class="clearfix"></div>
                                     <hr>
                                     @foreach ($payment_methods as $payment_method)
-                                    <div class="row" id="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)).'_div' }}" style="display: {{ $payment_method->settings->default ? 'block' : 'none' }};">
+                                    <div class="row {{ $payment_method->is_cash ? 'cash' : '' }}" id="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)).'_div' }}" style="display: {{ $payment_method->settings->default ? 'block' : 'none' }};">
                                         <div class="col-md-12">
                                             <div class="form-group row">
                                                 <label class="control-label text-right col-md-9">{{ $payment_method->settings->name }}:</label>
@@ -369,7 +372,7 @@
                                                         <div class="input-group-prepend"  style="height: {{ ($payment_method->settings->verify ?? false) or ($payment_method->settings->employee ?? false) ? '76' : '100' }}%;">
                                                             <span class="input-group-text">$</span>
                                                         </div>
-                                                        <input type="number" class="form-control"  id="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)) }}">
+                                                        <input type="number" class="form-control"  id="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)) }}" @if($payment_method->is_cash) onkeyup="IndexPOSCalculateCashChange()" @endif style="font-size: 25px !important;">
                                                         @if(($payment_method->settings->verify ?? false) or ($payment_method->settings->employee ?? false))
                                                         @php($name = '')
                                                         @if (isset($payment_method->settings->employee))
@@ -393,17 +396,13 @@
                                     </div>
                                     @endforeach
 
-                                    <div class="row" id="input_cambio">
+                                    <div class="row cash" id="change_div">
                                         <div class="col-md-12">
-                                            <div class="form-group row ">
+                                            <div class="form-group row">
                                                 <label class="control-label text-right col-md-9">Cambio:</label>
                                                 <div class="col-md-3">
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text">$</span>
-                                                        </div>
-                                                        <input type="text" class="form-control" id="change" disabled>
-                                                    </div>
+
+                                                    <h3><span id="change">$ 0</span></h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -411,8 +410,8 @@
 
                                     <hr>
                                     <div class="text-right">
-                                        <button type="button" class="btn btn-danger">Cancelar</button>
-                                        <button type="button" class="btn btn-success" id="vender_producto">Vender</button>
+                                        <button type="button" class="btn btn-danger" id="CancelPOSInvoiceButton">Cancelar</button>
+                                        <button type="button" class="btn btn-success" id="CreatePOSInvoiceButton" onclick="CreatePOSInvoice()">Vender</button>
                                     </div>
                                 </div>
                             </div>
@@ -423,5 +422,10 @@
     </section>
 @endsection
 @section('script')
+    <script>
+        let payment_methods = @json($payment_methods);
+        let promotions = @json($promotions);
+    </script>
     <script src="{{ asset('js/Dashboard/POS/Index.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/POS/Create.js') }}"></script>
 @endsection

@@ -58,6 +58,11 @@ class User extends Authenticatable implements Auditable
         return $this->morphToMany(Warehouse::class, 'model', 'model_warehouses', 'model_id', 'warehouse_id');
     }
 
+    public function stores() : MorphToMany
+    {
+        return $this->morphToMany(Store::class, 'model', 'model_stores', 'model_id', 'store_id');
+    }
+
     public function business() : BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_id');
