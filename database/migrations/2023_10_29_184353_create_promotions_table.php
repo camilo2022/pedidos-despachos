@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->boolean('apply_trademark')->default(false);
             $table->boolean('apply_category')->default(false);
             $table->boolean('apply_product')->default(false);
             $table->boolean('apply_quantity')->default(false);
