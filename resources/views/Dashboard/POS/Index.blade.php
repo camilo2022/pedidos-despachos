@@ -402,7 +402,7 @@
                                                 <label class="control-label text-right col-md-9">Cambio:</label>
                                                 <div class="col-md-3">
 
-                                                    <h3><span id="change">$ 0</span></h3>
+                                                    <h3><span id="change" data-change="0">$ 0</span></h3>
                                                 </div>
                                             </div>
                                         </div>

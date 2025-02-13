@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CashRegister;
 use App\Models\Store;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,7 +17,7 @@ return new class extends Migration
     {
         Schema::create('cash_register_controls', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Store::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(CashRegister::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->date('date');
             $table->foreignId('start_user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->decimal('start_balance', 10, 2);

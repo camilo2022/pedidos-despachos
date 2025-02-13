@@ -11,6 +11,7 @@ use App\Models\Person;
 use App\Models\Promotion;
 use App\Traits\ApiMessage;
 use App\Traits\ApiResponser;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
@@ -23,13 +24,20 @@ class POSController extends Controller
     public function index()
     {
         try {
-            /*return Auth::user()->stores->first()->warehouses;*/
+            $cash_register = Auth::user()->cash_register;
+            if($cash_register->status == 'Activa' and $cash_register->store and $cash_register->store->status == 'Abierta'){
+                if($cash_register->cash_register_controls->where('status', 'Abierta')->where('date', '<>', Carbon::now()->format('Y-m-d'))->first()){
+                    return back()->with('warning', 'Para acceder al POS, debe realizar los cierres de caja pendientes. Por favor, complete los cierres antes de continuar.');
+                } else if(!$cash_register->cash_register_controls->where('status', 'Abierta')->where('date', Carbon::now()->format('Y-m-d'))->first()) {
+                    return back()->with('info', 'Para acceder al POS, es necesario realizar una apertura de caja. Por favor, asegúrese de abrir una caja antes de continuar.');
+                }
+            }
+
             $payment_methods = PaymentMethod::get();
             $promotions = Promotion::get();
 
             return view('Dashboard.POS.Index', compact('payment_methods', 'promotions'));
         } catch (Exception $e) {
-            return $e->getMessage();
             return back()->with('danger', 'Ocurrió un error al cargar la vista: ' . $e->getMessage());
         }
     }

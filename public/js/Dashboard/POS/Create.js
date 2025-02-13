@@ -1,4 +1,11 @@
 function CreatePOSInvoice(){
+    if(parseInt($('#change').attr('data-change')) < 0){
+        $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'CAMBIO DE EFECTIVO',
+            body: 'El cambio en efectivo no puede ser negativo, verificar el efectivo recibido.'
+        });
+    }
     let items = $('#invoice_details tr');
     let person_id = $('#person_number_document').attr('data-person_id');
     let invoice_details = [];
@@ -22,9 +29,10 @@ function CreatePOSInvoice(){
     $.each(payment_methods, function(index, payment_method) {
         let checked = $(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}_check`).prop('checked');
         if(checked) {
+            let payment = parseInt($(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}`).val());
             payments.push({
                 'id': payment_method.id,
-                'payment': $(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}`).val()
+                'payment': (isNaN(payment) ? 0 : payment) - ( payment_method.is_cash ? parseInt($('#change').attr('data-change')) : 0 )
             });
         }
     });

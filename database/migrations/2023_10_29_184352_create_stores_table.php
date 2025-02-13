@@ -21,9 +21,10 @@ return new class extends Migration
             $table->string('address');
             $table->string('email');
             $table->string('prefix', 3)->unique();
-            $table->string('consecutive', 6)->default(0);
+            $table->unsignedInteger('consecutive')->default(1);
             $table->enum('status', ['Abierta', 'Cerrada']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

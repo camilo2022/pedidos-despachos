@@ -20,9 +20,10 @@ return new class extends Migration
             $table->foreignIdFor(Store::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
             $table->enum('status', ['Activa', 'Inactiva'])->default('Activa');
-            $table->foreignIdFor(User::class)->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(User::class)->nullable()->unique()->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->index(['store_id', 'name'])->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -225,6 +225,7 @@ function IndexPOSCalculateCashChange(){
     });
 
     $('#change').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(cash - (total - other)));
+    $('#change').attr('data-change', cash - (total - other));
 }
 
 function IndexPOSAjaxSuccess(response) {

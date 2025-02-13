@@ -15,6 +15,13 @@
       </div>
     </div>
 </div>
+
+@include('Dashboard.Alerts.Success')
+@include('Dashboard.Alerts.Info')
+@include('Dashboard.Alerts.Question')
+@include('Dashboard.Alerts.Warning')
+@include('Dashboard.Alerts.Danger')
+
 <section class="content">
     <div class="container-fluid">
 
