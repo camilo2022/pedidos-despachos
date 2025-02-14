@@ -34,59 +34,61 @@ function CreatePOSInvoice(){
         }
     })
 
-    Swal.fire({
-        title: '¿Desea guardar la factura?',
-        text: 'Se registrará la factura y se descontarán las unidades del inventario.',
-        icon: 'warning',
-        showCancelButton: true,
-        cancelButtonColor: '#DD6B55',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Si, guardar!',
-        cancelButtonText: 'No, cancelar!',
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                url: `/Dashboard/Invoices/Store`,
-                type: 'POST',
-                data: {
-                    '_token': $('meta[name="csrf-token"]').attr('content'),
-                    'person_id': $('#person_number_document').attr('data-person_id'),
-                    'invoice_details': $('#invoice_details tr').map(function() {
-                        return {
-                            'warehouse_id': $(this).find('#reference').attr('data-warehouse_id'),
-                            'product_id': $(this).find('#reference').attr('data-product_id'),
-                            'size_id': $(this).find('#reference').attr('data-size_id'),
-                            'color_id': $(this).find('#reference').attr('data-color_id'),
-                            'quantity': $(this).find('#quantity').val(),
-                            'promotion_id': $(this).find('#promotion').attr('data-promotion_id'),
-                            'price': $(this).find('#price').attr('data-price'),
-                            'discount': $(this).find('#discount').attr('data-discount'),
-                            'subtotal': $(this).find('#subtotal').attr('data-subtotal'),
-                            'total': $(this).find('#total').attr('data-total')
-                        };
-                    }).get(),
-                    'payments': payment_methods.map(function(payment_method) {
-                        let checked = $(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}_check`).prop('checked');
-                        if (checked) {
-                            let payment = parseInt($(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}`).val());
+    if(boolean){
+        Swal.fire({
+            title: '¿Desea guardar la factura?',
+            text: 'Se registrará la factura y se descontarán las unidades del inventario.',
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: '#DD6B55',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Si, guardar!',
+            cancelButtonText: 'No, cancelar!',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: `/Dashboard/Invoices/Store`,
+                    type: 'POST',
+                    data: {
+                        '_token': $('meta[name="csrf-token"]').attr('content'),
+                        'person_id': $('#person_number_document').attr('data-person_id'),
+                        'invoice_details': $('#invoice_details tr').map(function() {
                             return {
-                                'id': payment_method.id,
-                                'payment': (isNaN(payment) ? 0 : payment) - (payment_method.is_cash ? parseInt($('#change').attr('data-change')) : 0)
+                                'warehouse_id': $(this).find('#reference').attr('data-warehouse_id'),
+                                'product_id': $(this).find('#reference').attr('data-product_id'),
+                                'size_id': $(this).find('#reference').attr('data-size_id'),
+                                'color_id': $(this).find('#reference').attr('data-color_id'),
+                                'quantity': $(this).find('#quantity').val(),
+                                'promotion_id': $(this).find('#promotion').attr('data-promotion_id'),
+                                'price': $(this).find('#price').attr('data-price'),
+                                'discount': $(this).find('#discount').attr('data-discount'),
+                                'subtotal': $(this).find('#subtotal').attr('data-subtotal'),
+                                'total': $(this).find('#total').attr('data-total')
                             };
-                        }
-                    }).filter(Boolean)
-                },
-                success: function(response) {
-                    CreatePOSAjaxSuccess(response);
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    CreatePOSAjaxError(xhr);
-                }
-            });
-        } else {
-            toastr.info('La factura no fue creada.')
-        }
-    });
+                        }).get(),
+                        'payments': payment_methods.map(function(payment_method) {
+                            let checked = $(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}_check`).prop('checked');
+                            if (checked) {
+                                let payment = parseInt($(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}`).val());
+                                return {
+                                    'payment_method_id': payment_method.id,
+                                    'payment': (isNaN(payment) ? 0 : payment) - (payment_method.is_cash ? parseInt($('#change').attr('data-change')) : 0)
+                                };
+                            }
+                        }).filter(Boolean)
+                    },
+                    success: function(response) {
+                        CreatePOSAjaxSuccess(response);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        CreatePOSAjaxError(xhr);
+                    }
+                });
+            } else {
+                toastr.info('La factura no fue creada.')
+            }
+        });
+    }
 }
 
 function CreatePOSAjaxSuccess(response) {

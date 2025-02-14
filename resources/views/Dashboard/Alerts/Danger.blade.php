@@ -1,10 +1,11 @@
 @if (session('danger') or isset($danger))
     <script>
+        let danger = @json(session('danger') ?? $danger);
         document.addEventListener('DOMContentLoaded', function() {
             $(document).Toasts('create', {
                 class: 'bg-danger',
                 title: 'ERROR',
-                body: '{{ $danger }}'
+                body: danger
             });
         });
     </script>
