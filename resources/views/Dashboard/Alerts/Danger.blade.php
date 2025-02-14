@@ -1,10 +1,10 @@
-@if (session('danger'))
+@if (session('danger') or isset($danger))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             $(document).Toasts('create', {
                 class: 'bg-danger',
                 title: 'ERROR',
-                body: '{{ session('danger') }}'
+                body: '{{ $danger }}'
             });
         });
     </script>

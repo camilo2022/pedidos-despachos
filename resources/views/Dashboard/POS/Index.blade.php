@@ -373,7 +373,7 @@
                                                             <span class="input-group-text">$</span>
                                                         </div>
                                                         <input type="number" class="form-control"  id="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)) }}" @if($payment_method->is_cash) onkeyup="IndexPOSCalculateCashChange()" @endif style="font-size: 25px !important;">
-                                                        @if(($payment_method->settings->verify ?? false) or ($payment_method->settings->employee ?? false))
+                                                        @if(($payment_method->settings->verify ?? false))
                                                         @php($name = '')
                                                         @if (isset($payment_method->settings->employee))
                                                             @php($name = 'employee')

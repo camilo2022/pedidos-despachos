@@ -138,42 +138,57 @@ function IndexPOSSearchProduct() {
 }
 
 function IndexPOSSelectProduct(product) {
-    let tr = `<tr>
-        <th id="reference" data-warehouse_id="${product.warehouse.id}" data-product_id="${product.product.id}" data-size_id="${product.size?.id}" data-color_id="${product.color?.id}">
-            ${product.product.code}${product.size ? '-'+product.size.code : ''}${product.color ? '-'+product.color.code : ''}
-        </th>
-        <th id="price" data-price="${product.product.price}">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(product.product.price)}</th>
-        <th><input type="number" id="quantity" class="form-control" value="1" onkeyup="IndexPOSCalculateItem(this)" onblur="IndexPOSCalculateItem(this, true);"></th>
-        <th id="discount" data-discount="0">$ 0.00</th>
-        <th id="promotion" data-promotion_id="">-</th>
-        <th id="subtotal" data-subtotal="${product.product.price}">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(product.product.price)}</th>
-        <th id="total" data-total="${product.product.price}">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(product.product.price)}</th>
-        <th>
-            <a type="button" class="btn btn-outline-dark btn-sm" title="Promocion item." id="PromotionItemButton">
-                <i class="fas fa-tag text-dark"></i>
-            </a>
-            <a type="button" class="btn btn-outline-danger btn-sm" title="Eliminar item." onclick="IndexPOSRemoveProduct(this)">
-                <i class="fas fa-trash text-red"></i>
-            </a>
-        </th>
-    </tr>`;
+    let item = `${product.product.code}${product.size ? '-'+product.size.code : ''}${product.color ? '-'+product.color.code : ''}`;
+    let exists = $('#invoice_details tr').filter(function() {
+        return $(this).find('#reference').text().trim() == item;
+    }).length > 0;
 
-    $('#invoice_details').append(tr);
-    IndexPOSCalculateInvoice();
-    IndexPOSCalculateCashChange()
+    if (exists) {
+        toastr.warning(`El item ${item} ya está agregado.`);
+    } else {
+        let tr = `<tr>
+            <th id="reference" data-warehouse_id="${product.warehouse.id}" data-product_id="${product.product.id}" data-size_id="${product.size?.id}" data-color_id="${product.color?.id}">
+                ${item}
+            </th>
+            <th id="price" data-price="${product.product.price}">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(product.product.price)}</th>
+            <th><input type="number" id="quantity" class="form-control" value="1" max="${product.quantity}" onkeyup="IndexPOSCalculateItem(this)" onblur="IndexPOSCalculateItem(this, true);"></th>
+            <th id="discount" data-discount="0">$ 0.00</th>
+            <th id="promotion" data-promotion_id="">-</th>
+            <th id="subtotal" data-subtotal="${product.product.price}">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(product.product.price)}</th>
+            <th id="total" data-total="${product.product.price}">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(product.product.price)}</th>
+            <th>
+                <a type="button" class="btn btn-outline-dark btn-sm" title="Promocion item." id="PromotionItemButton">
+                    <i class="fas fa-tag text-dark"></i>
+                </a>
+                <a type="button" class="btn btn-outline-danger btn-sm" title="Eliminar item." onclick="IndexPOSRemoveProduct(this, '${item}')">
+                    <i class="fas fa-trash text-red"></i>
+                </a>
+            </th>
+        </tr>`;
+
+        $('#invoice_details').append(tr);
+        IndexPOSCalculateInvoice();
+        IndexPOSCalculateCashChange();
+        toastr.success(`Item ${item} agregado exitosamente.`);
+    }
 }
 
-function IndexPOSRemoveProduct(button){
+function IndexPOSRemoveProduct(button, item){
     $(button).closest('tr').remove();
     IndexPOSCalculateInvoice();
-    IndexPOSCalculateCashChange()
+    IndexPOSCalculateCashChange();
+    toastr.danger(`Item ${item} removido exitosamente.`);
 }
 
 function IndexPOSCalculateItem(input, boolean = false){
     let tr = $(input).closest('tr');
     let price = parseInt(tr.find('#price').attr('data-price'));
     let quantity = parseInt($(input).val());
-    if(boolean && isNaN(quantity)){
+    let max = parseInt($(input).attr('max'));
+    if ((boolean && isNaN(quantity)) || quantity > max) {
+        if (quantity > max) {
+            toastr.error(`La cantidad en inventario es de ${max}.`);
+        }
         quantity = 1;
         $(input).val(quantity);
     }
@@ -229,9 +244,9 @@ function IndexPOSCalculateCashChange(){
 }
 
 function IndexPOSAjaxSuccess(response) {
-    if(response.status === 200) {
+    /*if(response.status === 200) {
         toastr.success(response.message);
-    }
+    }*/
 
     if(response.status === 204) {
         toastr.warning(response.message);

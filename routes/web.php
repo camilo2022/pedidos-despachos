@@ -8,6 +8,7 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ModulesAndSubmodulesController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
@@ -258,6 +259,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/Index', 'index')->name('Dashboard.POS.Index');
                 Route::post('/Person', 'person')->name('Dashboard.POS.Person');
                 Route::post('/Product', 'product')->name('Dashboard.POS.Product');
+            });
+        });
+
+        Route::prefix('/Invoices')->group(function () {
+            Route::controller(InvoiceController::class)->group(function () {
+                Route::post('/Store', 'store')->name('Dashboard.Invoices.Store');
             });
         });
 
