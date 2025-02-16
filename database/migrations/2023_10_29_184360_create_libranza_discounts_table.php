@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Invoice;
+use App\Models\Libranza;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,7 +17,7 @@ return new class extends Migration
     {
         Schema::create('libranza_discounts', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Invoice::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(Libranza::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->float('value');
             $table->float('balance');
             $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');

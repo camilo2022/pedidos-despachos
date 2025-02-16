@@ -265,6 +265,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/Invoices')->group(function () {
             Route::controller(InvoiceController::class)->group(function () {
                 Route::post('/Store', 'store')->name('Dashboard.Invoices.Store');
+                Route::get('/Ticket/{id}', 'ticket')->name('Dashboard.Invoices.Ticket');
             });
         });
 

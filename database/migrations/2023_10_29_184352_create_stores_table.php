@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Business;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->string('prefix', 3)->unique();
             $table->unsignedInteger('consecutive')->default(1);
             $table->enum('status', ['Abierta', 'Cerrada']);
+            $table->foreignIdFor(Business::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

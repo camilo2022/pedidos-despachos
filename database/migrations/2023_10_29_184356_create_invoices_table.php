@@ -20,7 +20,7 @@ return new class extends Migration
             $table->id();
             $table->morphs('model');
             $table->string('reference');
-            $table->enum('status', ['Pendiente', 'Aprobado', 'Anulado'])->default('Pendiente');
+            $table->enum('status', ['Pendiente', 'Pagado', 'Anulado'])->default('Pendiente');
             $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(CashRegister::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->index(['model_type', 'model_id', 'reference'])->unique();

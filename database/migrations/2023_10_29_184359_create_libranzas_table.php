@@ -21,6 +21,7 @@ return new class extends Migration
             $table->float('value');
             $table->enum('status', ['Pendiente', 'Aprobado', 'Cancelado', 'Proceso', 'Pagado'])->default('Pendiente');
             $table->string('code', 8);
+            $table->string('sms');
             $table->enum('share', [1, 2, 3, 4])->default(4);
             $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

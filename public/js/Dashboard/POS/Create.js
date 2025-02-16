@@ -78,6 +78,9 @@ function CreatePOSInvoice(){
                         }).filter(Boolean)
                     },
                     success: function(response) {
+                        if(response.data.url != null){
+                            window.open(response.data.url, '_blank');
+                        }
                         CreatePOSAjaxSuccess(response);
                     },
                     error: function(xhr, textStatus, errorThrown) {
@@ -93,6 +96,10 @@ function CreatePOSInvoice(){
 
 function CreatePOSAjaxSuccess(response) {
     if(response.status === 200) {
+        toastr.success(response.message);
+    }
+
+    if(response.status === 201) {
         toastr.success(response.message);
     }
 

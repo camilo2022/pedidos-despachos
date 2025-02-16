@@ -372,7 +372,7 @@
                                                         <div class="input-group-prepend"  style="height: {{ ($payment_method->settings->verify ?? false) or ($payment_method->settings->employee ?? false) ? '76' : '100' }}%;">
                                                             <span class="input-group-text">$</span>
                                                         </div>
-                                                        <input type="number" class="form-control"  id="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)) }}" @if($payment_method->is_cash) onkeyup="IndexPOSCalculateCashChange()" @endif style="font-size: 25px !important;">
+                                                        <input type="number" class="form-control"  id="{{ str_replace(' ', '_', strtolower($payment_method->settings->name)) }}" onkeyup="IndexPOSCalculateCashChange()" style="font-size: 25px !important;">
                                                         @if(($payment_method->settings->verify ?? false))
                                                         @php($name = '')
                                                         @if (isset($payment_method->settings->employee))
