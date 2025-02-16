@@ -80,6 +80,7 @@
         <p><strong>Caja:</strong> {{ strtoupper($invoice->cash_register->name) }} - <strong>Cajero:</strong> {{ strtoupper($invoice->cash_register->user->name) }}</p>
         <p><strong>Cliente:</strong> {{ strtoupper($invoice->model->name . ' ' . $invoice->model->last_name) }}</p>
         <p><strong>Doc:</strong> {{ $invoice->model->number_document }} - <strong>Tel:</strong>{{ $invoice->model->phone_number }}</p>
+        <p><strong>Correo:</strong> {{ $invoice->model->email }}</p>
         <hr>
         <p><strong>Detalles de la compra</strong></p>
         <hr>
@@ -87,8 +88,8 @@
             <thead>
                 <tr>
                     <th width="40%">Cod</th>
-                    <th width="10%">Val</th>
-                    <th width="20%">Can</th>
+                    <th width="10%">Can</th>
+                    <th width="20%">Val</th>
                     <th width="30%">Tot</th>
                 </tr>
             </thead>
