@@ -9,6 +9,7 @@ use App\Http\Controllers\FilterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LibranzaController;
 use App\Http\Controllers\ModulesAndSubmodulesController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
@@ -266,6 +267,12 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(InvoiceController::class)->group(function () {
                 Route::post('/Store', 'store')->name('Dashboard.Invoices.Store');
                 Route::get('/Ticket/{id}', 'ticket')->name('Dashboard.Invoices.Ticket');
+            });
+        });
+
+        Route::prefix('/Libranzas')->group(function () {
+            Route::controller(LibranzaController::class)->group(function () {
+                Route::put('/Confirm/{id}', 'confirm')->name('Dashboard.Libranzas.Confirm');
             });
         });
 

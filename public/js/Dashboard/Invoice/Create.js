@@ -1,4 +1,4 @@
-function CreatePOSInvoice(){
+function CreateInvoice(){
     let boolean = true;
     $.each(payment_methods, function(field, payment_method) {
         let checked = $(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}_check`).prop('checked');
@@ -78,13 +78,17 @@ function CreatePOSInvoice(){
                         }).filter(Boolean)
                     },
                     success: function(response) {
-                        if(response.data.url != null){
+                        if(response.data.url != null && response.data.libranza == null){
                             window.open(response.data.url, '_blank');
+                        } else {
+                            toastr.info('Para cerrar la factura y poder imprimirla debe firmar la libranza.');
+                            $('#ConfirmLibranzaButton').attr('onclick', `ConfirmLibranza(${response.data.libranza.id})`);
+                            $('#ConfirmLibranzaModal').modal('show');
                         }
-                        CreatePOSAjaxSuccess(response);
+                        CreateInvoiceAjaxSuccess(response);
                     },
                     error: function(xhr, textStatus, errorThrown) {
-                        CreatePOSAjaxError(xhr);
+                        CreateInvoiceAjaxError(xhr);
                     }
                 });
             } else {
@@ -94,7 +98,7 @@ function CreatePOSInvoice(){
     }
 }
 
-function CreatePOSAjaxSuccess(response) {
+function CreateInvoiceAjaxSuccess(response) {
     if(response.status === 200) {
         toastr.success(response.message);
     }
@@ -108,7 +112,7 @@ function CreatePOSAjaxSuccess(response) {
     }
 }
 
-function CreatePOSAjaxError(xhr) {
+function CreateInvoiceAjaxError(xhr) {
     if(xhr.status === 403) {
         toastr.error(xhr.responseJSON.error ? xhr.responseJSON.error.message : xhr.responseJSON.message);
     }

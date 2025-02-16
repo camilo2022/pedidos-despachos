@@ -410,8 +410,8 @@
 
                                     <hr>
                                     <div class="text-right">
-                                        <button type="button" class="btn btn-danger" id="CancelPOSInvoiceButton">Cancelar</button>
-                                        <button type="button" class="btn btn-success" id="CreatePOSInvoiceButton" onclick="CreatePOSInvoice()">Vender</button>
+                                        <button type="button" class="btn btn-danger" id="CancelPOSButton">Cancelar</button>
+                                        <button type="button" class="btn btn-success" id="CreateInvoiceButton" onclick="CreateInvoice()">Vender</button>
                                     </div>
                                 </div>
                             </div>
@@ -419,6 +419,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+        @include('Dashboard.Libranza.Confirm')
     </section>
 @endsection
 @section('script')
@@ -427,5 +429,6 @@
         let promotions = @json($promotions);
     </script>
     <script src="{{ asset('js/Dashboard/POS/Index.js') }}"></script>
-    <script src="{{ asset('js/Dashboard/POS/Create.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Invoice/Create.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Libranza/Confirm.js') }}"></script>
 @endsection

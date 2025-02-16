@@ -104,7 +104,7 @@ class InvoiceController extends Controller
                     'libranza' => $libranza,
                     'url' => URL::route('Dashboard.Invoices.Ticket', ['id' => $invoice->id]),
                 ],
-                'La factura fue registrada exitosamente.' . is_null($libranza) ? '' : ' La libranza se registró correctamente, ingresar el codigo enviado por SMS al telefono del cliente para cerrar la libranza.',
+                'La factura fue registrada exitosamente.',
                 201
             );
         } catch (QueryException $e) {
@@ -128,41 +128,54 @@ class InvoiceController extends Controller
 
     private function sms($code, $reference, $value, $phone, $store)
     {
-        return 'MTczOTY4MTAzNA==|xVxHlrsNKLRUEpwJOS05yiWhM';
-        $url = "https://api103.hablame.co/api/sms/v3/send/priority";
+        try {
+            return 'MTczOTY4MTAzNA==|xVxHlrsNKLRUEpwJOS05yiWhM';
+            $url = "https://api103.hablame.co/api/sms/v3/send/priority";
 
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Account' => env('SMS_ACCOUNT'),
-            'ApiKey' => env('SMS_API_KEY'),
-            'Content-Type' => 'application/json',
-            'Token' => env('SMS_TOKEN'),
-        ])->post($url, [
-            'toNumber' => "57$phone",
-            'sms' => "$store Libranza Monto: $ $value. Este es tu código de firma de libranza $code de la factura $reference.",
-            'flash' => '0',
-            'sc' => '899991',
-            'request_dlvr_rcpt' => '0',
-        ]);
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Account' => env('SMS_ACCOUNT'),
+                'ApiKey' => env('SMS_API_KEY'),
+                'Content-Type' => 'application/json',
+                'Token' => env('SMS_TOKEN'),
+            ])->post($url, [
+                'toNumber' => "57$phone",
+                'sms' => "$store Libranza Monto: $ $value. Este es tu código de firma de libranza $code de la factura $reference.",
+                'flash' => '0',
+                'sc' => '899991',
+                'request_dlvr_rcpt' => '0',
+            ]);
 
-        $data = (object) $response->json();
+            $data = (object) $response->json();
 
-        if (isset($data->status) && $data->status == '1x000') {
-            return $data->smsId;
-        } else {
-            return 'Ha ocurrido un error: ' . ($data->error_description ?? 'Desconocido') . ' (' . ($data->status ?? 'Sin código') . ')';
+            if (isset($data->status) && $data->status == '1x000') {
+                return $data->smsId;
+            } else {
+                return 'Ha ocurrido un error: ' . ($data->error_description ?? 'Desconocido') . ' (' . ($data->status ?? 'Sin código') . ')';
+            }
+        } catch (Exception $e) {
+            return 'Ha ocurrido un error: Desconocido (Sin código)';
         }
     }
 
     public function ticket($id)
     {
-        $payment_methods = PaymentMethod::get();
-        $invoice = Invoice::with(['model', 'cash_register.user', 'cash_register.store.business', 'invoice_details.invoice_detail_payments.payment_method', 'invoice_details.product', 'invoice_details.size', 'invoice_details.color'])->findOrFail($id);
-        $codeBar = DNS1D::getBarcodePNG($invoice->reference, 'C39+', 5, 100);
-        $pdf = PDF::loadView('Dashboard.Invoices.Ticket', compact('invoice', 'payment_methods', 'codeBar'));
+        try {
+            $payment_methods = PaymentMethod::get();
+            $invoice = Invoice::with(['model', 'cash_register.user', 'cash_register.store.business', 'invoice_details.invoice_detail_payments.payment_method', 'invoice_details.product', 'invoice_details.size', 'invoice_details.color'])->findOrFail($id);
+            $codeBar = DNS1D::getBarcodePNG($invoice->reference, 'C39+', 5, 100);
+            $pdf = PDF::loadView('Dashboard.Invoices.Ticket', compact('invoice', 'payment_methods', 'codeBar'));
+            $pdf->setPaper([0, 0, 226.772, 550]);
 
-        $pdf->setPaper([0, 0, 226.772, 550]);
-
-        return $pdf->stream("{$invoice->reference}.pdf");
+            return $pdf->stream("{$invoice->reference}.pdf");
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('Exception'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
     }
 }
