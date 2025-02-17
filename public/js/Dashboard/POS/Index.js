@@ -243,6 +243,31 @@ function IndexPOSCalculateCashChange(){
     $('#change').attr('data-change', cash - (total - other));
 }
 
+function IndexPOSReset() {
+    $.each(payment_methods, function(index, payment_method) {
+        $(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}`).val('');
+        $(`#${payment_method.settings.name.toLowerCase().replace(/\s+/g, '_')}_check`).prop('checked', payment_method.settings.default).trigger('change').prop('disabled', payment_method.is_libranza);
+    });
+
+
+    $('#person_number_document').attr('data-person_id', '');
+    $('#person_number_document').val('');
+    $('#person_name').val('');
+    $('#person_last_name').val('');
+    $('#person_phone_number').val('');
+    $('#person_email').val('');
+    $('#person_address').val('');
+    $('#employee_quota').val('');
+    $('#employee_debt').val('');
+    $('#employee_available').val('');
+
+    $('#green, #red').hide();
+    $(`#black`).show();
+
+    $('#invoice_details').empty();
+    IndexPOSCalculateCashChange();
+}
+
 function IndexPOSAjaxSuccess(response) {
     /*if(response.status === 200) {
         toastr.success(response.message);

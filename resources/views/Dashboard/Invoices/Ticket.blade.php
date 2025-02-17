@@ -83,7 +83,6 @@
         <p><strong>Correo:</strong> {{ $invoice->model->email }}</p>
         <hr>
         <p><strong>Detalles de la compra</strong></p>
-        <hr>
         <table>
             <thead>
                 <tr>
@@ -116,7 +115,28 @@
             @endif
         @endforeach
         <hr>
-
+        @if(!is_null($invoice->libranza))
+        <p><strong>Detalles de Libranza</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th width="10%">N°</th>
+                    <th width="45%">Fecha</th>
+                    <th width="45%">Descuento</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($discounts as $discount)
+                <tr>
+                    <td>{{ $discount->number }}</td>
+                    <td>{{ $discount->date }}</td>
+                    <td>{{ $discount->value }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <hr>
+        @endif
         <div class="barcode">
             <p>GRACIAS POR SU COMPRA</p>
             <img src="data:image/png;base64,{{ $codeBar }}" width="150">

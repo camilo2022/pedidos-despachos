@@ -12,6 +12,7 @@ use App\Models\Person;
 use App\Traits\ApiMessage;
 use App\Traits\ApiResponser;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -162,10 +163,34 @@ class InvoiceController extends Controller
     {
         try {
             $payment_methods = PaymentMethod::get();
-            $invoice = Invoice::with(['model', 'cash_register.user', 'cash_register.store.business', 'invoice_details.invoice_detail_payments.payment_method', 'invoice_details.product', 'invoice_details.size', 'invoice_details.color'])->findOrFail($id);
+            $invoice = Invoice::with(['model', 'libranza', 'cash_register.user', 'cash_register.store.business', 'invoice_details.invoice_detail_payments.payment_method', 'invoice_details.product', 'invoice_details.size', 'invoice_details.color'])->findOrFail($id);
             $codeBar = DNS1D::getBarcodePNG($invoice->reference, 'C39+', 5, 100);
-            $pdf = PDF::loadView('Dashboard.Invoices.Ticket', compact('invoice', 'payment_methods', 'codeBar'));
-            $pdf->setPaper([0, 0, 226.772, 550]);
+
+            $discounts = [];
+            $date = Carbon::parse($invoice->libranza->created_at)->addMonthNoOverflow()->startOfMonth();
+
+            $value_share = $invoice->libranza->value / $invoice->libranza->share;
+
+            for ($i = 0; $i < $invoice->libranza->share; $i++) {
+                $date_discount = $i % 2 == 1 ? $date->copy()->day(15) : $date->copy()->day(1);
+                $discounts[] = (object) [
+                    'number' => $i + 1,
+                    'date' => $date_discount->format('d/m/Y'),
+                    'value' => number_format($value_share, 2)
+                ];
+
+                if ($i % 2 == 1) {
+                    $date->addMonthNoOverflow()->startOfMonth();
+                }
+            }
+
+            $pdf = PDF::loadView('Dashboard.Invoices.Ticket', compact('invoice', 'payment_methods', 'discounts', 'codeBar'));
+            $height = 500;
+            $height += $invoice->invoice_details->count() * 15;
+            $height += $invoice->invoice_details->pluck('invoice_detail_payments')->flatten()->pluck('payment_method_id')->unique()->count() * 15 ;
+            $height += count($discounts) > 0 ? (15 + (count($discounts)) * 15) : 0;
+
+            $pdf->setPaper([0, 0, 226.772, $height]);
 
             return $pdf->stream("{$invoice->reference}.pdf");
         } catch (Exception $e) {

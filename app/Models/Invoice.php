@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -36,6 +37,11 @@ class Invoice extends Model implements Auditable
     public function model() : MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function libranza() : HasOne
+    {
+        return $this->hasOne(libranza::class, 'invoice_id');
     }
 
     public function files() : MorphMany

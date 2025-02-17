@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->boolean('apply_product')->default(false);
             $table->boolean('apply_quantity')->default(false);
             $table->boolean('apply_percentage')->default(false);
-            $table->json('settings');
+            $table->json('settings')->default(new Expression('(JSON_OBJECT())'));
             $table->timestamps();
         });
     }

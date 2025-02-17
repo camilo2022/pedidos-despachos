@@ -22,6 +22,15 @@ class PaymentMethod extends Model implements Auditable
         'settings'
     ];
 
+    protected $casts = [
+        'apply_trademark' => 'boolean',
+        'apply_category' => 'boolean',
+        'apply_product' => 'boolean',
+        'apply_quantity' => 'boolean',
+        'apply_percentage' => 'boolean',
+        'settings' => 'object'
+    ];
+
     protected $auditInclude = [
         'name',
         'is_cash',

@@ -47,7 +47,6 @@
                         <div class="card-body">
                             @foreach (['is_cash', 'is_libranza', 'is_transfer', 'is_card'] as $type)
                                 @forelse ($payment_methods->where($type, true) as $payment_method)
-                                @php($payment_method->settings = json_decode($payment_method->settings))
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="input-group">
@@ -316,7 +315,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <table id="detalles" style="width:100%"
+                                    <table style="width:100%"
                                         class="table table-bordered table-sm table-hover text-center">
                                         <thead class="bg-dark">
                                             <tr>
@@ -402,7 +401,7 @@
                                                 <label class="control-label text-right col-md-9">Cambio:</label>
                                                 <div class="col-md-3">
 
-                                                    <h3><span id="change" data-change="0">$ 0</span></h3>
+                                                    <h3><span id="change" data-change="0">$ 0,00</span></h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -410,7 +409,7 @@
 
                                     <hr>
                                     <div class="text-right">
-                                        <button type="button" class="btn btn-danger" id="CancelPOSButton">Cancelar</button>
+                                        <button type="button" class="btn btn-danger" id="IndexPOSResetButton" onclick="IndexPOSReset()">Cancelar</button>
                                         <button type="button" class="btn btn-success" id="CreateInvoiceButton" onclick="CreateInvoice()">Vender</button>
                                     </div>
                                 </div>
@@ -427,6 +426,7 @@
     <script>
         let payment_methods = @json($payment_methods);
         let promotions = @json($promotions);
+        console.log(promotions);
     </script>
     <script src="{{ asset('js/Dashboard/POS/Index.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Invoice/Create.js') }}"></script>
