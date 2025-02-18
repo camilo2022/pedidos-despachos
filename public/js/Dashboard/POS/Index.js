@@ -254,26 +254,25 @@ function IndexPOSCalculateDiscount(){
             let price_quantity = parseInt($(this).find('#price').attr('data-price'));
             let price_promotion = promotion.settings.value;
             let quantity_promotion = promotion.settings.quantity;
+            let percentage = promotion.settings.percentage;
             let subtotal = parseInt($(this).find('#subtotal').attr('data-subtotal'));
+            let discount = 0;
 
             if(promotion.apply_quantity && !promotion.apply_percentage) {
                 let group_promotion = Math.floor(quantity / quantity_promotion);
                 let remaining = quantity % quantity_promotion;
 
-                let price_final = (group_promotion * price_promotion) + (remaining * price_quantity);
-
-                $(this).find('#discount').attr('data-discount', subtotal - price_final);
-                $(this).find('#discount').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(subtotal - price_final));
-
-                $(this).find('#total').attr('data-total', price_final);
-                $(this).find('#total').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(price_final));
-
-            } else if(!promotion.apply_quantity && promotion.apply_percentage) {
+                discount = (group_promotion * price_promotion) + (remaining * price_quantity);
 
             } else {
-
+                discount = (percentage * subtotal) / 100;
             }
-            console.log(promotion)
+
+            $(this).find('#discount').attr('data-discount', subtotal - discount);
+            $(this).find('#discount').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(subtotal - discount));
+
+            $(this).find('#total').attr('data-total', discount);
+            $(this).find('#total').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(discount));
         }
     });
     IndexPOSCalculateInvoice();

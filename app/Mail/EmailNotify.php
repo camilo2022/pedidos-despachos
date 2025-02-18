@@ -2,10 +2,14 @@
 
 namespace App\Mail;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 
-class EmailNotify extends Mailable
+class EmailNotify extends Mailable implements ShouldQueue
 {
+    use Queueable;
+
     public $data;
 
     public function __construct($data)

@@ -1,4 +1,4 @@
-<div class="modal fade" id="CreateOrderDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" aria-hidden="true">
+<div class="modal fade" id="CreateOrderDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header w-100">
@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group c_form_group">    
+                <div class="form-group c_form_group">
                     <label for="product_id_c">REFERENCIA</label>
                     <select class="form-control select2" id="product_id_c" name="product_id_c" onchange="CreateOrderDetailProductGetColor(this)">
                         <option value="">Seleccione</option>

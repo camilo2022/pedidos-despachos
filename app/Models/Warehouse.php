@@ -24,6 +24,14 @@ class Warehouse extends Model implements Auditable
         'to_sale'
     ];
 
+    protected $casts = [
+        'to_cut' => 'boolean',
+        'to_transit' => 'boolean',
+        'to_discount' => 'boolean',
+        'to_exclusive' => 'boolean',
+        'to_sale' => 'boolean'
+    ];
+
     protected $auditInclude = [
         'name',
         'code',

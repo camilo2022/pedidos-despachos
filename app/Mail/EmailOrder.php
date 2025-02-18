@@ -2,10 +2,14 @@
 
 namespace App\Mail;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 
-class EmailOrder extends Mailable
+class EmailOrder extends Mailable implements ShouldQueue
 {
+    use Queueable;
+
     public $data;
     public $file;
 

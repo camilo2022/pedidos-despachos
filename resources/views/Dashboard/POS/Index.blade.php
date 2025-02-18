@@ -427,7 +427,6 @@
     <script>
         let payment_methods = @json($payment_methods);
         let promotions = @json($promotions);
-        console.log(promotions);
     </script>
     <script src="{{ asset('js/Dashboard/POS/Index.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Invoice/Create.js') }}"></script>

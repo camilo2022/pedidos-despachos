@@ -85,6 +85,7 @@ function CreateInvoice(){
                             $('#ConfirmLibranzaButton').attr('onclick', `ConfirmLibranza(${response.data.libranza.id})`);
                             $('#ConfirmLibranzaModal').modal('show');
                         }
+                        IndexPOSReset();
                         CreateInvoiceAjaxSuccess(response);
                     },
                     error: function(xhr, textStatus, errorThrown) {

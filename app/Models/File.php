@@ -28,6 +28,10 @@ class File extends Model implements Auditable
         'metadata'
     ];
 
+    protected $casts = [
+        'metadata' => 'object'
+    ];
+
     protected $auditInclude = [
         'model_id',
         'model_type',

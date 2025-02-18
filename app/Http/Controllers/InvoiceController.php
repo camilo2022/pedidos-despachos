@@ -31,7 +31,7 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         try {
-            $consecutive = DB::selectOne('CALL store_consecutive(?)', [Auth::user()->cash_register->store_id])->next_invoice;
+            $consecutive = DB::selectOne('CALL stores(?)', [Auth::user()->cash_register->store_id])->next_invoice;
 
             $libranza = null;
             $value_libranza = 0;
