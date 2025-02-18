@@ -147,7 +147,7 @@ function IndexPOSSelectProduct(product) {
         toastr.warning(`El item ${item} ya está agregado.`);
     } else {
         let tr = `<tr>
-            <th id="reference" data-warehouse_id="${product.warehouse.id}" data-product_id="${product.product.id}" data-size_id="${product.size?.id}" data-color_id="${product.color?.id}">
+            <th id="reference" data-warehouse_id="${product.warehouse.id}" data-product_id="${product.product.id}" data-size_id="${product.size?.id}" data-color_id="${product.color?.id}" data-category="${product.product.category}" data-trademark="${product.product.trademark}">
                 ${item}
             </th>
             <th id="price" data-price="${product.product.price}">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(product.product.price)}</th>
@@ -157,7 +157,7 @@ function IndexPOSSelectProduct(product) {
             <th id="subtotal" data-subtotal="${product.product.price}">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(product.product.price)}</th>
             <th id="total" data-total="${product.product.price}">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(product.product.price)}</th>
             <th>
-                <a type="button" class="btn btn-outline-dark btn-sm" title="Promocion item." id="PromotionItemButton">
+                <a type="button" class="btn btn-outline-dark btn-sm" title="Promocion item." id="PromotionItemButton" onclick="IndexPOSPromotions(this)">
                     <i class="fas fa-tag text-dark"></i>
                 </a>
                 <a type="button" class="btn btn-outline-danger btn-sm" title="Eliminar item." onclick="IndexPOSRemoveProduct(this, '${item}')">
@@ -178,6 +178,47 @@ function IndexPOSRemoveProduct(button, item){
     IndexPOSCalculateInvoice();
     IndexPOSCalculateCashChange();
     toastr.danger(`Item ${item} removido exitosamente.`);
+}
+
+function IndexPOSPromotions(button) {
+    $('#PromotionPOSModal').modal('show');
+
+    $('.PromotionsButton').off('click').on('click', function() {
+        let id = $(this).data('id');
+        IndexPOSApplyPromotion(id, button);
+    });
+}
+
+
+function IndexPOSApplyPromotion(id, button){
+    let tr = $(button).closest('tr');
+    let name = '-';
+    let quantity = parseInt(tr.find('#quantity').val());
+    let reference = tr.find('#reference');
+
+    let apply = promotions.some(promotion => {
+        if (promotion.id !== id) return false;
+
+        let { trademarks, categories, products, quantity: minQuantity } = promotion.settings;
+        name = promotion.name;
+        return (
+            (promotion.apply_trademark && trademarks.includes(reference.attr('data-trademark')) && quantity >= minQuantity) ||
+            (promotion.apply_category && categories.includes(reference.attr('data-category')) && quantity >= minQuantity) ||
+            (promotion.apply_product && products.includes(reference.attr('data-product_id')) && quantity >= minQuantity) ||
+            (promotion.apply_quantity && promotion.apply_percentage && quantity >= minQuantity)
+        );
+    });
+
+    if(apply){
+        toastr.success('El item cumple con los requisitos para aplicar la promocion.');
+        $('#PromotionPOSModal').modal('hide');
+        tr.find('#quantity').prop('disabled', true);
+        tr.find('#promotion').attr('data-promotion_id', id);
+        tr.find('#promotion').text(name);
+        IndexPOSCalculateDiscount();
+    } else {
+        toastr.error('El item no cumple con los requisitos para aplicar la promocion.');
+    }
 }
 
 function IndexPOSCalculateItem(input, boolean = false){
@@ -203,6 +244,41 @@ function IndexPOSCalculateItem(input, boolean = false){
     IndexPOSCalculateCashChange();
 }
 
+function IndexPOSCalculateDiscount(){
+    let invoice_details = $('#invoice_details tr');
+    $.each(invoice_details, function(index, invoice_detail) {
+        let promotion_id = $(this).find('#promotion').attr('data-promotion_id');
+        let promotion = promotions.find(obj => obj.id == promotion_id);
+        if(promotion){
+            let quantity = parseInt($(this).find('#quantity').val());
+            let price_quantity = parseInt($(this).find('#price').attr('data-price'));
+            let price_promotion = promotion.settings.value;
+            let quantity_promotion = promotion.settings.quantity;
+            let subtotal = parseInt($(this).find('#subtotal').attr('data-subtotal'));
+
+            if(promotion.apply_quantity && !promotion.apply_percentage) {
+                let group_promotion = Math.floor(quantity / quantity_promotion);
+                let remaining = quantity % quantity_promotion;
+
+                let price_final = (group_promotion * price_promotion) + (remaining * price_quantity);
+
+                $(this).find('#discount').attr('data-discount', subtotal - price_final);
+                $(this).find('#discount').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(subtotal - price_final));
+
+                $(this).find('#total').attr('data-total', price_final);
+                $(this).find('#total').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(price_final));
+
+            } else if(!promotion.apply_quantity && promotion.apply_percentage) {
+
+            } else {
+
+            }
+            console.log(promotion)
+        }
+    });
+    IndexPOSCalculateInvoice();
+}
+
 function IndexPOSCalculateInvoice(boolean = false){
     let invoice_details = $('#invoice_details tr');
     let subtotal = 0;
@@ -218,6 +294,7 @@ function IndexPOSCalculateInvoice(boolean = false){
     $('#invoice_subtotal').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(subtotal));
     $('#invoice_discount').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(discount));
     $('#invoice_total').text(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(total));
+    IndexPOSCalculateCashChange();
 }
 
 function IndexPOSCalculateCashChange(){

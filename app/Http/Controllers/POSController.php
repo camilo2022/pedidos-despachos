@@ -40,7 +40,7 @@ class POSController extends Controller
             $payment_methods = PaymentMethod::get();
             $promotions = Promotion::get();
 
-            return view('Dashboard.POS.Index', compact('payment_methods', 'promotions'))->with('success', "Acceso al POS exitoso. Su caja es {$cash_register->name} de la tienda {$cash_register->store->name}.");
+            return view('Dashboard.POS.Index', compact('payment_methods', 'promotions'))/*->with('success', "Acceso al POS exitoso. Su caja es {$cash_register->name} de la tienda {$cash_register->store->name}.")*/;
         } catch (Exception $e) {
             return back()->with('danger', 'Ocurrió un error al cargar la vista: ' . $e->getMessage());
         }

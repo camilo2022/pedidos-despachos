@@ -109,7 +109,6 @@
         <p><strong>Total a Pagar:</strong> {{ number_format($invoice->invoice_details->sum('total'), 2) }}</p>
         <hr>
         @foreach ($payment_methods as $payment_method)
-            @php($payment_method->settings = json_decode($payment_method->settings))
             @if ($invoice->invoice_details->pluck('invoice_detail_payments')->flatten()->where('payment_method_id', $payment_method->id)->sum('payment') > 0)
                 <p><strong>{{ $payment_method->settings->name }}:</strong> {{ number_format($invoice->invoice_details->pluck('invoice_detail_payments')->flatten()->where('payment_method_id', $payment_method->id)->sum('payment'), 2) }}</p>
             @endif

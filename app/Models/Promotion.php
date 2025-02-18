@@ -28,7 +28,7 @@ class Promotion extends Model implements Auditable
         'apply_product' => 'boolean',
         'apply_quantity' => 'boolean',
         'apply_percentage' => 'boolean',
-        'settings' => 'array'
+        'settings' => 'object'
     ];
 
     protected $auditInclude = [

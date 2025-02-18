@@ -340,7 +340,7 @@
 
                                     <div class="pull-right m-t-30 text-right">
                                         <h4><p>Sub - Total: <span id="invoice_subtotal">$ 0</span></p></h4>
-                                        <h4><p>Descuento: <span id="invoice_descuento">$ 0</span></p></h4>
+                                        <h4><p>Descuento: <span id="invoice_discount">$ 0</span></p></h4>
                                         <h3><b>Total :</b> <span id="invoice_total">$ 0</span></h3>
                                     </div>
                                     <div class="clearfix"></div>
@@ -419,6 +419,7 @@
                 </div>
             </div>
         </div>
+        @include('Dashboard.POS.Promotion')
         @include('Dashboard.Libranza.Confirm')
     </section>
 @endsection
