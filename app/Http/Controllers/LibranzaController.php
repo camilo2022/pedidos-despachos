@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Libranza\LibranzaConfirmRequest;
 use App\Models\Libranza;
 use App\Traits\ApiMessage;
 use App\Traits\ApiResponser;
@@ -16,7 +17,7 @@ class LibranzaController extends Controller
     use ApiResponser;
     use ApiMessage;
 
-    public function confirm(Request $request, $id)
+    public function confirm(LibranzaConfirmRequest $request, $id)
     {
         try {
             $libranza = Libranza::with('invoice')->findOrFail($id);

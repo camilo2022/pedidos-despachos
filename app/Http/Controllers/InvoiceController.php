@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Invoice\InvoiceStoreRequest;
+use App\Models\Inventory;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
 use App\Models\InvoiceDetailPayment;
@@ -15,7 +17,6 @@ use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -28,11 +29,9 @@ class InvoiceController extends Controller
     use ApiResponser;
     use ApiMessage;
 
-    public function store(Request $request)
+    public function store(InvoiceStoreRequest $request)
     {
         try {
-            $consecutive = DB::selectOne('CALL stores(?)', [Auth::user()->cash_register->store_id])->next_invoice;
-
             $libranza = null;
             $value_libranza = 0;
             $has_libranza = PaymentMethod::whereIn('id', collect($request->input('payments'))->pluck('payment_method_id'))->where('is_libranza', true)->get();
@@ -43,7 +42,7 @@ class InvoiceController extends Controller
             $invoice = new Invoice();
             $invoice->model_id = $request->input('person_id');
             $invoice->model_type = Person::class;
-            $invoice->reference = $consecutive;
+            $invoice->reference = DB::selectOne('CALL stores(?)', [Auth::user()->cash_register->store_id])->next_invoice;
             $invoice->status = $has_libranza->count() > 0 ? 'Pendiente' : 'Pagado' ;
             $invoice->user_id = Auth::user()->id;
             $invoice->cash_register_id = Auth::user()->cash_register->id;
@@ -51,6 +50,13 @@ class InvoiceController extends Controller
 
             foreach($request->input('invoice_details') as $item){
                 $item = (object) $item;
+
+                $inventory = Inventory::where('warehouse_id', $item->warehouse_id)->where('product_id', $item->product_id)->where('size_id', $item->size_id ?? null)->where('color_id', $item->color_id ?? null)->first();
+                if($inventory) {
+                    $inventory->quantity -= $item->quantity;
+                    $inventory->save();
+                }
+
                 $invoice_detail = new InvoiceDetail();
                 $invoice_detail->invoice_id = $invoice->id;
                 $invoice_detail->warehouse_id = $item->warehouse_id;
