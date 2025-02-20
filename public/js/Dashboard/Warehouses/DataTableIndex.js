@@ -13,8 +13,9 @@ let tableWarehouses = $('#warehouses').DataTable({
                 4: 'to_transit',
                 5: 'to_discount',
                 6: 'to_exclusive',
-                7: 'deleted_at',
-                8: 'id'
+                7: 'to_sale',
+                8: 'deleted_at',
+                9: 'id'
             };
             request._token = $('meta[name="csrf-token"]').attr('content');
             request.perPage = request.length;
@@ -68,6 +69,16 @@ let tableWarehouses = $('#warehouses').DataTable({
         },
         {
             data: 'to_exclusive',
+            render: function (data, type, row) {
+                if (data == 1) {
+                    return `<h5><span class="badge badge-pill badge-success"><i class="fas fa-circle-check mr-2"></i>Activo</span></h5>`;
+                } else {
+                    return `<h5><span class="badge badge-pill badge-danger"><i class="fas fa-circle-xmark mr-2"></i>Inactivo</span></h5>`;
+                }
+            }
+        },
+        {
+            data: 'to_sale',
             render: function (data, type, row) {
                 if (data == 1) {
                     return `<h5><span class="badge badge-pill badge-success"><i class="fas fa-circle-check mr-2"></i>Activo</span></h5>`;

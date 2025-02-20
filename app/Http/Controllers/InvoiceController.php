@@ -16,6 +16,7 @@ use App\Traits\ApiResponser;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -182,7 +183,7 @@ class InvoiceController extends Controller
                 $discounts[] = (object) [
                     'number' => $i + 1,
                     'date' => $date_discount->format('d/m/Y'),
-                    'value' => number_format($value_share, 2)
+                    'value' => number_format($value_share, 0)
                 ];
 
                 if ($i % 2 == 1) {
@@ -194,19 +195,15 @@ class InvoiceController extends Controller
             $height = 500;
             $height += $invoice->invoice_details->count() * 15;
             $height += $invoice->invoice_details->pluck('invoice_detail_payments')->flatten()->pluck('payment_method_id')->unique()->count() * 15 ;
-            $height += count($discounts) > 0 ? (15 + (count($discounts)) * 15) : 0;
+            $height += !empty($discounts) ? (15 + (count($discounts)) * 15) : 0;
 
             $pdf->setPaper([0, 0, 226.772, $height]);
 
             return $pdf->stream("{$invoice->reference}.pdf");
+        } catch (ModelNotFoundException $e) {
+            return back()->with('danger', 'Ocurrió un error al cargar el pdf del pedido: ' . $this->getMessage('ModelNotFoundException'));
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('Exception'),
-                    'error' => $e->getMessage()
-                ],
-                500
-            );
+            return back()->with('danger', 'Ocurrió un error al cargar la vista: ' . $e->getMessage());
         }
     }
 }

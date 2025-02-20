@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->morphs('model');
-            $table->enum('file', ['DOCUMENTO DE IDENTIFICACION', 'FIRMA GARANTIA', 'RUT', 'CAMARA DE COMERCIO', 'PORTADA', 'IMAGEN', 'VIDEO', 'CERTIFICADO', 'FACTURA', 'MEMBRETE', 'FIRMA', 'FOTO', 'TRANSFERENCIA', 'LOGO']);
+            $table->enum('type', ['DOCUMENTO DE IDENTIFICACION', 'FIRMA GARANTIA', 'RUT', 'CAMARA DE COMERCIO', 'PORTADA', 'IMAGEN', 'VIDEO', 'CERTIFICADO', 'FACTURA', 'MEMBRETE', 'FIRMA', 'FOTO', 'TRANSFERENCIA', 'LOGO']);
             $table->string('name');
             $table->string('path');
             $table->string('mime');

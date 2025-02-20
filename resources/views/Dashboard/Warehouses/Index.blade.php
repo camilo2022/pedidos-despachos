@@ -56,6 +56,7 @@
                                             <th>TRANSITORIAS</th>
                                             <th>PEDIDOS - FILTRO</th>
                                             <th>PEDIDOS ESPECIAL</th>
+                                            <th>TIENDAS</th>
                                             <th>ESTADO</th>
                                             <th>ACCIONES</th>
                                         </tr>

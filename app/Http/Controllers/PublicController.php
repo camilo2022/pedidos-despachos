@@ -22,7 +22,7 @@ class PublicController extends Controller
     use ApiResponser;
     use ApiMessage;
 
-    public function packageDetail($token)
+    public function package($token)
     {
         try {
             $id = Crypt::decrypt($token);

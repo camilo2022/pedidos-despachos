@@ -56,14 +56,43 @@ function ConfirmLibranzaAjaxError(xhr) {
     }
 
     if(xhr.status === 422){
-        $.each(xhr.responseJSON.errors, function(field, messages) {
-            $.each(messages, function(index, message) {
+        RemoveIsValidClassConfirmLibranza();
+        RemoveIsInvalidClassConfirmLibranza();
+        $.each(xhr.responseJSON.errors, function (field, messages) {
+            AddIsInvalidClassConfirmLibranza(field);
+            $.each(messages, function (index, message) {
                 toastr.error(message);
             });
         });
+        AddIsValidClassConfirmLibranza();
     }
 
     if(xhr.status === 500){
         toastr.error(xhr.responseJSON.error ? xhr.responseJSON.error.message : xhr.responseJSON.message);
     }
+}
+
+function AddIsValidClassConfirmLibranza() {
+    if (!$('#share_l').hasClass('is-invalid')) {
+        $('#share_l').addClass('is-valid');
+    }
+    if (!$('#code_l').hasClass('is-invalid')) {
+        $('#code_l').addClass('is-valid');
+    }
+}
+
+function RemoveIsValidClassConfirmLibranza() {
+    $('#share_l').removeClass('is-valid');
+    $('#code_l').removeClass('is-valid');
+}
+
+function AddIsInvalidClassConfirmLibranza(input) {
+    if (!$(`#${input}_l`).hasClass('is-valid')) {
+        $(`#${input}_l`).addClass('is-invalid');
+    }
+}
+
+function RemoveIsInvalidClassConfirmLibranza() {
+    $('#share_l').removeClass('is-invalid');
+    $('#code_l').removeClass('is-invalid');
 }

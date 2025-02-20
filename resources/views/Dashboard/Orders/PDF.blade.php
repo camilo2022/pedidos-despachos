@@ -56,7 +56,7 @@
         <table style="padding-left:1cm !important; padding-right:1cm !important;" class="table">
             <thead>
                 <tr>
-                    <th colspan="6" class="cell fz-12">
+                    <th colspan="4" class="cell fz-12">
                         INFORMACION DESPACHO DEL PEDIDO
                     </th>
                 </tr>
@@ -67,10 +67,16 @@
                     <td style="text-align: left;" class="cell fz-12">
                         {{ strtoupper($order->client->client_name) }}
                     </td>
+
+                    <th class="text-center" style="border: 1px solid #a7a7a7;" colspan="2" rowspan="4">
+                        <img src="data:image/png;base64,{{ base64_encode($qrCode) }}">
+                    </th>
+                </tr>
+                <tr>
                     <th style="text-align: left;" class="cell fz-12">
                         DOCUMENTO:
                     </th>
-                    <td style="text-align: left;" class="cell fz-12" colspan="3">
+                    <td style="text-align: left;" class="cell fz-12">
                         {{ $order->client->client_number_document . '-' . $order->client->client_branch_code }}
                     </td>
                 </tr>
@@ -81,10 +87,12 @@
                     <td style="text-align: left;" class="cell fz-12">
                         {{ strtoupper($order->client->departament . ' - ' . $order->client->city) }}
                     </td>
+                </tr>
+                <tr>
                     <th style="text-align: left;" class="cell fz-12">
                         DIRECCION:
                     </th>
-                    <td style="text-align: left;" class="cell fz-12" colspan="3">
+                    <td style="text-align: left;" class="cell fz-12">
                         {{ strtoupper($order->client->client_branch_address) }}
                     </td>
                 </tr>
@@ -93,13 +101,13 @@
                         TELEFONOS:
                     </th>
                     <td style="text-align: left;" class="cell fz-12">
-                        {{ $order->client->client_number_phone . ' - ' . $order->client->client_branch_number_phone . ' - ' . $order->client->number_phone }}
+                        {{ collect([$order->client->client_number_phone, $order->client->client_branch_number_phone, $order->client->number_phone])->filter()->unique()->implode(' - ') }}
                     </td>
                     <th style="text-align: left;" class="cell fz-12">
-                        CORREO:
+                        FECHA:
                     </th>
-                    <td style="text-align: left;" class="cell fz-12" colspan="3">
-                        {{ strtoupper($order->client->email) }}
+                    <td style="text-align: left;" class="cell fz-12">
+                        {{ $order->seller_date }}
                     </td>
                 </tr>
                 <tr>
@@ -110,37 +118,31 @@
                         {{ strtoupper($order->seller_user->name . ' ' . $order->seller_user->last_name) }}
                     </td>
                     <th style="text-align: left;" class="cell fz-12">
-                        FECHA:
-                    </th>
-                    <td style="text-align: left;" class="cell fz-12" colspan="3">
-                        {{ $order->seller_date }}
-                    </td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;" class="cell fz-12">
                         DESPACHO:
                     </th>
                     <td style="text-align: left;" class="cell fz-12">
                         {{  strtoupper(in_array($order->dispatch_type, ['Antes de', 'Despues de']) ? $order->dispatch_type . ' ' . $order->dispatch_date : $order->dispatch_type) }}
                     </td>
+                </tr>
+                <tr>
                     <th style="text-align: left;" class="cell fz-12">
-                        OFC:
+                        CORREO:
                     </th>
                     <td style="text-align: left;" class="cell fz-12">
-                        {{ ($order->wallet_dispatch_official ?? $order->seller_dispatch_official) . ' %' }}
+                        {{ strtoupper($order->client->email) }}
                     </td>
-                    <th style="text-align: left;" class="cell fz-12">
-                        DCO:
-                    </th>
                     <td style="text-align: left;" class="cell fz-12">
-                        {{ ($order->wallet_dispatch_document ?? $order->seller_dispatch_document) . ' %' }}
+                        <b>OFC:</b> {{ ($order->wallet_dispatch_official ?? $order->seller_dispatch_official) . ' %' }}
+                    </td>
+                    <td style="text-align: left;" class="cell fz-12">
+                        <b>DCO:</b> {{ ($order->wallet_dispatch_document ?? $order->seller_dispatch_document) . ' %' }}
                     </td>
                 </tr>
                 <tr>
                     <th style="text-align: left;" class="cell fz-12">
                         OBSERVACION:
                     </th>
-                    <td style="text-align: left;" class="cell fz-12" colspan="5">
+                    <td style="text-align: left;" class="cell fz-12" colspan="3">
                         {{ strtoupper($order->seller_observation) }}
                     </td>
                 </tr>

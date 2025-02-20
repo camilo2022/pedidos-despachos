@@ -41,11 +41,13 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Mailer\Exception\TransportException;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class OrderController extends Controller
 {
@@ -1088,7 +1090,10 @@ class OrderController extends Controller
                 }
             }
 
-            $pdf = PDF::loadView('Dashboard.Orders.PDF', compact('order', 'orderSizes'))->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+            $url = URL::route('Public.Order.Index', ['token' => Crypt::encrypt($order->id)]);
+            $qrCode = QrCode::size(100)->generate($url);
+
+            $pdf = PDF::loadView('Dashboard.Orders.PDF', compact('order', 'orderSizes', 'qrCode'))->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
             $pdf->setEncryption($order->client->client_number_document, $order->business->name, ['print']);
 
@@ -1161,7 +1166,10 @@ class OrderController extends Controller
                 }
             }
 
-            $pdf = PDF::loadView('Dashboard.Orders.PDF', compact('order', 'orderSizes'))->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+            $url = URL::route('Public.Order.Index', ['token' => Crypt::encrypt($order->id)]);
+            $qrCode = QrCode::size(100)->generate($url);
+
+            $pdf = PDF::loadView('Dashboard.Orders.PDF', compact('order', 'orderSizes', 'qrCode'))->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
             //return $pdf->download("PEDIDO N° {$order->id}.pdf");
             return $pdf->stream("PEDIDO N° {$order->id}.pdf");
         } catch (ModelNotFoundException $e) {

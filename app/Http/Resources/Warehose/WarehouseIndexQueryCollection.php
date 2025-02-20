@@ -25,6 +25,7 @@ class WarehouseIndexQueryCollection extends ResourceCollection
                     'to_transit' => $warehouse->to_transit,
                     'to_discount' => $warehouse->to_discount,
                     'to_exclusive' => $warehouse->to_exclusive,
+                    'to_sale' => $warehouse->to_sale,
                     'created_at' => $this->formatDate($warehouse->created_at),
                     'updated_at' => $this->formatDate($warehouse->updated_at),
                     'deleted_at' => $warehouse->deleted_at

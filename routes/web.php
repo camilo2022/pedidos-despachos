@@ -62,10 +62,13 @@ Route::get('reset-password/{id}/{token}', [ResetPasswordController::class, 'show
 
 Auth::routes(['register' => false]);
 
-Route::controller(PublicController::class)->group(function () {
-    Route::get('/Packages/Detail/{token}', 'packageDetail')->name('Public.Packages.Detail');
-    Route::get('/Catalogo', 'catalogo')->name('Public.Catalogo.Index');
-    Route::get('/Catalogo/{referecia}/{business_id?}', 'referencia')->name('Public.Catalogo.Referencia');
+Route::prefix('/Public')->group(function () {
+    Route::controller(PublicController::class)->group(function () {
+        Route::get('/Order/{token}', 'order')->name('Public.Order.Index');
+        Route::get('/Package/{token}', 'package')->name('Public.Package.Index');
+        Route::get('/Catalogo', 'catalogo')->name('Public.Catalogo.Index');
+        Route::get('/Catalogo/{referecia}/{business_id?}', 'referencia')->name('Public.Catalogo.Referencia');
+    });
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -272,6 +275,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/Libranzas')->group(function () {
             Route::controller(LibranzaController::class)->group(function () {
+                Route::get('/Index', 'index')->name('Dashboard.Libranzas.Index');
+                Route::post('/Index/Query', 'indexQuery')->name('Dashboard.Libranzas.Index.Query');
+                Route::post('/Create', 'create')->name('Dashboard.Libranzas.Create');
+                Route::post('/Store', 'store')->name('Dashboard.Libranzas.Store');
                 Route::put('/Confirm/{id}', 'confirm')->name('Dashboard.Libranzas.Confirm');
             });
         });

@@ -44,7 +44,8 @@ class WarehouseController extends Controller
                         $query->where('to_cut', true)
                         ->orWhere('to_transit', true)
                         ->orWhere('to_discount', true)
-                        ->orWhere('to_exclusive', true);
+                        ->orWhere('to_exclusive', true)
+                        ->orWhere('to_sale', true);
                     }
                 )
                 ->withTrashed()

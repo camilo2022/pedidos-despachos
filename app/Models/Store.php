@@ -25,7 +25,8 @@ class Store extends Model implements Auditable
         'email',
         'prefix',
         'consecutive',
-        'status'
+        'status',
+        'business_id'
     ];
 
     protected $auditInclude = [
@@ -36,7 +37,8 @@ class Store extends Model implements Auditable
         'email',
         'prefix',
         'consecutive',
-        'status'
+        'status',
+        'business_id'
     ];
 
     public function file() : MorphOne

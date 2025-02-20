@@ -583,8 +583,7 @@ class OrderDispatchController extends Controller
             $sizes = Size::all();
 
             foreach($orderDispatch->order_packing->order_packages as $index => $orderPackage) {
-                $encryptedId = Crypt::encrypt($orderPackage->id);
-                $url = URL::route('Public.Packages.Detail', ['token' => $encryptedId]);
+                $url = URL::route('Public.Package.Index', ['token' => Crypt::encrypt($orderPackage->id)]);
                 $orderPackage->qrCode = QrCode::size(100)->generate($url);
             }
 
