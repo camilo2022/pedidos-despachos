@@ -1,4 +1,4 @@
-function ConfirmLibranza(id) {
+function ApproveLibranza(id) {
     Swal.fire({
         title: '¿Desea confirmar la libranza?',
         text: 'La libranza será confirmada.',
@@ -11,7 +11,7 @@ function ConfirmLibranza(id) {
     }).then((result) => {
         if (result.value) {
             $.ajax({
-                url: `/Dashboard/Libranzas/Confirm/${id}`,
+                url: `/Dashboard/Libranzas/Approve`,
                 type: 'PUT',
                 data: {
                     '_token': $('meta[name="csrf-token"]').attr('content'),
@@ -23,10 +23,10 @@ function ConfirmLibranza(id) {
                     if(response.data.url != null){
                         window.open(response.data.url, '_blank');
                     }
-                    ConfirmLibranzaAjaxSuccess(response);
+                    ApproveLibranzaAjaxSuccess(response);
                 },
                 error: function(xhr, textStatus, errorThrown) {
-                    ConfirmLibranzaAjaxError(xhr);
+                    ApproveLibranzaAjaxError(xhr);
                 }
             });
         } else {
@@ -35,14 +35,14 @@ function ConfirmLibranza(id) {
     });
 }
 
-function ConfirmLibranzaAjaxSuccess(response) {
+function ApproveLibranzaAjaxSuccess(response) {
     if(response.status === 200) {
         toastr.success(response.message);
-        $('#ConfirmLibranzaModal').modal('hide');
+        $('#ApproveLibranzaModal').modal('hide');
     }
 }
 
-function ConfirmLibranzaAjaxError(xhr) {
+function ApproveLibranzaAjaxError(xhr) {
     if(xhr.status === 403) {
         toastr.error(xhr.responseJSON.error ? xhr.responseJSON.error.message : xhr.responseJSON.message);
     }
@@ -56,15 +56,15 @@ function ConfirmLibranzaAjaxError(xhr) {
     }
 
     if(xhr.status === 422){
-        RemoveIsValidClassConfirmLibranza();
-        RemoveIsInvalidClassConfirmLibranza();
+        RemoveIsValidClassApproveLibranza();
+        RemoveIsInvalidClassApproveLibranza();
         $.each(xhr.responseJSON.errors, function (field, messages) {
-            AddIsInvalidClassConfirmLibranza(field);
+            AddIsInvalidClassApproveLibranza(field);
             $.each(messages, function (index, message) {
                 toastr.error(message);
             });
         });
-        AddIsValidClassConfirmLibranza();
+        AddIsValidClassApproveLibranza();
     }
 
     if(xhr.status === 500){
@@ -72,7 +72,7 @@ function ConfirmLibranzaAjaxError(xhr) {
     }
 }
 
-function AddIsValidClassConfirmLibranza() {
+function AddIsValidClassApproveLibranza() {
     if (!$('#share_l').hasClass('is-invalid')) {
         $('#share_l').addClass('is-valid');
     }
@@ -81,18 +81,18 @@ function AddIsValidClassConfirmLibranza() {
     }
 }
 
-function RemoveIsValidClassConfirmLibranza() {
+function RemoveIsValidClassApproveLibranza() {
     $('#share_l').removeClass('is-valid');
     $('#code_l').removeClass('is-valid');
 }
 
-function AddIsInvalidClassConfirmLibranza(input) {
+function AddIsInvalidClassApproveLibranza(input) {
     if (!$(`#${input}_l`).hasClass('is-valid')) {
         $(`#${input}_l`).addClass('is-invalid');
     }
 }
 
-function RemoveIsInvalidClassConfirmLibranza() {
+function RemoveIsInvalidClassApproveLibranza() {
     $('#share_l').removeClass('is-invalid');
     $('#code_l').removeClass('is-invalid');
 }

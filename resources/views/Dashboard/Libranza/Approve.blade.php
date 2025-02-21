@@ -1,4 +1,4 @@
-<div class="modal fade" id="ConfirmLibranzaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static">
+<div class="modal fade" id="ApproveLibranzaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static">
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header w-100">
@@ -29,7 +29,7 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cerrar ventana.">
                     <i class="fas fa-xmark"></i>
                 </button>
-                <button type="button" class="btn btn-primary" id="ConfirmLibranzaButton" onclick="" title="Firmar libranza.">
+                <button type="button" class="btn btn-primary" id="ApproveLibranzaButton" onclick="" title="Aprobar libranza.">
                     <i class="fas fa-floppy-disk"></i>
                 </button>
             </div>

@@ -11,19 +11,23 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-12">
                         <div class="form-group c_form_group">
                             <label for="reference_a">REFERENCIA</label>
                             <input type="text" class="form-control" id="reference_a" name="reference_a" readonly>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
                         <div class="form-group c_form_group">
                             <label for="size_a">TALLA</label>
                             <input type="text" class="form-control" id="size_a" name="size_a" readonly>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
                         <div class="form-group c_form_group">
                             <label for="color_a">COLOR</label>
                             <input type="text" class="form-control" id="color_a" name="color_a" readonly>

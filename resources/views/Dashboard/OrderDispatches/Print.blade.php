@@ -6,7 +6,7 @@
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
         <title>ORDEN N° {{ $orderDispatch->consecutive }}</title>
-        <link rel="icon" href="" type="image/x-icon"> <!-- Favicon-->
+        <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/x-icon">
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class LibranzaConfirmRequest extends FormRequest
+class LibranzaApproveRequest extends FormRequest
 {
     protected function failedValidation(Validator $validator)
     {
@@ -25,6 +25,7 @@ class LibranzaConfirmRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => ['required', 'exists:libranzas,id'],
             'share' => ['required', Rule::in([1, 2, 3, 4])],
             'code' => ['required', 'exists:libranzas,code,' . $this->route('id')]
         ];
@@ -33,6 +34,8 @@ class LibranzaConfirmRequest extends FormRequest
     public function messages()
     {
         return [
+            'id.required' => 'El Identificador de la libranza es requerido.',
+            'id.exists' => 'El Identificador de la libranza no es valido.',
             'share.required' => 'El campo Numero de cuotas es requerido.',
             'share.in' => 'El campo campo Numero de cuotas es invalido.',
             'code.required' => 'El campo Codigo de confirmacion de la libranza es requerido.',

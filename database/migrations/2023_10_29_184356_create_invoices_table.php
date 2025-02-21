@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('reference');
             $table->enum('status', ['Pendiente', 'Pagado', 'Anulado'])->default('Pendiente');
             $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignIdFor(CashRegister::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(CashRegister::class)->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->index(['model_type', 'model_id', 'reference'])->unique();
             $table->timestamps();
         });

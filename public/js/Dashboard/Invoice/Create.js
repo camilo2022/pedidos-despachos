@@ -82,8 +82,8 @@ function CreateInvoice(){
                             window.open(response.data.url, '_blank');
                         } else {
                             toastr.info('Para cerrar la factura y poder imprimirla debe firmar la libranza.');
-                            $('#ConfirmLibranzaButton').attr('onclick', `ConfirmLibranza(${response.data.libranza.id})`);
-                            $('#ConfirmLibranzaModal').modal('show');
+                            $('#ApproveLibranzaButton').attr('onclick', `ApproveLibranza(${response.data.libranza.id})`);
+                            $('#ApproveLibranzaModal').modal('show');
                         }
                         IndexPOSReset();
                         CreateInvoiceAjaxSuccess(response);

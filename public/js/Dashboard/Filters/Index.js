@@ -18,7 +18,7 @@ function IndexFilterReferences() {
         success: function(response) {
             references = response.data.products;
             totalPosition = references.length;
-            
+
             IndexFilterOrganizeReferences(response.data.products, response.data.filtered);
 
             if(references.length == 0) {
@@ -35,7 +35,7 @@ function IndexFilterReferences() {
                 $('#referenceDescription').text('-');
                 $('#color').text('-');
                 $('#colorDescription').text('-');
-                
+
                 $('#siesa').attr('class', `alert alert-info`);
                 $('#tns').attr('class', `alert alert-info`);
                 $('#bmi').attr('class', `alert alert-info`);
@@ -90,7 +90,7 @@ function IndexFilterTotalPositionReference() {
     $('#referenceDescription').text(referenceDescription);
     $('#color').text(color).attr('data-id', object.color.id);
     $('#colorDescription').text(colorDescription);
-    
+
     IndexFilterQueryDataReference(object.product.id, object.color.id);
 }
 
@@ -168,7 +168,7 @@ function IndexFilterOrganizeData(object) {
             'subject': 'filtered_'
         },
     ];
-    
+
     $.each(rowsWarehouses, function (index, rowWarehouse) {
         $(rowWarehouse).empty();
         IndexFilterOrganizeWarehouses(rowWarehouse.name, rowWarehouse.data, object.sizes, rowWarehouse.row, rowWarehouse.subject);
@@ -178,7 +178,7 @@ function IndexFilterOrganizeData(object) {
 
     $('#bodyClients').empty();
     IndexFilterOrganizeOrders(object.requested, object.sizes);
-    
+
     IndexFilterHideColumnsTable(object.sizes, object);
 
     $('#loading').hide();
@@ -188,7 +188,7 @@ function IndexFilterOrganizeData(object) {
 function IndexFilterOrganizeReferences(references) {
     $('#tableReferences').DataTable().destroy().draw();
     $('#bodyReferences').empty();
-    
+
     $.each(references, function (index, reference) {
         let tr =`<tr>
             <td>${index + 1}</td>
@@ -211,7 +211,7 @@ function IndexFilterOrganizeReferences(references) {
 
 function IndexFilterOrganizeWarehouses(warehouse, object, sizes, identify, subject) {
     let tr = `<td colspan="4"><label id="${subject}NAME">${warehouse}</label></td>`;
-    
+
     $.each(sizes, function (index, size) {
         tr += `<td><label id="${subject}T${size.code}">${object['T'+size.code]}</label></td>`;
     });
@@ -226,12 +226,12 @@ function IndexFilterOrganizePercentage(boolean = true) {
     }
 
     let tr = `<td colspan="4"><label id="pctg_NAME">PORCENTAJE</label></td>`;
-        
+
     let corteTotal = parseInt($(`#cutted_TTOTAL`).text());
     let disponibleTotal = parseInt($(`#filtered_TTOTAL`).text());
-    
+
     let porcentajeTotal = Math.round((disponibleTotal / corteTotal) * 100)
-    
+
     $.each(sizes, function (index, size) {
         let corte = parseInt($(`#cutted_T${size.code}`).text());
         let disponible = parseInt($(`#filtered_T${size.code}`).text());
@@ -378,7 +378,7 @@ function IndexFilterHideColumnsTable(sizes, object) {
         $.each(object.requested, function (column, request) {
             quantity += request[`T${size.code}`];
         });
-        
+
         if(quantity == 0) {
             $(`.tableExistencia thead>tr>th:nth-child(${index + 2})`).hide();
             $(`.tableExistencia tbody>tr>td:nth-child(${index + 2})`).hide();
@@ -488,13 +488,13 @@ function IndexFilterAvailabledVsFiltered(){
 
     $.each(tableClientesRows, function(index, tableClientesRow) {
         if($(tableClientesRow).find('input[name="check"]').prop('checked')){
-            
+
             let total = 0;
 
             $.each(sizes, function(j, size) {
-                
+
                 $(tableClientesRow).find(`#t${size.code}`).attr('onkeyup', 'IndexFilterAvailabledVsFiltered()');
-                
+
                 let quantity = parseInt($(tableClientesRow).find(`#t${size.code}`).val())
 
                 sumSizes[`t${size.code}`] += quantity ?? -0;
@@ -517,10 +517,10 @@ function IndexFilterAvailabledVsFiltered(){
         let sum = availabled + sumSizes[`t${size.code}`];
 
         $(`#sum_t${size.code}`).text(sumSizes[`t${size.code}`]);
-        
+
         let filteredElement = $(`#filtered_T${size.code}`);
         filteredElement.text(sum);
-    
+
         if (sum < 0) {
             filteredElement.parent().addClass('bg-danger');
         } else {
@@ -533,7 +533,7 @@ function IndexFilterAvailabledVsFiltered(){
     $(`#sum_tTOTAL`).text(sumSizes[`tTOTAL`]);
 
     $(`#filtered_TTOTAL`).text(availabled_total + sumSizes[`tTOTAL`]);
-    
+
     IndexFilterOrganizePercentage(false);
 }
 
@@ -551,7 +551,7 @@ function IndexFilterValidated() {
         return false;
     }
 
-    
+
     $.each(tableClientesRows, function(index, tableClientesRow) {
         let total = $(this).find('#tTOTAL').val();
         let order_id = $(this).find('#order_id').text();
@@ -588,7 +588,7 @@ function IndexFilterValidated() {
     $.each(sizes, function(index, size) {
         let cutted = parseInt($(`#cutted_T${size.code}`).text());
         let filtered = parseInt($(`#filtered_T${size.code}`).text());
-        
+
         let pctg = Math.round((filtered / cutted) * 100);
         let pctg_total = Math.round((filtered_total / cutted_total) * 100);
 
@@ -624,7 +624,7 @@ function IndexFilterValidated() {
 
 function IndexFilterReference() {
     let boolean = IndexFilterValidated();
-    
+
     let reference = $('#reference').text();
     let color = $('#color').text();
     let colorName = $('#colorDescription').text();
@@ -650,17 +650,17 @@ function IndexFilterReference() {
                         'color_id': $('#color').attr('data-id'),
                         'order_details': $('#tableClientes tr.pedidos').map(function() {
                             if ($(this).find('input[type="checkbox"]').prop('checked')) {
-                
+
                                 let row = $(this);
-                
+
                                 let object = {
                                     'order_detail_id': row.find('input[type="checkbox"]').attr('id')
                                 }
-                
+
                                 $.each(sizes, function(j, size) {
                                     object[`T${size.code}`] = row.find(`#t${size.code}`).val() * -1;
                                 });
-                
+
                                 return object;
                             }
                         }).get()
@@ -684,7 +684,7 @@ function IndexFilterAjaxSuccess(response) {
     if(response.status === 200) {
         toastr.success(response.message);
     }
-    
+
     if(response.status === 201) {
         $(document).Toasts('create', {
             class: 'bg-success',

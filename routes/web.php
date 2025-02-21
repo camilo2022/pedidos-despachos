@@ -279,7 +279,11 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/Index/Query', 'indexQuery')->name('Dashboard.Libranzas.Index.Query');
                 Route::post('/Create', 'create')->name('Dashboard.Libranzas.Create');
                 Route::post('/Store', 'store')->name('Dashboard.Libranzas.Store');
-                Route::put('/Confirm/{id}', 'confirm')->name('Dashboard.Libranzas.Confirm');
+                Route::put('/Approve', 'approve')->name('Dashboard.Libranzas.Approve');
+                Route::post('/Show/{id}', 'show')->name('Dashboard.Libranzas.Show');
+                Route::put('/Payment', 'payment')->name('Dashboard.Libranzas.Payment');
+                Route::put('/Cancel', 'cancel')->name('Dashboard.Libranzas.Cancel');
+                Route::get('/Download/{id}', 'download')->name('Dashboard.Libranzas.Download');
             });
         });
 

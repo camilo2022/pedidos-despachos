@@ -420,7 +420,7 @@
             </div>
         </div>
         @include('Dashboard.POS.Promotion')
-        @include('Dashboard.Libranza.Confirm')
+        @include('Dashboard.Libranza.Approve')
     </section>
 @endsection
 @section('script')
@@ -430,5 +430,5 @@
     </script>
     <script src="{{ asset('js/Dashboard/POS/Index.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Invoice/Create.js') }}"></script>
-    <script src="{{ asset('js/Dashboard/Libranza/Confirm.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Libranza/Approve.js') }}"></script>
 @endsection
