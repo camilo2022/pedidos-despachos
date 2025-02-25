@@ -190,38 +190,30 @@ class InventoryController extends Controller
     public function download()
     {
         try {
-            $inventories = Inventory::select(
-                    'warehouses.name AS BODEGA', 'warehouses.code AS CODBOD', 'products.trademark AS MARCA', 'products.code AS REFERENCIA',
-                    'colors.name AS COLOR', 'colors.code AS CODCOL', 'sizes.code AS TALLA', 'inventories.quantity AS CANTIDAD', 'inventories.system AS SISTEMA'
-                )
-                ->join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
-                /* ->join('warehouses', 'warehouses.id', 'inventories.model_id') */
-                ->join('products', 'products.id', 'inventories.product_id')
-                ->join('colors', 'colors.id', 'inventories.color_id')
-                ->join('sizes', 'sizes.id', 'inventories.size_id')
-                ->where('warehouses.to_cut', false)
+            $inventories = Inventory::with(['warehouse:id,name,code', 'product:id,trademark,code', 'color:id,name,code', 'size:id,code' ])
+                ->select('id', 'warehouse_id', 'product_id', 'color_id', 'size_id', 'quantity', 'system')
+                ->whereHas('warehouse', fn($query) => $query->where('to_cut', false))
                 ->where('quantity', '>', 0)
-                /* ->whereMorphedTo('model_typr', [Warehouse::class]) */
-                ->get();
+                ->get()->map(function ($inventory) {
+                    return [
+                        'BODEGA' => $inventory->warehouse->name,
+                        'CODBOD' => $inventory->warehouse->code,
+                        'MARCA' => $inventory->product->trademark,
+                        'REFERENCIA' => $inventory->product->code,
+                        'COLOR' => $inventory->color->name,
+                        'CODCOL' => $inventory->color->code,
+                        'TALLA' => $inventory->size->code,
+                        'CANTIDAD' => $inventory->quantity,
+                        'SISTEMA' => $inventory->system,
+                    ];
+                });
+
 
             return Excel::download(new InventoryExport($inventories), "INVENTARIOS.xlsx");
         } catch (QueryException $e) {
-            // Manejar la excepción de la base de datos
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('QueryException'),
-                    'error' => $e->getMessage()
-                ],
-                500
-            );
+            return back()->with('danger', $this->getMessage('QueryException') . $e->getMessage());
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('Exception'),
-                    'error' => $e->getMessage()
-                ],
-                500
-            );
+            return back()->with('danger', $this->getMessage('Exception') . $e->getMessage());
         }
     }
 

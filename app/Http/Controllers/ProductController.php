@@ -322,22 +322,9 @@ class ProductController extends Controller
 
             return Excel::download(new ProductExport($products), "PRODUCTOS.xlsx");
         } catch (QueryException $e) {
-            // Manejar la excepción de la base de datos
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('QueryException'),
-                    'error' => $e->getMessage()
-                ],
-                500
-            );
+            return back()->with('danger', $this->getMessage('QueryException') . $e->getMessage());
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('Exception'),
-                    'error' => $e->getMessage()
-                ],
-                500
-            );
+            return back()->with('danger', $this->getMessage('Exception') . $e->getMessage());
         }
     }
 

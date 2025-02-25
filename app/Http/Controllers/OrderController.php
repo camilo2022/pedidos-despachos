@@ -90,17 +90,23 @@ class OrderController extends Controller
             ->when(!in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']),
                 function ($query) {
                     $query->where('seller_user_id', Auth::user()->id)
-                    ->whereHas('correria', fn($query) => $query->whereNull('deleted_at'));
+                    ->whereHas('correria', fn($query) => $query->whereNull('deleted_at'))
+                    ->where('business_id', Auth::user()->business_id);
                 }
             )
-            ->when(in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA']),
+            ->when(in_array(Auth::user()->title, ['CARTERA']),
                 function ($query) {
                     $query->where('seller_status', 'Aprobado')
                     ->whereIn('wallet_status', ['Pendiente', 'Suspendido', 'En mora', 'Parcialmente Aprobado', 'Aprobado', 'Autorizado'])
-                    ->whereIn('dispatch_status', ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Parcialmente Empacado', 'Parcialmente Despachado', 'Despachado']);
+                    ->whereIn('dispatch_status', ['Pendiente', 'Parcialmente Aprobado', 'Aprobado', 'Parcialmente Empacado', 'Parcialmente Despachado', 'Despachado'])
+                    ->where('business_id', Auth::user()->business_id);
                 }
             )
-            ->where('business_id', Auth::user()->business_id)
+            ->when(in_array(Auth::user()->title, ['ADMINISTRADOR']),
+                function ($query) {
+                    $query->where('business_id', Auth::user()->business_id);
+                }
+            )
             ->orderBy($request->input('column'), $request->input('dir'))
             ->paginate($request->input('perPage'));
 

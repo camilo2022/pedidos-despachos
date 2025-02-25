@@ -19,7 +19,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Libranza::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->float('value');
-            $table->float('balance');
             $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

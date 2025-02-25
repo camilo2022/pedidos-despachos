@@ -38,7 +38,7 @@ class Libranza extends Model implements Auditable
 
     public function libranza_discounts() : HasMany
     {
-        return $this->hasMany(Libranza::class, 'libranza_id');
+        return $this->hasMany(LibranzaDiscount::class, 'libranza_id');
     }
 
     public function invoice() : BelongsTo

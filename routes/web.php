@@ -252,7 +252,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/Restore', 'restore')->middleware('can:Dashboard.Clients.Restore')->name('Dashboard.Clients.Restore');
                 Route::post('/Upload/Query', 'uploadQuery')->middleware('can:Dashboard.Clients.Upload.Query')->name('Dashboard.Clients.Upload.Query');
                 Route::post('/Upload', 'upload')->middleware('can:Dashboard.Clients.Upload')->name('Dashboard.Clients.Upload');
-                Route::post('/Download', 'download')->middleware('can:Dashboard.Clients.Download')->name('Dashboard.Clients.Download');
+                Route::get('/Download/{id}', 'download')->middleware('can:Dashboard.Clients.Download')->name('Dashboard.Clients.Download');
                 Route::post('/SyncSiesa', 'syncSiesa')->middleware('can:Dashboard.Clients.SyncSiesa')->name('Dashboard.Clients.SyncSiesa');
                 Route::post('/SyncTns', 'syncTns')->middleware('can:Dashboard.Clients.SyncTns')->name('Dashboard.Clients.SyncTns');
             });
@@ -279,9 +279,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/Index/Query', 'indexQuery')->name('Dashboard.Libranzas.Index.Query');
                 Route::post('/Create', 'create')->name('Dashboard.Libranzas.Create');
                 Route::post('/Store', 'store')->name('Dashboard.Libranzas.Store');
-                Route::put('/Approve', 'approve')->name('Dashboard.Libranzas.Approve');
                 Route::post('/Show/{id}', 'show')->name('Dashboard.Libranzas.Show');
-                Route::put('/Payment', 'payment')->name('Dashboard.Libranzas.Payment');
+                Route::put('/Approve', 'approve')->name('Dashboard.Libranzas.Approve');
+                Route::put('/Discount', 'discount')->name('Dashboard.Libranzas.Discount');
                 Route::put('/Cancel', 'cancel')->name('Dashboard.Libranzas.Cancel');
                 Route::get('/Download/{id}', 'download')->name('Dashboard.Libranzas.Download');
             });
