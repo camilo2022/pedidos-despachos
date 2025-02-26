@@ -420,7 +420,7 @@
             </div>
         </div>
         @include('Dashboard.POS.Promotion')
-        @include('Dashboard.Libranza.Approve')
+        @include('Dashboard.Libranzas.Approve')
     </section>
 @endsection
 @section('script')
@@ -429,6 +429,6 @@
         let promotions = @json($promotions);
     </script>
     <script src="{{ asset('js/Dashboard/POS/Index.js') }}"></script>
-    <script src="{{ asset('js/Dashboard/Invoice/Create.js') }}"></script>
-    <script src="{{ asset('js/Dashboard/Libranza/Approve.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Invoices/Create.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Libranzas/Approve.js') }}"></script>
 @endsection

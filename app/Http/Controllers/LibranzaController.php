@@ -41,7 +41,7 @@ class LibranzaController extends Controller
             $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
 
             $libranzas = Libranza::with([
-                'libranza_discounts', 'invoice',
+                'libranza_discounts', 'invoice.model', 'invoice.cash_register.store',
                 'user' => fn($query) => $query->withTrashed()
             ])
             ->when($request->filled('search'),

@@ -21,13 +21,7 @@ class RolesAndPermissionsIndexQueryCollection extends ResourceCollection
                 return [
                     'id' => $role->id,
                     'role' => $role->name,
-                    'permissions' => $role->permissions->map(function ($permission) {
-                            return [
-                                'id' => $permission->id,
-                                'name' => $permission->name
-                            ];
-                        }
-                    )->toArray()
+                    'permissions' => $role->permissions
                 ];
             }),
 
