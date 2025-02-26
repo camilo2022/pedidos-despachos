@@ -1,12 +1,41 @@
-function ApproveLibranza(id) {
+function ApproveLibranzaModal(id) {
+    $.ajax({
+        url: `/Dashboard/Libranzas/Show/${id}`,
+        type: 'POST',
+        data: {
+            '_token': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            ApproveLibranzaModalCleaned(response.data);
+            ApproveLibranzaAjaxSuccess(response);
+            $('#ApproveLibranzaModal').modal('show');
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            ApproveLibranzaAjaxError(xhr);
+        }
+    });
+}
+
+function ApproveLibranzaModalCleaned(libranza) {
+    RemoveIsValidClassApproveLibranza();
+    RemoveIsInvalidClassApproveLibranza();
+
+    $('#ApproveLibranzaButton').attr('onclick', `ApproveLibranza(${libranza.id})`);
+    $('#ApproveLibranzaButton').attr('data-id', libranza.id);
+
+    $('#share_l').val(libranza.share);
+    $('#code_l').val('');
+}
+
+function ApproveLibranza(id, status = true) {
     Swal.fire({
-        title: '¿Desea confirmar la libranza?',
-        text: 'La libranza será confirmada.',
+        title: '¿Desea aprobar la libranza?',
+        text: 'La libranza será aprobada.',
         icon: 'warning',
         showCancelButton: true,
         cancelButtonColor: '#DD6B55',
         confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Si, confirmar!',
+        confirmButtonText: 'Si, aprobar!',
         cancelButtonText: 'No, cancelar!'
     }).then((result) => {
         if (result.value) {
@@ -20,6 +49,7 @@ function ApproveLibranza(id) {
                     'code': $('#code_l').val()
                 },
                 success: function(response) {
+                    status ? tableLibranzas.ajax.reload() : '' ;
                     if(response.data.url != null){
                         window.open(response.data.url, '_blank');
                     }
@@ -30,7 +60,7 @@ function ApproveLibranza(id) {
                 }
             });
         } else {
-            toastr.info('La libranza no fue confirmada.')
+            toastr.info('La libranza no fue aprobada.')
         }
     });
 }

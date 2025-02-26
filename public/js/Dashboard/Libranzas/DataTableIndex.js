@@ -1,4 +1,4 @@
-let tableOrders = $('#orders').DataTable({
+let tableLibranzas = $('#libranzas').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
@@ -31,11 +31,9 @@ let tableOrders = $('#orders').DataTable({
         dataSrc: function (response) {
             response.recordsTotal = response.data.libranzas.meta.pagination.count;
             response.recordsFiltered = response.data.libranzas.meta.pagination.total;
-            console.log(response.data.values)
             $('#total').text(new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(response.data.values.total));
             $('#pay').text(new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(response.data.values.pay));
             $('#debt').text(new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(response.data.values.debt));
-            console.log(response.data.libranzas.libranzas);
             return response.data.libranzas.libranzas;
         },
         error: function (xhr, error, thrown) {
@@ -114,7 +112,7 @@ let tableOrders = $('#orders').DataTable({
                         return `<h5><span class="badge badge-success"><i class="fas fa-check mr-2"></i>Aprobado</span></h5>`;
                         break;
                     case 'Proceso':
-                        return `<h5><span class="badge bg-orange text-white" style="color: white !important;"><i class="fas fa-dollar-sign mr-2 text-white"></i>Proceso</span></h5>`;
+                        return `<h5><span class="badge bg-orange text-white" style="color: white !important;"><i class="fas fa-hand-holding-usd mr-2 text-white"></i>Proceso</span></h5>`;
                         break;
                     case 'Pagado':
                         return `<h5><span class="badge badge-primary"><i class="fas fa-money-bill mr-2"></i>Pagado</span></h5>`;
@@ -130,32 +128,41 @@ let tableOrders = $('#orders').DataTable({
             render: function (data, type, row) {
                 let btn = `<div class="text-center" style="width: 100%;">`;
 
-                btn += `<a href="/Dashboard/Orders/Download/${row.id}" type="button"
-                class="btn bg-purple btn-sm mr-2" title="Descargar pdf del pedido." target="_blank">
+                btn += `<a href="/Dashboard/Libranzas/Download/${row.id}" type="button"
+                class="btn bg-purple btn-sm mr-2" title="Descargar pdf de la libranza." target="_blank">
                     <i class="fas fa-file-pdf text-white"></i>
                 </a>`;
 
-                btn += `<a onclick="AssentOrder(${row.id})" type="button"
-                class="btn btn-info btn-sm mr-2" title="Visualizar detalles del pedido.">
+                btn += `<a onclick="ShowLibranzaModal(${row.id})" type="button"
+                class="btn btn-info btn-sm mr-2" title="Visualizar libranza.">
                     <i class="fas fa-eye text-white"></i>
                 </a>`;
 
-                btn += `<a onclick="AssentOrder(${row.id})" type="button"
-                class="btn btn-success btn-sm mr-2" title="Asentar pedido.">
-                    <i class="fas fa-check text-white"></i>
-                </a>`;
+                if((row.user_id == $('meta[name="user-id"]').attr('content') && isTienda()) || isAdministrador()){
+                    if(['Pendiente', 'Cancelado'].includes(row.status)){
+                        btn += `<a onclick="ApproveLibranzaModal(${row.id})" type="button"
+                        class="btn btn-success btn-sm mr-2" title="Aprobar libranza.">
+                            <i class="fas fa-check text-white"></i>
+                        </a>`;
+                    }
 
-                btn += `<a onclick="CancelOrder(${row.id})" type="button"
-                class="btn btn-danger btn-sm mr-2" title="Cancelar pedido.">
-                    <i class="fas fa-xmark text-white"></i>
-                </a>`;
+                    if(['Pendiente', 'Aprobado'].includes(row.status)){
+                        btn += `<a onclick="CancelLibranza(${row.id})" type="button"
+                        class="btn btn-danger btn-sm mr-2" title="Cancelar libranza.">
+                            <i class="fas fa-xmark text-white"></i>
+                        </a>`;
+                    }
+                }
 
-                btn += `<a onclick="CancelOrder(${row.id})" type="button"
-                class="btn btn-primary btn-sm mr-2" title="Cancelar pedido.">
-                    <i class="fas fa-money-bill text-white"></i>
-                </a>`;
+                if(['Aprobado', 'Proceso'].includes(row.status) && isAdministrador()){
+                    btn += `<a onclick="DiscountLibranzaModal(${row.id})" type="button"
+                    class="btn bg-orange btn-sm mr-2 text-white" style="color: white !important;" title="Descontar libranza.">
+                        <i class="fas fa-hand-holding-usd text-white"></i>
+                    </a>`;
+                }
 
                 btn += `</div>`;
+
                 return btn;
             }
         },

@@ -281,8 +281,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/Store', 'store')->name('Dashboard.Libranzas.Store');
                 Route::post('/Show/{id}', 'show')->name('Dashboard.Libranzas.Show');
                 Route::put('/Approve', 'approve')->name('Dashboard.Libranzas.Approve');
-                Route::put('/Discount', 'discount')->name('Dashboard.Libranzas.Discount');
                 Route::put('/Cancel', 'cancel')->name('Dashboard.Libranzas.Cancel');
+                Route::put('/Discount', 'discount')->name('Dashboard.Libranzas.Discount');
                 Route::get('/Download/{id}', 'download')->name('Dashboard.Libranzas.Download');
             });
         });

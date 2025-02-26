@@ -133,7 +133,7 @@ class LibranzaController extends Controller
     public function approve(LibranzaApproveRequest $request)
     {
         try {
-            $libranza = Libranza::with('invoice')->findOrFail($request->input('id'));
+            $libranza = Libranza::with('invoice.invoice_details')->findOrFail($request->input('id'));
             $libranza->share = $request->input('share');
             $libranza->status = 'Aprobado';
             $libranza->invoice->status = 'Pagado';
@@ -143,9 +143,50 @@ class LibranzaController extends Controller
             return $this->successResponse(
                 [
                     'libranza' => $libranza,
-                    'url' => URL::route('Dashboard.Invoices.Ticket', ['id' => $libranza->invoice->id]),
+                    'url' => $libranza->invoice->invoice_details ? URL::route('Dashboard.Invoices.Ticket', ['id' => $libranza->invoice->id]) : null,
                 ],
                 'La libranza fue aprobada exitosamente.',
+                200
+            );
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('ModelNotFoundException'),
+                    'error' => $e->getMessage()
+                ],
+                404
+            );
+        } catch (QueryException $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('QueryException'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('Exception'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function cancel(LibranzaCancelRequest $request)
+    {
+        try {
+            $libranza = Libranza::with('invoice')->findOrFail($request->input('id'));
+            $libranza->status = 'Cancelado';
+            $libranza->invoice->status = 'Anulado';
+            $libranza->save();
+            $libranza->invoice->save();
+
+            return $this->successResponse(
+                $libranza,
+                'La libranza fue cancelada exitosamente.',
                 200
             );
         } catch (ModelNotFoundException $e) {
@@ -197,47 +238,6 @@ class LibranzaController extends Controller
             return $this->successResponse(
                 $libranza,
                 'El descuento de Libranza fue aplicado exitosamente exitosamente.',
-                200
-            );
-        } catch (ModelNotFoundException $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('ModelNotFoundException'),
-                    'error' => $e->getMessage()
-                ],
-                404
-            );
-        } catch (QueryException $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('QueryException'),
-                    'error' => $e->getMessage()
-                ],
-                500
-            );
-        } catch (Exception $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('Exception'),
-                    'error' => $e->getMessage()
-                ],
-                500
-            );
-        }
-    }
-
-    public function cancel(LibranzaCancelRequest $request)
-    {
-        try {
-            $libranza = Libranza::with('invoice')->findOrFail($request->input('id'));
-            $libranza->status = 'Cancelado';
-            $libranza->invoice->status = 'Anulado';
-            $libranza->save();
-            $libranza->invoice->save();
-
-            return $this->successResponse(
-                $libranza,
-                'La libranza fue cancelada exitosamente.',
                 200
             );
         } catch (ModelNotFoundException $e) {

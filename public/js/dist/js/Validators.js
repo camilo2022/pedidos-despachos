@@ -2,7 +2,7 @@ function Numbers(event) {
     if(event.keyCode >= 48 && event.keyCode <= 57){
         return true;
     }
-    return false; 
+    return false;
 }
 
 function CleanText(data) {
@@ -54,7 +54,23 @@ function isPromotora() {
 }
 
 function isCoordinadorPromotora() {
-    return ['COORDINADOR'].includes($('meta[name="title"]').attr('content'));
+    return ['COORDINADOR PROMOTORA'].includes($('meta[name="title"]').attr('content'));
+}
+
+function isTienda() {
+    return ['TIENDAS'].includes($('meta[name="title"]').attr('content'));
+}
+
+function isCajeroVendedor() {
+    return ['CAJERO VENDEDOR'].includes($('meta[name="title"]').attr('content'));
+}
+
+function isCajeroSupervisor() {
+    return ['CAJERO SUPERVISOR'].includes($('meta[name="title"]').attr('content'));
+}
+
+function isReporte() {
+    return ['REPORTES'].includes($('meta[name="title"]').attr('content'));
 }
 
 function isUsuario() {

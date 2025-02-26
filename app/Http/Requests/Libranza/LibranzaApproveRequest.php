@@ -27,7 +27,7 @@ class LibranzaApproveRequest extends FormRequest
         return [
             'id' => ['required', 'exists:libranzas,id'],
             'share' => ['required', Rule::in([1, 2, 3, 4])],
-            'code' => ['required', 'exists:libranzas,code,' . $this->route('id')]
+            'code' => ['required', 'exists:libranzas,code,id,' . $this->input('id')]
         ];
     }
 

@@ -62,7 +62,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="orders" class="table table-bordered table-hover dataTable dtr-inline nowrap w-100">
+                                <table id="libranzas" class="table table-bordered table-hover dataTable dtr-inline nowrap w-100">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>#</th>
@@ -90,8 +90,11 @@
                 </div>
             </div>
         </div>
+        @include('Dashboard.Libranzas.Approve')
     </section>
 @endsection
 @section('script')
     <script src="{{ asset('js/Dashboard/Libranzas/DataTableIndex.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Libranzas/Approve.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Libranzas/Cancel.js') }}"></script>
 @endsection
