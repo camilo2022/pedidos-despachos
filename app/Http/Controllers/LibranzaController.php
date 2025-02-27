@@ -219,13 +219,13 @@ class LibranzaController extends Controller
     public function discount(LibranzaDiscountRequest $request)
     {
         try {
-            $libranza = Libranza::with('libranza_discounts')->findOrFail($request->input('id'));
-
             $libranza_discount = new LibranzaDiscount();
-            $libranza_discount->libranza_id = $libranza->id;
+            $libranza_discount->libranza_id = $request->input('id');
             $libranza_discount->value = $request->input('value');
             $libranza_discount->user_id = Auth::user()->id;
             $libranza_discount->save();
+
+            $libranza = Libranza::with('libranza_discounts')->findOrFail($request->input('id'));
 
             if($libranza->value == $libranza->libranza_discounts->sum('value')){
                 $libranza->status = 'Pagado';

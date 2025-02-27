@@ -23,7 +23,30 @@ function DiscountLibranzaModalCleaned(libranza) {
     $('#DiscountLibranzaButton').attr('onclick', `DiscountLibranza(${libranza.id})`);
     $('#DiscountLibranzaButton').attr('data-id', libranza.id);
 
+    $('#total_d').text(new Intl.NumberFormat('es-CO', { currency: 'COP', maximumFractionDigits: 0 }).format(libranza.value));
+    $('#total_d').attr('data-value', libranza.value);
+
+    $('#pay_d').text(new Intl.NumberFormat('es-CO', { currency: 'COP', maximumFractionDigits: 0 }).format(libranza.libranza_discounts.reduce((total, item) => total + item.value, 0)));
+    $('#pay_d').attr('data-value', libranza.libranza_discounts.reduce((total, item) => total + item.value, 0));
+
+    $('#debt_d').text(new Intl.NumberFormat('es-CO', { currency: 'COP', maximumFractionDigits: 0 }).format(libranza.value - libranza.libranza_discounts.reduce((total, item) => total + item.value, 0)));
+    $('#debt_d').attr('data-value', libranza.value - libranza.libranza_discounts.reduce((total, item) => total + item.value, 0));
+
+    $('#share_d').text(new Intl.NumberFormat('es-CO', { currency: 'COP' }).format(libranza.value / libranza.share));
+    $('#share_d').attr('data-value', libranza.value / libranza.share);
+
     $('#value_d').val('');
+}
+
+function DiscountLibranzaCalculate(input) {
+    let value = parseInt($(input).val());
+    value = isNaN(value) ? 0 : value ;
+
+    let pay = parseInt($('#pay_d').attr('data-value'));
+    let debt = parseInt($('#debt_d').attr('data-value'));
+
+    $('#pay_d').text(new Intl.NumberFormat('es-CO', { currency: 'COP', maximumFractionDigits: 0 }).format(pay + value));
+    $('#debt_d').text(new Intl.NumberFormat('es-CO', { currency: 'COP', maximumFractionDigits: 0 }).format(debt - value));
 }
 
 function DiscountLibranza(id, status = true) {

@@ -51,12 +51,12 @@
                                 <div class="col-lg-4 col-md-4 col-12 col-xs-12">
                                     <i class="fas fa-dollar-sign" style="color: rgb(112, 225, 1); font-size: 2.5em !important;"></i>
                                     <strong style="color: rgb(112, 225, 1); font-size: 2.5em !important;" id="pay">0</strong>
-                                    <small>Pagados</small>
+                                    <small>Pagado</small>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-12 col-xs-12">
                                     <i class="fas fa-dollar-sign" style="color: rgb(255, 0, 0); font-size: 2.5em !important;"></i>
                                     <strong style="color: rgb(255, 0, 0); font-size: 2.5em !important;" id="debt">0</strong>
-                                    <small>Deudas</small>
+                                    <small>Deuda</small>
                                 </div>
                             </div>
                         </div>
@@ -91,10 +91,12 @@
             </div>
         </div>
         @include('Dashboard.Libranzas.Approve')
+        @include('Dashboard.Libranzas.Discount')
     </section>
 @endsection
 @section('script')
     <script src="{{ asset('js/Dashboard/Libranzas/DataTableIndex.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Libranzas/Approve.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Libranzas/Cancel.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Libranzas/Discount.js') }}"></script>
 @endsection
