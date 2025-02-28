@@ -73,6 +73,7 @@
         </div>
         @include('Dashboard.Orders.Create')
         @include('Dashboard.Orders.Edit')
+        @include('Dashboard.Orders.Audit')
         @include('Dashboard.Clients.Data')
     </section>
 @endsection
@@ -82,6 +83,7 @@
     <script src="{{ asset('js/Dashboard/Orders/Edit.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Orders/Assent.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Orders/Cancel.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Orders/Audit.js') }}"></script>
 
     <script src="{{ asset('js/Dashboard/Clients/Data.js') }}"></script>
 @endsection

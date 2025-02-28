@@ -42,6 +42,11 @@
                                 </a>
                             </li>
                             <li class="nav-item ml-auto">
+                                <a class="btn btn-dark text-white" type="button" onclick="AuditOrderModal({{ $order->id }})" title="Auditar pedido.">
+                                    <i class="fas fa-link text-white mr-2"></i> <b>AUDITAR</b>
+                                </a>
+                            </li>
+                            <li class="nav-item ml-2">
                                 <a class="btn bg-purple text-white" type="button" href=" {{ route('Dashboard.Orders.Download', $order->id) }}" target="_blank" title="Descargar pdf del pedido.">
                                     <i class="fas fa-file-pdf text-white mr-2"></i> <b>DESCARGAR</b>
                                 </a>
@@ -462,6 +467,7 @@
             </div>
         </div>
     </div>
+    @include('Dashboard.Orders.Audit')
     @include('Dashboard.OrderDetails.Create')
     @include('Dashboard.OrderDetails.Edit')
     @include('Dashboard.OrderDetails.Clone')
@@ -490,4 +496,5 @@
     <script src="{{ asset('js/Dashboard/Orders/Decline.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Orders/Suspend.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Orders/Delay.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Orders/Audit.js') }}"></script>
 @endsection

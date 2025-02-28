@@ -306,6 +306,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/Approve', 'approve')->middleware('can:Dashboard.Orders.Approve')->name('Dashboard.Orders.Approve');
                 Route::put('/PartiallyApprove', 'partiallyApprove')->middleware('can:Dashboard.Orders.PartiallyApprove')->name('Dashboard.Orders.PartiallyApprove');
                 Route::put('/Dispatch', 'despatch')->middleware('can:Dashboard.Orders.Dispatch')->name('Dashboard.Orders.Dispatch');
+                Route::post('/Audit/{id}', 'audit')/* ->middleware('can:Dashboard.Orders.Audit') */->name('Dashboard.Orders.Audit');
                 Route::post('/Wallet/{id}', 'wallet')->middleware('can:Dashboard.Orders.Wallet')->name('Dashboard.Orders.Wallet');
                 Route::post('/Email/{id}', 'email')->middleware('can:Dashboard.Orders.Email')->name('Dashboard.Orders.Email');
                 Route::get('/Download/{id}', 'download')->middleware('can:Dashboard.Orders.Download')->name('Dashboard.Orders.Download');

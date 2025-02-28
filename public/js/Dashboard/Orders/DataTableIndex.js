@@ -170,6 +170,11 @@ let tableOrders = $('#orders').DataTable({
             render: function (data, type, row) {
                 let btn = `<div class="text-center" style="width: 100%;">`;
 
+                btn += `<a onclick="AuditOrderModal(${row.id})" type="button"
+                class="btn btn-dark btn-sm mr-2" title="Auditar pedido.">
+                    <i class="fas fa-link text-white"></i>
+                </a>`;
+
                 btn += `<a href="/Dashboard/Orders/Download/${row.id}" type="button"
                 class="btn bg-purple btn-sm mr-2" title="Descargar pdf del pedido." target="_blank">
                     <i class="fas fa-file-pdf text-white"></i>

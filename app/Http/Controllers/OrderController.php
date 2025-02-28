@@ -1014,6 +1014,37 @@ class OrderController extends Controller
         }
     }
 
+    public function audit($id)
+    {
+        try {
+            $order = Order::findOrFail($id);
+
+            return $this->successResponse(
+                [
+                    'audits' => $order->audits()->with('user')->get()
+                ],
+                'El pedido fue encontrado exitosamente.',
+                200
+            );
+        } catch (TransportException $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('TransportException'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('Exception'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
     public function wallet($id)
     {
         try {
