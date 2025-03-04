@@ -5,7 +5,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">ORDEN N° {{ $orderPicking->order_dispatch->consecutive }} - {{ $orderPicking->order_dispatch->client->client_name }}</h1>
+                        <h1 class="m-0 text-dark">ORDEN N° {{ $orderPicking->order_dispatch->consecutive }} - {{ $orderPicking->order_dispatch->client->name }}</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -63,9 +63,9 @@
                                     <tbody>
                                         <tr>
                                             <th width="10%" class="order">NIT:</th>
-                                            <td width="20%" class="order">{{ $orderPicking->order_dispatch->client->client_number_document }}-{{ $orderPicking->order_dispatch->client->client_branch_code }}</td>
+                                            <td width="20%" class="order">{{ $orderPicking->order_dispatch->client->number_document }}-{{ $orderPicking->order_dispatch->client->branch_code }}</td>
                                             <th width="11%" class="order">CLIENTE:</th>
-                                            <td width="18%" class="order">{{ $orderPicking->order_dispatch->client->client_name }}</td>
+                                            <td width="18%" class="order">{{ $orderPicking->order_dispatch->client->name }}</td>
                                             <th width="13%" class="order">ALISTADOR: </th>
                                             <td width="26%" class="order">{{ strtoupper($orderPicking->picking_user->name . ' ' . $orderPicking->picking_user->last_name) }}</td>
                                         </tr>
@@ -73,7 +73,7 @@
                                             <th class="order">CIUDAD:</th>
                                             <td class="order">{{ $orderPicking->order_dispatch->client->departament }} - {{ $orderPicking->order_dispatch->client->city }}</td>
                                             <th class="order">DIRECCION:</th>
-                                            <td class="order">{{ $orderPicking->order_dispatch->client->client_branch_address }}</td>
+                                            <td class="order">{{ $orderPicking->order_dispatch->client->branch_address }}</td>
                                             <th class="order">FECHA ALISTAMIENTO:</th>
                                             <td class="order">
                                                 <span class="badge badge-primary">{{ Carbon::parse($orderPicking->picking_date)->format('Y-m-d H:i:s') }}</span>
@@ -83,7 +83,7 @@
                                             <th class="order">ZONA:</th>
                                             <td class="order">{{ $orderPicking->order_dispatch->client->zone }}</td>
                                             <th class="order">TELEFONO:</th>
-                                            <td class="order">{{ $orderPicking->order_dispatch->client->client_branch_number_phone }}</td>
+                                            <td class="order">{{ $orderPicking->order_dispatch->client->branch_number_phone }}</td>
                                             <th class="order">ESTADO:</th>
                                             <td class="order">
                                                 @switch($orderPicking->picking_status)
@@ -106,7 +106,7 @@
                                         </tr>
                                         <tr>
                                             <th class="order">TELEFONO:</th>
-                                            <td class="order">{{ $orderPicking->order_dispatch->client->client_number_phone }}</td>
+                                            <td class="order">{{ $orderPicking->order_dispatch->client->number_phone }}</td>
                                             <th class="order">CORREO:</th>
                                             <td class="order">{{ $orderPicking->order_dispatch->client->email }}</td>
                                             <th class="order">CORRERIA:</th>

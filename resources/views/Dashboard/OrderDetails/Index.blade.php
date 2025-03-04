@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-9">
-                    <h1 class="m-0 text-dark">PEDIDO N° {{ $order->id }} - {{ $order->client->client_name }}</h1>
+                    <h1 class="m-0 text-dark">PEDIDO N° {{ $order->id }} - {{ $order->client->name }}</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-3">
                     <ol class="breadcrumb float-sm-right">
@@ -42,15 +42,17 @@
                                 </a>
                             </li>
                             <li class="nav-item ml-auto">
-                                <a class="btn btn-dark text-white" type="button" onclick="AuditOrderModal({{ $order->id }})" title="Auditar pedido.">
-                                    <i class="fas fa-link text-white mr-2"></i> <b>AUDITAR</b>
-                                </a>
-                            </li>
-                            <li class="nav-item ml-2">
                                 <a class="btn bg-purple text-white" type="button" href=" {{ route('Dashboard.Orders.Download', $order->id) }}" target="_blank" title="Descargar pdf del pedido.">
                                     <i class="fas fa-file-pdf text-white mr-2"></i> <b>DESCARGAR</b>
                                 </a>
                             </li>
+                            @if (in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR']))
+                                <li class="nav-item ml-2">
+                                    <a class="btn btn-dark text-white" type="button" onclick="AuditOrderModal({{ $order->id }})" title="Auditar pedido.">
+                                        <i class="fas fa-link text-white mr-2"></i> <b>AUDITAR</b>
+                                    </a>
+                                </li>
+                            @endif
                             @if ($order->seller_status == 'Pendiente' && in_array(Auth::user()->title, ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'CARTERA', 'FILTRADOR', 'VENDEDOR', 'VENDEDOR ESPECIAL']) && $order->seller_user_id == Auth::user()->id)
                                 <li class="nav-item ml-2">
                                     <a class="btn btn-success text-white" type="button" onclick="AssentOrder({{ $order->id }}, false)" title="Realizar pedido.">
@@ -225,7 +227,7 @@
                                 <tbody>
                                     <tr>
                                         <th width="15%" class="order">NIT:</th>
-                                        <td width="30%" class="order">{{ $order->client->client_number_document }}-{{ $order->client->client_branch_code }}</td>
+                                        <td width="30%" class="order">{{ $order->client->number_document }}-{{ $order->client->branch_code }}</td>
                                         <th width="9%" class="order">FECHA:</th>
                                         <td width="18%" class="order">{{ Carbon::parse($order->created_at)->format('Y-m-d H:i:s') }}</td>
                                         <th width="13%" class="order">TIPO DESPACHO: </th>
@@ -235,7 +237,7 @@
                                     </tr>
                                     <tr>
                                         <th class="order">CLIENTE:</th>
-                                        <td class="order">{{ $order->client->client_name }}</td>
+                                        <td class="order">{{ $order->client->name }}</td>
                                         <th class="order">CIERRE:</th>
                                         <td class="order">{{ $order->seller_date }}</td>
                                         <th class="order">FECHA DESPACHO: </th>
@@ -247,7 +249,7 @@
                                         <th class="order">CIUDAD:</th>
                                         <td class="order">{{ $order->client->departament }} - {{ $order->client->city }}</td>
                                         <th class="order">DIRECCION:</th>
-                                        <td class="order">{{ $order->client->client_branch_address }}</td>
+                                        <td class="order">{{ $order->client->branch_address }}</td>
                                         <th class="order">ESTADO VENDEDOR:</th>
                                         <td class="order">
                                             @switch($order->seller_status)
@@ -269,7 +271,7 @@
                                         <th class="order">ZONA:</th>
                                         <td class="order">{{ $order->client->zone }}</td>
                                         <th class="order">TELEFONO:</th>
-                                        <td class="order">{{ $order->client->client_number_phone }}</td>
+                                        <td class="order">{{ $order->client->cell_phone_number }}</td>
                                         <th class="order">ESTADO CARTERA:</th>
                                         <td class="order">
                                             @switch($order->wallet_status)
@@ -303,7 +305,7 @@
                                         <th class="order">CORREO:</th>
                                         <td class="order">{{ $order->client->email }}</td>
                                         <th class="order">TELEFONO:</th>
-                                        <td class="order">{{ $order->client->client_branch_number_phone }}</td>
+                                        <td class="order">{{ $order->client->branch_number_phone }}</td>
                                         <th class="order">ESTADO DESPACHO:</th>
                                         <td class="order">
                                             @switch($order->dispatch_status)
@@ -471,6 +473,7 @@
     @include('Dashboard.OrderDetails.Create')
     @include('Dashboard.OrderDetails.Edit')
     @include('Dashboard.OrderDetails.Clone')
+    @include('Dashboard.OrderDetails.Audit')
 </section>
 @endsection
 @section('script')

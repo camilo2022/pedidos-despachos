@@ -57,13 +57,13 @@ let tableOrderDispatches = $('#orderDispatches').DataTable({
         {
             data: 'client_id',
             render: function (data, type, row) {
-                return `${row.client.client_number_document}-${row.client.client_branch_code}`;
+                return `${row.client.number_document}-${row.client.branch_code}`;
             }
         },
         {
             data: 'client_id',
             render: function (data, type, row) {
-                return row.client.client_name;
+                return row.client.name;
             }
         },
         {
@@ -75,7 +75,7 @@ let tableOrderDispatches = $('#orderDispatches').DataTable({
         {
             data: 'client_id',
             render: function (data, type, row) {
-                return row.client.client_branch_address;
+                return row.client.branch_address;
             }
         },
         { data: 'created_at' },

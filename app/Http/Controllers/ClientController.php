@@ -150,14 +150,14 @@ class ClientController extends Controller
     {
         try {
             $client = new Client();
-            $client->client_name = $request->input('client_name');
-            $client->client_address = $request->input('client_address');
-            $client->client_number_document = $request->input('client_number_document');
-            $client->client_number_phone = $request->input('client_number_phone');
-            $client->client_branch_code = $request->input('client_branch_code');
-            $client->client_branch_name = $request->input('client_branch_name');
-            $client->client_branch_address = $request->input('client_branch_address');
-            $client->client_branch_number_phone = $request->input('client_branch_number_phone');
+            $client->name = $request->input('name');
+            $client->address = $request->input('address');
+            $client->number_document = $request->input('number_document');
+            $client->cell_phone_number = $request->input('cell_phone_number');
+            $client->branch_code = $request->input('branch_code');
+            $client->branch_name = $request->input('branch_name');
+            $client->branch_address = $request->input('branch_address');
+            $client->branch_number_phone = $request->input('branch_number_phone');
             $client->country = $request->input('country');
             $client->departament = $request->input('departament');
             $client->city = $request->input('city');
@@ -260,14 +260,14 @@ class ClientController extends Controller
     {
         try {
             $client = Client::withTrashed()->findOrFail($id);
-            $client->client_name = $request->input('client_name');
-            $client->client_address = $request->input('client_address');
-            $client->client_number_document = $request->input('client_number_document');
-            $client->client_number_phone = $request->input('client_number_phone');
-            $client->client_branch_code = $request->input('client_branch_code');
-            $client->client_branch_name = $request->input('client_branch_name');
-            $client->client_branch_address = $request->input('client_branch_address');
-            $client->client_branch_number_phone = $request->input('client_branch_number_phone');
+            $client->name = $request->input('name');
+            $client->address = $request->input('address');
+            $client->number_document = $request->input('number_document');
+            $client->cell_phone_number = $request->input('cell_phone_number');
+            $client->branch_code = $request->input('branch_code');
+            $client->branch_name = $request->input('branch_name');
+            $client->branch_address = $request->input('branch_address');
+            $client->branch_number_phone = $request->input('branch_number_phone');
             $client->country = $request->input('country');
             $client->departament = $request->input('departament');
             $client->city = $request->input('city');
@@ -313,11 +313,11 @@ class ClientController extends Controller
     {
         try {
             $client = Client::with('wallet', 'compra', 'cartera', 'bodega', 'administrador', 'chamber_of_commerce.user', 'rut.user', 'identity_card.user', 'signature_warranty.user')->withTrashed()->findOrFail($id);
-            $wallet = Wallet::where('number_document', $client->client_number_document)->first();
+            $wallet = Wallet::where('number_document', $client->number_document)->first();
 
             if(!$wallet) {
                 $wallet = new Wallet();
-                $wallet->number_document = $client->client_number_document;
+                $wallet->number_document = $client->number_document;
                 $wallet->save();
                 $wallet = $wallet->fresh();
             }
@@ -363,9 +363,9 @@ class ClientController extends Controller
         try {
             $client = Client::withTrashed()->findOrFail($request->input('client_id'));
 
-            $wallet = Wallet::where('number_document', $client->client_number_document)->first();
+            $wallet = Wallet::where('number_document', $client->number_document)->first();
             $wallet = $wallet ? $wallet : new Wallet();
-            $wallet->number_document = $client->client_number_document;
+            $wallet->number_document = $client->number_document;
             $wallet->zero_to_thirty = $request->input('zero_to_thirty');
             $wallet->one_to_thirty = $request->input('one_to_thirty');
             $wallet->thirty_one_to_sixty = $request->input('thirty_one_to_sixty');
@@ -520,9 +520,9 @@ class ClientController extends Controller
     private function person($object, $client, $type)
     {
         try {
-            $person = Person::where('client_number_document', $client->client_number_document)->where('type', $type)->first();
+            $person = Person::where('client_number_document', $client->number_document)->where('type', $type)->first();
             $person = $person ? $person : new Person();
-            $person->client_number_document = $client->client_number_document;
+            $person->number_document = $client->number_document;
             $person->type = $type;
             $person->name = $object['name'];
             $person->last_name = $object['last_name'];
@@ -781,16 +781,16 @@ class ClientController extends Controller
                 $item->IdSucursal = $item->IdSucursal == '000' ? '001' : $item->IdSucursal;
                 $item->NitCli = preg_replace('/-.*/', '', $this->cleaned($item->NitCli));
 
-                $client = Client::where('client_number_document', $item->NitCli)->where('client_branch_code', $item->IdSucursal ?? '001')->first();
+                $client = Client::where('number_document', $item->NitCli)->where('branch_code', $item->IdSucursal ?? '001')->first();
                 $client = $client ? $client : new Client();
-                $client->client_name = $this->cleaned($item->RazonSocialCli);
-                $client->client_address = $this->cleaned($item->Direccion);
-                $client->client_number_document = $this->cleaned($item->NitCli);
-                $client->client_number_phone = $this->cleaned($item->CelularTercero);
-                $client->client_branch_code = $this->cleaned($item->IdSucursal);
-                $client->client_branch_name = $this->cleaned($item->DescSucursal);
-                $client->client_branch_address = $this->cleaned($item->DireccionDespacho);
-                $client->client_branch_number_phone = $this->cleaned($item->CelularSucursal);
+                $client->name = $this->cleaned($item->RazonSocialCli);
+                $client->address = $this->cleaned($item->Direccion);
+                $client->number_document = $this->cleaned($item->NitCli);
+                $client->cell_phone_number = $this->cleaned($item->CelularTercero);
+                $client->branch_code = $this->cleaned($item->IdSucursal);
+                $client->branch_name = $this->cleaned($item->DescSucursal);
+                $client->branch_address = $this->cleaned($item->DireccionDespacho);
+                $client->branch_number_phone = $this->cleaned($item->CelularSucursal);
                 $client->country = $this->cleaned($item->Pais);
                 $client->departament = $this->cleaned($item->Departamento);
                 $client->city = $this->cleaned($item->Ciudad);
@@ -840,16 +840,16 @@ class ClientController extends Controller
                 $item->SUC = $item->SUC == '000' ? '001' : $item->SUC;
                 $item->NIT = preg_replace('/-.*/', '', $this->cleaned($item->NIT));
 
-                $client = Client::where('client_number_document', $item->NIT)->where('client_branch_code', $item->SUC)->first();
+                $client = Client::where('number_document', $item->NIT)->where('branch_code', $item->SUC)->first();
                 $client = $client ?? new Client();
-                $client->client_name = $this->cleaned($item->NOMBRE);
-                $client->client_address = $this->cleaned($item->DIRECC1);
-                $client->client_number_document = $this->cleaned($item->NIT);
-                $client->client_number_phone = $this->cleaned($item->TELEF1);
-                $client->client_branch_code = $this->cleaned($item->SUC);
-                $client->client_branch_name = $this->cleaned($item->NOMREGTRI);
-                $client->client_branch_address = $this->cleaned($item->DIRECC2);
-                $client->client_branch_number_phone = $this->cleaned($item->TELEF2);
+                $client->name = $this->cleaned($item->NOMBRE);
+                $client->address = $this->cleaned($item->DIRECC1);
+                $client->number_document = $this->cleaned($item->NIT);
+                $client->cell_phone_number = $this->cleaned($item->TELEF1);
+                $client->branch_code = $this->cleaned($item->SUC);
+                $client->branch_name = $this->cleaned($item->NOMREGTRI);
+                $client->branch_address = $this->cleaned($item->DIRECC2);
+                $client->branch_number_phone = $this->cleaned($item->TELEF2);
                 $client->country = $this->cleaned($item->PAISDANE);
                 $client->departament = $this->cleaned($item->DEPARDANE);
                 $client->city = $this->cleaned($item->CIUDANE);

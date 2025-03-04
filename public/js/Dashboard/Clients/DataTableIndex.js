@@ -7,14 +7,14 @@ let tableClients = $('#clients').DataTable({
         data: function (request) {
             var columnMappings = {
                 0: 'id',
-                1: 'client_name',
-                2: 'client_address',
-                3: 'client_number_document',
-                4: 'client_number_phone',
-                5: 'client_branch_code',
-                6: 'client_branch_name',
-                7: 'client_branch_address',
-                8: 'client_branch_number_phone',
+                1: 'name',
+                2: 'address',
+                3: 'number_document',
+                4: 'cell_number_phone_e',
+                5: 'branch_code',
+                6: 'branch_name',
+                7: 'branch_address',
+                8: 'branch_number_phone',
                 9: 'departament',
                 10: 'city',
                 11: 'number_phone',
@@ -41,14 +41,14 @@ let tableClients = $('#clients').DataTable({
     },
     columns: [
         { data: 'id' },
-        { data: 'client_name' },
-        { data: 'client_address' },
-        { data: 'client_number_document' },
-        { data: 'client_number_phone' },
-        { data: 'client_branch_code' },
-        { data: 'client_branch_name' },
-        { data: 'client_branch_address' },
-        { data: 'client_branch_number_phone' },
+        { data: 'name' },
+        { data: 'address' },
+        { data: 'number_document' },
+        { data: 'cell_number_phone_e' },
+        { data: 'branch_code' },
+        { data: 'branch_name' },
+        { data: 'branch_address' },
+        { data: 'branch_number_phone' },
         { data: 'departament' },
         { data: 'city' },
         { data: 'number_phone' },
@@ -78,7 +78,7 @@ let tableClients = $('#clients').DataTable({
                     class="btn btn-secondary btn-sm mr-2" title="Cartera cliente.">
                         <i class="fas fa-wallet text-white"></i>
                     </a>`;
-                    
+
                     btn += `<a onclick="EditClientModal(${row.id})" type="button"
                     class="btn btn-primary btn-sm mr-2" title="Editar cliente.">
                         <i class="fas fa-pen text-white"></i>

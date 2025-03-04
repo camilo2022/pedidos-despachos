@@ -37,7 +37,7 @@
                 display: block;
                 margin: 0px auto;
                 padding: 0;
-                text-align: center; 
+                text-align: center;
                 vertical-align: middle;
             }
         </style>
@@ -57,7 +57,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <p>Estimado/a <strong>{{ ucwords(strtolower($order->client->client_name)) }}</strong></p>
+                            <p>Estimado/a <strong>{{ ucwords(strtolower($order->client->name)) }}</strong></p>
                             @php(Carbon::setLocale('es'))
                             <p>Le escribimos de parte de <strong>{{ $order->business->name }}</strong> para notificarle que a las <strong>{{ Carbon::parse($order->seller_date)->format('h:i:s A') }}</strong> del día <strong>{{ Carbon::parse($order->seller_date)->isoFormat('D [de] MMMM [de] YYYY') }}</strong>, el vendedor <strong>{{ ucwords(strtolower($order->seller_user->name . ' ' . $order->seller_user->last_name)) }}</strong> cerró un pedido a su nombre, el cual quedó registrado con el numero de pedido <strong>{{ $order->id }}</strong>.</p>
                             <p>Le anexamos un PDF con la información detallada del pedido realizado.</p>

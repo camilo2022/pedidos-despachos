@@ -5,7 +5,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">ORDEN N° {{ $orderDispatch->consecutive }} - {{ $orderDispatch->client->client_name }}</h1>
+                        <h1 class="m-0 text-dark">ORDEN N° {{ $orderDispatch->consecutive }} - {{ $orderDispatch->client->name }}</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -60,9 +60,9 @@
                                     <tbody>
                                         <tr>
                                             <th width="10%" class="order">NIT:</th>
-                                            <td width="29%" class="order">{{ $orderDispatch->client->client_number_document }}-{{ $orderDispatch->client->client_branch_code }}</th>
+                                            <td width="29%" class="order">{{ $orderDispatch->client->number_document }}-{{ $orderDispatch->client->branch_code }}</th>
                                             <th width="11%" class="order">CLIENTE:</th>
-                                            <td width="18%" class="order">{{ $orderDispatch->client->client_name }}</th>
+                                            <td width="18%" class="order">{{ $orderDispatch->client->name }}</th>
                                             <th width="13%"  class="order">CIUDAD:</th>
                                             <td width="24%"  class="order">{{ $orderDispatch->client->departament }} - {{ $orderDispatch->client->city }}</th>
                                         </tr>
@@ -70,7 +70,7 @@
                                             <th class="order">ZONA:</th>
                                             <td class="order">{{ $orderDispatch->client->zone }}</th>
                                             <th class="order">DIRECCION:</th>
-                                            <td class="order">{{ $orderDispatch->client->client_branch_address }}</th>
+                                            <td class="order">{{ $orderDispatch->client->branch_address }}</th>
                                             <th class="order">FECHA ALISTAMIENTO:</th>
                                             <td class="order">
                                                 <span class="badge badge-primary">{{ Carbon::parse($orderDispatch->order_picking->picking_date)->format('Y-m-d H:i:s') }}</span>
@@ -78,7 +78,7 @@
                                         </tr>
                                         <tr>
                                             <th class="order">TELEFONOS:</th>
-                                            <td class="order">{{ $orderDispatch->client->client_number_phone }} - {{ $orderDispatch->client->client_branch_number_phone }}</th>
+                                            <td class="order">{{ $orderDispatch->client->number_phone }} - {{ $orderDispatch->client->branch_number_phone }}</th>
                                             <th class="order">CORREO:</th>
                                             <td class="order">{{ $orderDispatch->client->email }}</th>
                                             <th class="order">ALISTADOR: </th>

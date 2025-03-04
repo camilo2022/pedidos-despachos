@@ -14,7 +14,10 @@ use App\Http\Requests\OrderDetail\OrderDetailPendingRequest;
 use App\Http\Requests\OrderDetail\OrderDetailStoreRequest;
 use App\Http\Requests\OrderDetail\OrderDetailSuspendRequest;
 use App\Http\Requests\OrderDetail\OrderDetailUpdateRequest;
+use App\Models\Business;
+use App\Models\Client;
 use App\Models\Color;
+use App\Models\Correria;
 use App\Models\Inventory;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -39,6 +42,7 @@ class OrderDetailController extends Controller
     {
         try {
             $order = Order::with('order_details', 'seller_user', 'client', 'wallet_user', 'business')->findOrFail($id);
+
             return view('Dashboard.OrderDetails.Index', compact('order'));
         } catch (ModelNotFoundException $e) {
             return back()->with('danger', 'Ocurrió un error al cargar el pedido: ' . $this->getMessage('ModelNotFoundException'));
@@ -771,6 +775,69 @@ class OrderDetailController extends Controller
                     'error' => $e->getMessage()
                 ],
                 500
+            );
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('Exception'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function audit($id)
+    {
+        try {
+            $orderDetail = OrderDetail::findOrFail($id);
+
+            $relations = [
+                'product_id' => [Product::class, ['code', 'category', 'trademark', 'price']],
+                'color_id' => [Color::class, ['name', 'code']],
+                'seller_user_id' => [User::class, ['name', 'last_name', 'title']],
+                'wallet_user_id' => [User::class, ['name', 'last_name', 'title']],
+                'dispatch_user_id' => [User::class, ['name', 'last_name', 'title']]
+            ];
+
+            $audits = $orderDetail->audits()->with('user')->get()->map(function ($audit) use ($relations) {
+                $old_values = $audit->old_values;
+                $new_values = $audit->new_values;
+
+                foreach (['old_values', 'new_values'] as $valueType) {
+                    foreach ($relations as $key => [$model, $fields]) {
+                        if (isset($$valueType[$key])) {
+                            $$valueType[str_replace('_id', '', $key)] = $model::select($fields)->find($$valueType[$key]);
+                        }
+                    }
+                }
+
+                return [
+                    'id' => $audit->id,
+                    'user_type' => $audit->user_type,
+                    'user_id' => $audit->user_id,
+                    'event' => $audit->event,
+                    'auditable_type' => $audit->auditable_type,
+                    'auditable_id' => $audit->auditable_id,
+                    'old_values' => $old_values,
+                    'new_values' => $new_values,
+                    'url' => $audit->url,
+                    'ip_address' => $audit->ip_address,
+                    'user_agent' => $audit->user_agent,
+                    'tags' => $audit->tags,
+                    'created_at' => $audit->created_at,
+                    'updated_at' => $audit->updated_at,
+                    'user' => $audit->user,
+                ];
+            });
+
+            return $this->successResponse(
+                [
+                    'orderDetail' => $orderDetail,
+                    'audits' => $audits
+                ],
+                'El detalle del pedido fue encontrado exitosamente.',
+                200
             );
         } catch (Exception $e) {
             return $this->errorResponse(

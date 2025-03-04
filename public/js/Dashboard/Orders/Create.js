@@ -37,7 +37,7 @@ function CreateOrderModalResetSelect(id) {
 
 function CreateOrderModalClient(clients) {
     $.each(clients, function(index, client) {
-        $('#client_id_c').append(new Option(`${client.client_name} | ${client.client_number_document}-${client.client_branch_code} | ${client.client_branch_address} | ${client.departament}-${client.city}`, client.id, false, false));
+        $('#client_id_c').append(new Option(`${client.name} | ${client.number_document}-${client.branch_code} | ${client.branch_address} | ${client.departament}-${client.city}`, client.id, false, false));
     });
 }
 

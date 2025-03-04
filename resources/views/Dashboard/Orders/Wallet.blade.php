@@ -32,7 +32,7 @@
                 font-size: 13px;
             }
             .center {
-                text-align: center; 
+                text-align: center;
                 vertical-align: middle;
             }
         </style>
@@ -61,25 +61,25 @@
                 <tbody>
                     <tr>
                         <th width="13%">SEÑORES:</th>
-                        <td width="37%" colspan="3">{{ strtoupper($order->client->client_name) }}</td>
+                        <td width="37%" colspan="3">{{ strtoupper($order->client->name) }}</td>
                         <th width="13%">DIRECCION:</th>
-                        <td width="37%" colspan="3">{{ strtoupper($order->client->client_address) }}</td>
+                        <td width="37%" colspan="3">{{ strtoupper($order->client->address) }}</td>
                     </tr>
                     <tr>
                         <th>UBICACION:</th>
                         <td colspan="3">{{ strtoupper($order->client->city) }} - {{ strtoupper($order->client->departament) }}</td>
                         <th>DOCUMENTO:</th>
-                        <td colspan="3">{{ strtoupper($order->client->client_number_document) }}</td>
+                        <td colspan="3">{{ strtoupper($order->client->number_document) }}</td>
                     </tr>
                     <tr>
                         <th>TELEFONO:</th>
-                        <td colspan="3">{{ $order->client->client_number_phone }} - {{ $order->client->client_branch_number_phone }} - {{ $order->client->number_phone }}</td>
+                        <td colspan="3">{{ $order->client->cell_number_phone_e }} - {{ $order->client->branch_number_phone }} - {{ $order->client->number_phone }}</td>
                         <th>CORREO:</th>
                         <td colspan="3">{{ strtoupper($order->client->email) }}</td>
                     </tr>
                     <tr>
                         <td colspan="8">
-                            <p>Estimado Sr. {{ ucwords(strtolower($order->client->client_name)) }},</p>
+                            <p>Estimado Sr. {{ ucwords(strtolower($order->client->name)) }},</p>
                             <p>Asunto: Notificación de Pago Pendiente</p>
                             <p>Nos dirigimos a usted con el fin de informarle que, según nuestros registros, presenta un saldo pendiente en su cartera. A continuación, se detallan la deuda y la distribución de las edades de mora:</p>
                         </td>

@@ -15,7 +15,7 @@
         body {
             font-family: 'Courier New', Courier, monospace;
             font-size: 12px;
-            width: 81mm;
+            width: 79mm;
             margin: 0;
             padding: 0;
             text-align: center;
@@ -61,12 +61,13 @@
             padding-bottom: 0;
             margin-bottom: 0;
         }
+
     </style>
 </head>
 <body>
     <div class="ticket">
         <div class="header">
-            <h2 class="text-center w-100">{{ strtoupper($invoice->cash_register->store->name) }}</h2>
+            <h2 class="w-100 text-center">{{ strtoupper($invoice->cash_register->store->name) }}</h2>
             <p>{{ strtoupper($invoice->cash_register->store->business->name) }}</p>
             <p>NIT: {{ $invoice->cash_register->store->document_number }}</p>
             <p>TELEFONO: {{ $invoice->cash_register->store->phone_number }}</p>

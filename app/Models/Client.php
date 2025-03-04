@@ -16,14 +16,14 @@ class Client extends Model implements Auditable
 
     protected $table = 'clients';
     protected $fillable = [
-        'client_name',
-        'client_address',
-        'client_number_document',
-        'client_number_phone',
-        'client_branch_code',
-        'client_branch_name',
-        'client_branch_address',
-        'client_branch_number_phone',
+        'name',
+        'address',
+        'number_document',
+        'cell_phone_number',
+        'branch_code',
+        'branch_name',
+        'branch_address',
+        'branch_number_phone',
         'country',
         'departament',
         'city',
@@ -34,14 +34,14 @@ class Client extends Model implements Auditable
     ];
 
     protected $auditInclude = [
-        'client_name',
-        'client_address',
-        'client_number_document',
-        'client_number_phone',
-        'client_branch_code',
-        'client_branch_name',
-        'client_branch_address',
-        'client_branch_number_phone',
+        'name',
+        'address',
+        'number_document',
+        'cell_phone_number',
+        'branch_code',
+        'branch_name',
+        'branch_address',
+        'branch_number_phone',
         'country',
         'departament',
         'city',
@@ -73,39 +73,39 @@ class Client extends Model implements Auditable
 
     public function wallet() : HasOne
     {
-        return $this->hasOne(Wallet::class, 'number_document', 'client_number_document');
+        return $this->hasOne(Wallet::class, 'client_number_document', 'number_document');
     }
 
     public function compra() : HasOne
     {
-        return $this->hasOne(Person::class, 'client_number_document', 'client_number_document')->where('type', 'COMPRAS');
+        return $this->hasOne(Person::class, 'client_number_document', 'number_document')->where('type', 'COMPRAS');
     }
 
     public function cartera() : HasOne
     {
-        return $this->hasOne(Person::class, 'client_number_document', 'client_number_document')->where('type', 'CARTERA');
+        return $this->hasOne(Person::class, 'client_number_document', 'number_document')->where('type', 'CARTERA');
     }
 
     public function bodega() : HasOne
     {
-        return $this->hasOne(Person::class, 'client_number_document', 'client_number_document')->where('type', 'BODEGA');
+        return $this->hasOne(Person::class, 'client_number_document', 'number_document')->where('type', 'BODEGA');
     }
 
     public function administrador() : HasOne
     {
-        return $this->hasOne(Person::class, 'client_number_document', 'client_number_document')->where('type', 'ADMINISTRADOR');
+        return $this->hasOne(Person::class, 'client_number_document', 'number_document')->where('type', 'ADMINISTRADOR');
     }
 
     public function scopeSearch($query, $search)
     {
-        return $query->where('client_name', 'LIKE', '%' . $search . '%')
-            ->orWhere('client_address', 'LIKE', '%' . $search . '%')
-            ->orWhere('client_number_document', 'LIKE', '%' . $search . '%')
-            ->orWhere('client_number_phone', 'LIKE', '%' . $search . '%')
-            ->orWhere('client_branch_code', 'LIKE', '%' . $search . '%')
-            ->orWhere('client_branch_name', 'LIKE', '%' . $search . '%')
-            ->orWhere('client_branch_address', 'LIKE', '%' . $search . '%')
-            ->orWhere('client_branch_number_phone', 'LIKE', '%' . $search . '%')
+        return $query->where('name', 'LIKE', '%' . $search . '%')
+            ->orWhere('address', 'LIKE', '%' . $search . '%')
+            ->orWhere('number_document', 'LIKE', '%' . $search . '%')
+            ->orWhere('cell_phone_number', 'LIKE', '%' . $search . '%')
+            ->orWhere('branch_code', 'LIKE', '%' . $search . '%')
+            ->orWhere('branch_name', 'LIKE', '%' . $search . '%')
+            ->orWhere('branch_address', 'LIKE', '%' . $search . '%')
+            ->orWhere('branch_number_phone', 'LIKE', '%' . $search . '%')
             ->orWhere('departament', 'LIKE', '%' . $search . '%')
             ->orWhere('city', 'LIKE', '%' . $search . '%')
             ->orWhere('number_phone', 'LIKE', '%' . $search . '%')

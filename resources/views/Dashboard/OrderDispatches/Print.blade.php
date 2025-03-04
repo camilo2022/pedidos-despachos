@@ -46,7 +46,7 @@
                         <th class="cell" rowspan="2">
                             <img width="100px" height="auto" src="{{ asset('images/logo-bless.jpg') }}">
                         </th>
-                        <th class="cell" rowspan="2" style="font-size: 15px;">{{ $orderDispatch->client->client_name }}</th>
+                        <th class="cell" rowspan="2" style="font-size: 15px;">{{ $orderDispatch->client->name }}</th>
                         <th class="cell bg-gray" colspan="2" style="font-size: 15px;">ORDEN DE DESPACHO N°</th>
                     </tr>
                     <tr>
@@ -56,9 +56,9 @@
                 <tbody>
                     <tr>
                         <th style="text-align: left;" class="cell">NIT:</th>
-                        <td style="text-align: left;" class="cell">{{ $orderDispatch->client->client_number_document . '-' . $orderDispatch->client->client_branch_code }}</td>
+                        <td style="text-align: left;" class="cell">{{ $orderDispatch->client->number_document . '-' . $orderDispatch->client->branch_code }}</td>
                         <th style="text-align: left;" class="cell">TELEFONO:</th>
-                        <td style="text-align: left;" class="cell">{{ ($orderDispatch->client->client_number_phone ?? $orderDispatch->client->client_branch_number_phone) ?? $orderDispatch->client->number_phone }}</td>
+                        <td style="text-align: left;" class="cell">{{ ($orderDispatch->client->number_phone ?? $orderDispatch->client->branch_number_phone) ?? $orderDispatch->client->number_phone }}</td>
                     </tr>
                     <tr>
                         <th style="text-align: left;" class="cell">CIUDAD:</th>
@@ -70,7 +70,7 @@
                         <th style="text-align: left;" class="cell">DEPARTAMENTO:</th>
                         <td style="text-align: left;" class="cell">{{ $orderDispatch->client->departament }}</td>
                         <th style="text-align: left;" class="cell">DIRECCION:</th>
-                        <td style="text-align: left;" class="cell">{{ $orderDispatch->client->client_branch_address }}</td>
+                        <td style="text-align: left;" class="cell">{{ $orderDispatch->client->branch_address }}</td>
                     </tr>
                 </tbody>
             </table>

@@ -197,7 +197,7 @@ class InvoiceController extends Controller
             $height += $invoice->invoice_details->pluck('invoice_detail_payments')->flatten()->pluck('payment_method_id')->unique()->count() * 15 ;
             $height += !empty($discounts) ? (15 + (count($discounts)) * 15) : 0;
 
-            $pdf->setPaper([0, 0, 226.772, $height]);
+            $pdf->setPaper([0, 0, 223, $height]);
 
             return $pdf->stream("{$invoice->reference}.pdf");
         } catch (ModelNotFoundException $e) {

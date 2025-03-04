@@ -1,22 +1,22 @@
-function AuditOrderModal(id) {
+function AuditOrderDetailModal(id) {
     $.ajax({
-        url: `/Dashboard/Orders/Audit/${id}`,
+        url: `/Dashboard/Orders/Details/Audit/${id}`,
         type: 'POST',
         data: {
             '_token': $('meta[name="csrf-token"]').attr('content')
         },
         success: function (response) {
-            AuditOrderModalCleaned(response.data.audits);
-            AuditOrderAjaxSuccess(response);
-            $('#AuditOrderModal').modal('show');
+            AuditOrderDetailModalCleaned(response.data.audits);
+            AuditOrderDetailAjaxSuccess(response);
+            $('#AuditOrderDetailModal').modal('show');
         },
         error: function (xhr, textStatus, errorThrown) {
-            AuditOrderAjaxError(xhr);
+            AuditOrderDetailAjaxError(xhr);
         }
     });
 }
 
-function AuditOrderModalCleaned(audits) {
+function AuditOrderDetailModalCleaned(audits) {
     let auditHtml = '';
 
     $.each(audits, function (index, audit) {
@@ -81,30 +81,30 @@ function AuditOrderModalCleaned(audits) {
         `;
     });
 
-    $('#AuditOrderBody').html(auditHtml);
+    $('#AuditOrderDetailBody').html(auditHtml);
 }
 
-function AuditOrderAjaxSuccess(response) {
+function AuditOrderDetailAjaxSuccess(response) {
     if (response.status === 200) {
         toastr.info(response.message);
-        $('#AuditOrderModal').modal('hide');
+        $('#AuditOrderDetailModal').modal('hide');
     }
 }
 
-function AuditOrderAjaxError(xhr) {
+function AuditOrderDetailAjaxError(xhr) {
     if (xhr.status === 403) {
         toastr.error(xhr.responseJSON.error ? xhr.responseJSON.error.message : xhr.responseJSON.message);
-        $('#AuditOrderModal').modal('hide');
+        $('#AuditOrderDetailModal').modal('hide');
     }
 
     if (xhr.status === 404) {
         toastr.error(xhr.responseJSON.error ? xhr.responseJSON.error.message : xhr.responseJSON.message);
-        $('#AuditOrderModal').modal('hide');
+        $('#AuditOrderDetailModal').modal('hide');
     }
 
     if (xhr.status === 419) {
         toastr.error(xhr.responseJSON.error ? xhr.responseJSON.error.message : xhr.responseJSON.message);
-        $('#AuditOrderModal').modal('hide');
+        $('#AuditOrderDetailModal').modal('hide');
     }
 
     if (xhr.status === 422) {
@@ -117,6 +117,6 @@ function AuditOrderAjaxError(xhr) {
 
     if (xhr.status === 500) {
         toastr.error(xhr.responseJSON.error ? xhr.responseJSON.error.message : xhr.responseJSON.message);
-        $('#AuditOrderModal').modal('hide');
+        $('#AuditOrderDetailModal').modal('hide');
     }
 }

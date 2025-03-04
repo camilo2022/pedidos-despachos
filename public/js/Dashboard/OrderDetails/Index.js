@@ -67,6 +67,11 @@ function IndexOrderDetailModalCleaned(order, sizes) {
             </td>`;
         let btn = '';
 
+        btn += `<a onclick="AuditOrderDetailModal(${order_detail.id})" type="button"
+        class="btn btn-dark btn-sm mr-2 btn-order" title="Auditar detalle de pedido.">
+            <i class="fas fa-link text-white"></i>
+        </a>`;
+
         if ((isAdministrador() || isVendedor() || isVendedorEspecial() || isCartera() || isFiltrador()) && order.seller_user_id == $('meta[name="user-id"]').attr('content') && order.seller_status == 'Pendiente') {
             switch (order_detail.status) {
                 case 'Pendiente':

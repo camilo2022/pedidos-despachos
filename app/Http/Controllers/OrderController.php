@@ -23,8 +23,10 @@ use App\Http\Resources\Order\OrderIndexQueryCollection;
 use App\Mail\EmailNotify;
 use App\Mail\EmailOrder;
 use App\Mail\EmailWallet;
+use App\Models\Business;
 use App\Models\Client;
 use App\Models\Color;
+use App\Models\Correria;
 use App\Models\Inventory;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -408,7 +410,11 @@ class OrderController extends Controller
         try {
             $order = Order::with('order_details')->findOrFail($request->input('id'));
 
-            $order->order_details()->whereIn('status', ['Pendiente'])->update(['status' => 'Cancelado']);
+            foreach ($order->order_details()->whereIn('status', ['Pendiente']) as $order_detail) {
+                $order_detail->status = 'Cancelado';
+                $order_detail->seller_date = Carbon::now()->format('Y-m-d H:i:s');
+                $order_detail->save();
+            }
 
             $order->seller_date = Carbon::now()->format('Y-m-d H:i:s');
             $order->seller_status = 'Cancelado';
@@ -546,8 +552,6 @@ class OrderController extends Controller
             $order->seller_status = 'Pendiente';
             $order->wallet_status = 'Pendiente';
 
-            /* $order->order_details()->whereIn('status', ['Agotado', 'Suspendido'])->update(['status' => 'Pendiente']); */
-
             $order->save();
 
             return $this->successResponse(
@@ -588,7 +592,12 @@ class OrderController extends Controller
         try {
             $order = Order::with('order_details')->findOrFail($request->input('id'));
 
-            $order->order_details()->whereIn('status', ['Pendiente', 'Aprobado', 'Autorizado'])->update(['status' => 'Suspendido', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
+            foreach ($order->order_details()->whereIn('status', ['Pendiente', 'Aprobado', 'Autorizado']) as $order_detail) {
+                $order_detail->status = 'Suspendido';
+                $order_detail->wallet_user_id = Auth::user()->id;
+                $order_detail->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
+                $order_detail->save();
+            }
 
             $order->wallet_user_id = Auth::user()->id;
             $order->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
@@ -635,7 +644,12 @@ class OrderController extends Controller
         try {
             $order = Order::with('order_details')->findOrFail($request->input('id'));
 
-            $order->order_details()->whereIn('status', ['Pendiente', 'Aprobado', 'Autorizado'])->update(['status' => 'Suspendido', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
+            foreach ($order->order_details()->whereIn('status', ['Pendiente', 'Aprobado', 'Autorizado']) as $order_detail) {
+                $order_detail->status = 'Suspendido';
+                $order_detail->wallet_user_id = Auth::user()->id;
+                $order_detail->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
+                $order_detail->save();
+            }
 
             $order->wallet_user_id = Auth::user()->id;
             $order->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
@@ -682,7 +696,12 @@ class OrderController extends Controller
         try {
             $order = Order::with('order_details')->findOrFail($request->input('id'));
 
-            $order->order_details()->whereIn('status', ['Pendiente', 'Aprobado', 'Autorizado', 'Suspendido'])->update(['status' => 'Cancelado', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
+            foreach ($order->order_details()->whereIn('status', ['Pendiente', 'Aprobado', 'Autorizado', 'Suspendido']) as $order_detail) {
+                $order_detail->status = 'Cancelado';
+                $order_detail->wallet_user_id = Auth::user()->id;
+                $order_detail->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
+                $order_detail->save();
+            }
 
             $order->wallet_user_id = Auth::user()->id;
             $order->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
@@ -728,7 +747,12 @@ class OrderController extends Controller
         try {
             $order = Order::with('order_details', 'seller_user')->findOrFail($request->input('id'));
 
-            $order->order_details()->whereIn('status', ['Pendiente'])->update(['status' => 'Autorizado', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
+            foreach ($order->order_details()->whereIn('status', ['Pendiente']) as $order_detail) {
+                $order_detail->status = 'Autorizado';
+                $order_detail->wallet_user_id = Auth::user()->id;
+                $order_detail->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
+                $order_detail->save();
+            }
 
             $sizes = Size::all();
 
@@ -800,7 +824,12 @@ class OrderController extends Controller
         try {
             $order = Order::with('order_details', 'seller_user')->findOrFail($request->input('id'));
 
-            $order->order_details()->whereIn('status', ['Pendiente'])->update(['status' => 'Aprobado', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
+            foreach ($order->order_details()->whereIn('status', ['Pendiente']) as $order_detail) {
+                $order_detail->status = 'Aprobado';
+                $order_detail->wallet_user_id = Auth::user()->id;
+                $order_detail->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
+                $order_detail->save();
+            }
 
             $sizes = Size::all();
 
@@ -918,7 +947,12 @@ class OrderController extends Controller
         try {
             $order = Order::with('client', 'order_details')->findOrFail($request->input('id'));
 
-            $order->order_details()->whereNotIn('status', ['Autorizado', 'Agotado', 'Despachado'])->update(['status' => 'Cancelado', 'wallet_user_id' => Auth::user()->id, 'wallet_date' => Carbon::now()->format('Y-m-d H:i:s')]);
+            foreach ($order->order_details()->whereIn('status', ['Autorizado', 'Agotado', 'Despachado']) as $order_detail) {
+                $order_detail->status = 'Cancelado';
+                $order_detail->wallet_user_id = Auth::user()->id;
+                $order_detail->wallet_date = Carbon::now()->format('Y-m-d H:i:s');
+                $order_detail->save();
+            }
 
             $order->wallet_dispatch_official = $order->wallet_dispatch_official ?? $order->seller_dispatch_official;
             $order->wallet_dispatch_document = $order->wallet_dispatch_document ?? $order->seller_dispatch_document;
@@ -1019,20 +1053,52 @@ class OrderController extends Controller
         try {
             $order = Order::findOrFail($id);
 
+            $relations = [
+                'client_id' => [Client::class, ['name', 'number_document', 'branch_code', 'branch_address', 'country', 'departament', 'city']],
+                'seller_user_id' => [User::class, ['name', 'last_name', 'title']],
+                'wallet_user_id' => [User::class, ['name', 'last_name', 'title']],
+                'correria_id' => [Correria::class, ['name', 'code', 'start_date', 'end_date']],
+                'business_id' => [Business::class, ['name', 'branch']],
+            ];
+
+            $audits = $order->audits()->with('user')->get()->map(function ($audit) use ($relations) {
+                $old_values = $audit->old_values;
+                $new_values = $audit->new_values;
+
+                foreach (['old_values', 'new_values'] as $valueType) {
+                    foreach ($relations as $key => [$model, $fields]) {
+                        if (isset($$valueType[$key])) {
+                            $$valueType[str_replace('_id', '', $key)] = $model::select($fields)->find($$valueType[$key]);
+                        }
+                    }
+                }
+
+                return [
+                    'id' => $audit->id,
+                    'user_type' => $audit->user_type,
+                    'user_id' => $audit->user_id,
+                    'event' => $audit->event,
+                    'auditable_type' => $audit->auditable_type,
+                    'auditable_id' => $audit->auditable_id,
+                    'old_values' => $old_values,
+                    'new_values' => $new_values,
+                    'url' => $audit->url,
+                    'ip_address' => $audit->ip_address,
+                    'user_agent' => $audit->user_agent,
+                    'tags' => $audit->tags,
+                    'created_at' => $audit->created_at,
+                    'updated_at' => $audit->updated_at,
+                    'user' => $audit->user,
+                ];
+            });
+
             return $this->successResponse(
                 [
-                    'audits' => $order->audits()->with('user')->get()
+                    'order' => $order,
+                    'audits' => $audits
                 ],
                 'El pedido fue encontrado exitosamente.',
                 200
-            );
-        } catch (TransportException $e) {
-            return $this->errorResponse(
-                [
-                    'message' => $this->getMessage('TransportException'),
-                    'error' => $e->getMessage()
-                ],
-                500
             );
         } catch (Exception $e) {
             return $this->errorResponse(
@@ -1056,11 +1122,11 @@ class OrderController extends Controller
 
             $pdf = PDF::loadView('Dashboard.Orders.Wallet', compact('order'))->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
-            $pdf->setEncryption($order->client->client_number_document, $order->business->name, ['print']);
+            $pdf->setEncryption($order->client->number_document, $order->business->name, ['print']);
 
-            // return $pdf->stream("CARTERA {$order->client->client_name}.pdf");
+            // return $pdf->stream("CARTERA {$order->client->name}.pdf");
 
-            $path = "Wallets/CARTERA_{$order->client->client_number_document}.pdf";
+            $path = "Wallets/CARTERA_{$order->client->number_document}.pdf";
 
             if (Storage::disk('public')->exists($path)) {
                 Storage::disk('public')->delete($path);
@@ -1132,9 +1198,9 @@ class OrderController extends Controller
 
             $pdf = PDF::loadView('Dashboard.Orders.PDF', compact('order', 'orderSizes', 'qrCode'))->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
-            $pdf->setEncryption($order->client->client_number_document, $order->business->name, ['print']);
+            $pdf->setEncryption($order->client->number_document, $order->business->name, ['print']);
 
-            // return $pdf->stream("CARTERA {$order->client->client_name}.pdf");
+            // return $pdf->stream("CARTERA {$order->client->name}.pdf");
 
             $path = "Orders/PEDIDO_N_{$order->id}.pdf";
 

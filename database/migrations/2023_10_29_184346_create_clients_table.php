@@ -15,21 +15,21 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('client_name');
-            $table->string('client_address')->default('N/A');
-            $table->string('client_number_document');
-            $table->string('client_number_phone')->nullable();
-            $table->string('client_branch_code')->default('001');
-            $table->string('client_branch_name')->nullable();
-            $table->string('client_branch_address')->nullable();
-            $table->string('client_branch_number_phone')->nullable();
+            $table->string('name');
+            $table->string('address')->default('N/A');
+            $table->string('number_document');
+            $table->string('cell_phone_number')->nullable();
+            $table->string('branch_code')->default('001');
+            $table->string('branch_name')->nullable();
+            $table->string('branch_address')->nullable();
+            $table->string('branch_number_phone')->nullable();
             $table->string('country');
             $table->string('departament');
             $table->string('city');
             $table->string('number_phone')->nullable();
             $table->string('email')->nullable();
             $table->string('zone')->default('N/A');
-            $table->index(['client_number_document', 'client_branch_code'])->unique();
+            $table->index(['number_document', 'branch_code'])->unique();
             $table->timestamps();
             $table->softDeletes();
         });

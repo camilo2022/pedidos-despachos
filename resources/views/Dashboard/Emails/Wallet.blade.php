@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>CARTERA {{ $order->client->client_name }}</title>
+        <title>CARTERA {{ $order->client->name }}</title>
         <style>
             body {
                 font-family: 'Trebuchet MS', sans-serif;
@@ -37,7 +37,7 @@
                 display: block;
                 margin: 0px auto;
                 padding: 0;
-                text-align: center; 
+                text-align: center;
                 vertical-align: middle;
             }
         </style>
@@ -57,7 +57,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <p>Estimado/a <strong>{{ ucwords(strtolower($order->client->client_name)) }}</strong></p>
+                            <p>Estimado/a <strong>{{ ucwords(strtolower($order->client->name)) }}</strong></p>
                             <p>Le escribimos de parte de <strong>{{ $order->business->name }}</strong> para informarle que el vendedor {{ $order->seller_user->name }} {{ $order->seller_user->last_name }} a registrado un pedido a su nombre en nuestra plataforma pero no se a podido cerrar debido a que tiene un saldo pendiente por pago. Adjunto encontrará un archivo PDF con la información detallada de su cartera pendiente.</p>
                             <p>Le agradeceríamos que revise la información y realice los pagos correspondientes a la mayor brevedad posible para poder realizar el cierre al pedido de manera exitosa.</p>
                             <p>Para cualquier consulta o aclaración, no dude en ponerse en contacto con nosotros. Los datos de contacto se encuentran en el archivo PDF adjunto.</p>

@@ -335,7 +335,7 @@ function IndexFilterOrganizeOrders(requested, sizes) {
         let tr = `<tr class="pedidos">
             <td><input type="checkbox" name="check" id="${request.id}" onclick="IndexFilterAvailabledVsFiltered()"></td>
             <td id="order_id">${request.order_id}</td>
-            <td>${request.order.client.client_name} | ${request.order.client.client_number_document}-${request.order.client.client_branch_code} | ${request.order.client.client_branch_address} | ${request.order.client.departament} | ${request.order.client.city}</td>
+            <td>${request.order.client.name} | ${request.order.client.number_document}-${request.order.client.branch_code} | ${request.order.client.branch_address} | ${request.order.client.departament} | ${request.order.client.city}</td>
             <td>CORRERIA: ${request.order.correria.code} | OBS PED: ${request.order.seller_observation ?? ''} | OBS CAR: ${request.order.wallet_observation ?? ''} | DESPACHO: OFC ${request.order.wallet_dispatch_official ?? request.order.seller_dispatch_official}% - DCO ${request.order.wallet_dispatch_document ?? request.order.seller_dispatch_document}%</td>`;
             $.each(sizes, function (index, size) {
                 tr += `<td><input type="number" class="t${size.code}" id="t${size.code}" value="-${request['T'+size.code]}" onblur="IndexFilterResetValue(this, -${request['T'+size.code]})"></td>`;

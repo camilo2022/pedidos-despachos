@@ -22,14 +22,14 @@ function CreateClientModalCleaned() {
     RemoveIsValidClassCreateClient();
     RemoveIsInvalidClassCreateClient();
 
-    $('#client_name_c').val('');
-    $('#client_address_c').val('');
-    $('#client_number_document_c').val('');
-    $('#client_number_phone_c').val('');
-    $('#client_branch_code_c').val('');
-    $('#client_branch_name_c').val('');
-    $('#client_branch_address_c').val('');
-    $('#client_branch_number_phone_c').val('');
+    $('#name_c').val('');
+    $('#address_c').val('');
+    $('#number_document_c').val('');
+    $('#cell_number_phone_c').val('');
+    $('#branch_code_c').val('');
+    $('#branch_name_c').val('');
+    $('#branch_address_c').val('');
+    $('#branch_number_phone_c').val('');
     $('#number_phone_c').val('');
     $('#email_c').val('');
     $('#zone_c').val('');
@@ -120,14 +120,14 @@ function CreateClient() {
                 type: 'POST',
                 data: {
                     '_token': $('meta[name="csrf-token"]').attr('content'),
-                    'client_name': $('#client_name_c').val(),
-                    'client_address': $('#client_address_c').val(),
-                    'client_number_document': $('#client_number_document_c').val(),
-                    'client_number_phone': $('#client_number_phone_c').val(),
-                    'client_branch_code': $('#client_branch_code_c').val(),
-                    'client_branch_name': $('#client_branch_name_c').val(),
-                    'client_branch_address': $('#client_branch_address_c').val(),
-                    'client_branch_number_phone': $('#client_branch_number_phone_c').val(),
+                    'name': $('#name_c').val(),
+                    'address': $('#address_c').val(),
+                    'number_document': $('#number_document_c').val(),
+                    'cell_number_phone': $('#cell_number_phone_c').val(),
+                    'branch_code': $('#branch_code_c').val(),
+                    'branch_name': $('#branch_name_c').val(),
+                    'branch_address': $('#branch_address_c').val(),
+                    'branch_number_phone': $('#branch_number_phone_c').val(),
                     'country': $('#country_c').val(),
                     'departament': $('#departament_c').val(),
                     'city': $('#city_c').val(),
@@ -196,29 +196,29 @@ function CreateClientAjaxError(xhr) {
 }
 
 function AddIsValidClassCreateClient() {
-    if (!$('#client_name_c').hasClass('is-invalid')) {
-        $('#client_name_c').addClass('is-valid');
+    if (!$('#name_c').hasClass('is-invalid')) {
+        $('#name_c').addClass('is-valid');
     }
-    if (!$('#client_address_c').hasClass('is-invalid')) {
-        $('#client_address_c').addClass('is-valid');
+    if (!$('#address_c').hasClass('is-invalid')) {
+        $('#address_c').addClass('is-valid');
     }
-    if (!$('#client_number_document_c').hasClass('is-invalid')) {
-        $('#client_number_document_c').addClass('is-valid');
+    if (!$('#number_document_c').hasClass('is-invalid')) {
+        $('#number_document_c').addClass('is-valid');
     }
-    if (!$('#client_number_phone_c').hasClass('is-invalid')) {
-        $('#client_number_phone_c').addClass('is-valid');
+    if (!$('#cell_number_phone_c').hasClass('is-invalid')) {
+        $('#cell_number_phone_c').addClass('is-valid');
     }
-    if (!$('#client_branch_code_c').hasClass('is-invalid')) {
-        $('#client_branch_code_c').addClass('is-valid');
+    if (!$('#branch_code_c').hasClass('is-invalid')) {
+        $('#branch_code_c').addClass('is-valid');
     }
-    if (!$('#client_branch_name_c').hasClass('is-invalid')) {
-        $('#client_branch_name_c').addClass('is-valid');
+    if (!$('#branch_name_c').hasClass('is-invalid')) {
+        $('#branch_name_c').addClass('is-valid');
     }
-    if (!$('#client_branch_address_c').hasClass('is-invalid')) {
-        $('#client_branch_address_c').addClass('is-valid');
+    if (!$('#branch_address_c').hasClass('is-invalid')) {
+        $('#branch_address_c').addClass('is-valid');
     }
-    if (!$('#client_branch_number_phone_c').hasClass('is-invalid')) {
-        $('#client_branch_number_phone_c').addClass('is-valid');
+    if (!$('#branch_number_phone_c').hasClass('is-invalid')) {
+        $('#branch_number_phone_c').addClass('is-valid');
     }
     if (!$('span[aria-labelledby="select2-country_c-container"]').hasClass('is-invalid')) {
         $('span[aria-labelledby="select2-country_c-container"]').addClass('is-valid');
@@ -241,14 +241,14 @@ function AddIsValidClassCreateClient() {
 }
 
 function RemoveIsValidClassCreateClient() {
-    $('#client_name_c').removeClass('is-valid');
-    $('#client_address_c').removeClass('is-valid');
-    $('#client_number_document_c').removeClass('is-valid');
-    $('#client_number_phone_c').removeClass('is-valid');
-    $('#client_branch_code_c').removeClass('is-valid');
-    $('#client_branch_name_c').removeClass('is-valid');
-    $('#client_branch_address_c').removeClass('is-valid');
-    $('#client_branch_number_phone_c').removeClass('is-valid');
+    $('#name_c').removeClass('is-valid');
+    $('#address_c').removeClass('is-valid');
+    $('#number_document_c').removeClass('is-valid');
+    $('#cell_number_phone_c').removeClass('is-valid');
+    $('#branch_code_c').removeClass('is-valid');
+    $('#branch_name_c').removeClass('is-valid');
+    $('#branch_address_c').removeClass('is-valid');
+    $('#branch_number_phone_c').removeClass('is-valid');
     $('span[aria-labelledby="select2-country_c-container"]').removeClass('is-valid');
     $('span[aria-labelledby="select2-departament_c-container"]').removeClass('is-valid');
     $('span[aria-labelledby="select2-city_c-container"]').removeClass('is-valid');
@@ -267,14 +267,14 @@ function AddIsInvalidClassCreateClient(input) {
 }
 
 function RemoveIsInvalidClassCreateClient() {
-    $('#client_name_c').removeClass('is-invalid');
-    $('#client_address_c').removeClass('is-invalid');
-    $('#client_number_document_c').removeClass('is-invalid');
-    $('#client_number_phone_c').removeClass('is-invalid');
-    $('#client_branch_code_c').removeClass('is-invalid');
-    $('#client_branch_name_c').removeClass('is-invalid');
-    $('#client_branch_address_c').removeClass('is-invalid');
-    $('#client_branch_number_phone_c').removeClass('is-invalid');
+    $('#name_c').removeClass('is-invalid');
+    $('#address_c').removeClass('is-invalid');
+    $('#number_document_c').removeClass('is-invalid');
+    $('#cell_number_phone_c').removeClass('is-invalid');
+    $('#branch_code_c').removeClass('is-invalid');
+    $('#branch_name_c').removeClass('is-invalid');
+    $('#branch_address_c').removeClass('is-invalid');
+    $('#branch_number_phone_c').removeClass('is-invalid');
     $('span[aria-labelledby="select2-country_c-container"]').removeClass('is-invalid');
     $('span[aria-labelledby="select2-departament_c-container"]').removeClass('is-invalid');
     $('span[aria-labelledby="select2-city_c-container"]').removeClass('is-invalid');

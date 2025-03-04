@@ -52,13 +52,13 @@ let tableOrders = $('#orders').DataTable({
         {
             data: 'client_id',
             render: function (data, type, row) {
-                return `${row.client.client_number_document}-${row.client.client_branch_code}`;
+                return `${row.client.number_document}-${row.client.branch_code}`;
             }
         },
         {
             data: 'client_id',
             render: function (data, type, row) {
-                return row.client.client_name;
+                return row.client.name;
             }
         },
         {
@@ -70,7 +70,7 @@ let tableOrders = $('#orders').DataTable({
         {
             data: 'client_id',
             render: function (data, type, row) {
-                return row.client.client_branch_address;
+                return row.client.branch_address;
             }
         },
         { data: 'created_at' },
@@ -170,29 +170,29 @@ let tableOrders = $('#orders').DataTable({
             render: function (data, type, row) {
                 let btn = `<div class="text-center" style="width: 100%;">`;
 
-                btn += `<a onclick="AuditOrderModal(${row.id})" type="button"
-                class="btn btn-dark btn-sm mr-2" title="Auditar pedido.">
-                    <i class="fas fa-link text-white"></i>
-                </a>`;
-
                 btn += `<a href="/Dashboard/Orders/Download/${row.id}" type="button"
                 class="btn bg-purple btn-sm mr-2" title="Descargar pdf del pedido." target="_blank">
                     <i class="fas fa-file-pdf text-white"></i>
                 </a>`;
+
+                if(isAdministrador() || isCartera()){
+                    btn += `<a onclick="AuditOrderModal(${row.id})" type="button"
+                    class="btn btn-dark btn-sm mr-2" title="Auditar pedido.">
+                        <i class="fas fa-link text-white"></i>
+                    </a>`;
+                }
 
                 btn += `<a href="/Dashboard/Orders/Details/Index/${row.id}" type="button"
                 class="btn btn-info btn-sm mr-2" title="Visualizar detalles del pedido.">
                     <i class="fas fa-eye text-white"></i>
                 </a>`;
 
-                if (row.seller_status == 'Pendiente' || isCartera()) {
+                if (row.seller_status == 'Pendiente' && ((isVendedor() || isVendedorEspecial() || isAdministrador()) && (row.seller_user_id == $('meta[name="user-id"]').attr('content') || isAdministrador()))) {
                     btn += `<a onclick="EditOrderModal(${row.id})" type="button"
                     class="btn btn-primary btn-sm mr-2" title="Editar pedido.">
                         <i class="fas fa-pen text-white"></i>
                     </a>`;
-                }
 
-                if (row.seller_status == 'Pendiente' && (isVendedor() || isVendedorEspecial() || row.seller_user_id == $('meta[name="user-id"]').attr('content'))) {
                     btn += `<a onclick="AssentOrder(${row.id})" type="button"
                     class="btn btn-success btn-sm mr-2" title="Asentar pedido.">
                         <i class="fas fa-check text-white"></i>

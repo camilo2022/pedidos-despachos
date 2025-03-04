@@ -65,7 +65,7 @@
                         SEÑORES:
                     </th>
                     <td style="text-align: left;" class="cell fz-12">
-                        {{ strtoupper($order->client->client_name) }}
+                        {{ strtoupper($order->client->name) }}
                     </td>
 
                     <th class="text-center" style="border: 1px solid #a7a7a7;" colspan="2" rowspan="4">
@@ -77,7 +77,7 @@
                         DOCUMENTO:
                     </th>
                     <td style="text-align: left;" class="cell fz-12">
-                        {{ $order->client->client_number_document . '-' . $order->client->client_branch_code }}
+                        {{ $order->client->number_document . '-' . $order->client->branch_code }}
                     </td>
                 </tr>
                 <tr>
@@ -93,7 +93,7 @@
                         DIRECCION:
                     </th>
                     <td style="text-align: left;" class="cell fz-12">
-                        {{ strtoupper($order->client->client_branch_address) }}
+                        {{ strtoupper($order->client->branch_address) }}
                     </td>
                 </tr>
                 <tr>
@@ -101,7 +101,7 @@
                         TELEFONOS:
                     </th>
                     <td style="text-align: left;" class="cell fz-12">
-                        {{ collect([$order->client->client_number_phone, $order->client->client_branch_number_phone, $order->client->number_phone])->filter()->unique()->implode(' - ') }}
+                        {{ collect([$order->client->cell_number_phone_e, $order->client->branch_number_phone, $order->client->number_phone])->filter()->unique()->implode(' - ') }}
                     </td>
                     <th style="text-align: left;" class="cell fz-12">
                         FECHA:

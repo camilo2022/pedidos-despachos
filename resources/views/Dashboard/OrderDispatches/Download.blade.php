@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ asset('css/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     <!-- Custom Css -->
     <link rel="stylesheet" href="{{ asset('css/plugins/pdf/style.min.css') }}">
-    
+
     <link rel="stylesheet" href="{{ asset('css/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
 
     <style>
@@ -33,7 +33,7 @@
             font-size: 12px;
         }
         .center {
-            text-align: center; 
+            text-align: center;
             vertical-align: middle;
         }
     </style>
@@ -44,7 +44,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="text-center" width="20%">   
+                            <th class="text-center" width="20%">
                                 <img src="{{ asset('images/logo-bless.jpg') }}">
                             </th>
                             <th colspan="4" width="60%" class="center">
@@ -88,15 +88,15 @@
                         </tr>
                         <tr>
                             <th>DESTINATARIO: </th>
-                            <td colspan="3">{{ strtoupper($orderDispatch->client->client_name) }}</td>
+                            <td colspan="3">{{ strtoupper($orderDispatch->client->name) }}</td>
                             <th>NIT: </th>
-                            <td>{{ $orderDispatch->client->client_number_document }}-{{ $orderDispatch->client->client_branch_code }}</td>
+                            <td>{{ $orderDispatch->client->number_document }}-{{ $orderDispatch->client->branch_code }}</td>
                         </tr>
                         <tr>
                             <th>DIRECCION: </th>
-                            <td colspan="3">{{ strtoupper($orderDispatch->client->client_branch_address) }}</td>
+                            <td colspan="3">{{ strtoupper($orderDispatch->client->branch_address) }}</td>
                             <th>TELEFONO: </th>
-                            <td>{{ $orderDispatch->client->client_number_phone ?? $orderDispatch->client->client_branch_number_phone }}</td>
+                            <td>{{ $orderDispatch->client->cell_number_phone_e ?? $orderDispatch->client->branch_number_phone }}</td>
                         </tr>
                         <tr>
                             <th>DEPARTAMENTO: </th>
@@ -126,8 +126,8 @@
                         </tr>
                         <tr>
                             <th colspan="6" class="center">
-                                <img style="width:90%;" src="{{asset('images/dian.png')}}"> 
-                            </th> 
+                                <img style="width:90%;" src="{{asset('images/dian.png')}}">
+                            </th>
                         </tr>
                         <tr>
                             <th colspan="6" class="center">www.organizacionbless.com.co</th>

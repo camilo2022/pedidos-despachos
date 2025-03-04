@@ -44,10 +44,6 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/phpinfo', function () {
-    echo phpinfo();
-} );
-
 Route::get('/', function () {
 
     if (Auth::check()) {
@@ -327,6 +323,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::put('/Allow', 'allow')->middleware('can:Dashboard.Orders.Details.Allow')->name('Dashboard.Orders.Details.Allow');
                     Route::put('/Cancel', 'cancel')->middleware('can:Dashboard.Orders.Details.Cancel')->name('Dashboard.Orders.Details.Cancel');
                     Route::put('/Suspend', 'suspend')->middleware('can:Dashboard.Orders.Details.Suspend')->name('Dashboard.Orders.Details.Suspend');
+                    Route::post('/Audit/{id}', 'audit')/* ->middleware('can:Dashboard.Orders.Details.Audit') */->name('Dashboard.Orders.Details.Audit');
                 });
             });
         });

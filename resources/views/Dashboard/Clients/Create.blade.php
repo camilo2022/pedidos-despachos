@@ -14,56 +14,56 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-group c_form_group">
-                            <label for="client_name_c">RAZON SOCIAL</label>
-                            <input type="text" class="form-control" id="client_name_c" name="client_name_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
+                            <label for="name_c">RAZON SOCIAL</label>
+                            <input type="text" class="form-control" id="name_c" name="name_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group c_form_group">
-                            <label for="client_address_c">DIRECCION</label>
-                            <input type="text" class="form-control" id="client_address_c" name="client_address_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group c_form_group">
-                            <label for="client_number_document_c">NUMERO DE DOCUMENTO</label>
-                            <input type="number" class="form-control" id="client_number_document_c" name="client_number_document_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group c_form_group">
-                            <label for="client_branch_code_c">CODIGO DE SUCURSAL</label>
-                            <input type="number" class="form-control" id="client_branch_code_c" name="client_branch_code_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
+                            <label for="address_c">DIRECCION</label>
+                            <input type="text" class="form-control" id="address_c" name="address_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-group c_form_group">
-                            <label for="client_number_phone_c">TELEFONO CLIENTE</label>
-                            <input type="number" class="form-control" id="client_number_phone_c" name="client_number_phone_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
+                            <label for="number_document_c">NUMERO DE DOCUMENTO</label>
+                            <input type="number" class="form-control" id="number_document_c" name="number_document_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group c_form_group">
-                            <label for="client_branch_name_c">SUCURSAL</label>
-                            <input type="text" class="form-control" id="client_branch_name_c" name="client_branch_name_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
+                            <label for="branch_code_c">CODIGO DE SUCURSAL</label>
+                            <input type="number" class="form-control" id="branch_code_c" name="branch_code_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-group c_form_group">
-                            <label for="client_branch_address_c">DIRECCION DE DESPACHO</label>
-                            <input type="text" class="form-control" id="client_branch_address_c" name="client_branch_address_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
+                            <label for="cell_number_phone_c">TELEFONO CLIENTE</label>
+                            <input type="number" class="form-control" id="cell_number_phone_c" name="cell_number_phone_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group c_form_group">
-                            <label for="client_branch_number_phone_c">TELEFONO SUCURSAL</label>
-                            <input type="number" class="form-control" id="client_branch_number_phone_c" name="client_branch_number_phone_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
+                            <label for="branch_name_c">SUCURSAL</label>
+                            <input type="text" class="form-control" id="branch_name_c" name="branch_name_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group c_form_group">
+                            <label for="branch_address_c">DIRECCION DE DESPACHO</label>
+                            <input type="text" class="form-control" id="branch_address_c" name="branch_address_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group c_form_group">
+                            <label for="branch_number_phone_c">TELEFONO SUCURSAL</label>
+                            <input type="number" class="form-control" id="branch_number_phone_c" name="branch_number_phone_c" onblur="Trim(this)" onkeyup="UpperCase(this)">
                         </div>
                     </div>
                 </div>

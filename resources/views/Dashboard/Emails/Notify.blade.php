@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PEDIDO N° {{ $order->id }}</title>
         <link rel="stylesheet" href="{{ asset('css/plugins/fontawesome-free/css/all.min.css') }}">
-    
+
         <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
         <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/sharp-solid.css">
         <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/sharp-regular.css">
@@ -43,7 +43,7 @@
                 display: block;
                 margin: 0px auto;
                 padding: 0;
-                text-align: center; 
+                text-align: center;
                 vertical-align: middle;
             }
         </style>
@@ -66,8 +66,8 @@
                             <p>Estimado equipo de Cartera,</p>
                             <p>
                                 @php(Carbon::setLocale('es'))
-                                Les informamos que el vendedor <strong>{{ ucwords(strtolower($order->seller_user->name . ' ' . $order->seller_user->last_name)) }}</strong> ha asentado un nuevo pedido para el cliente <strong> {{ ucwords(strtolower($order->client->client_name)) }} </strong> 
-                                identificado con <strong> {{ $order->client->client_number_document }}-{{ $order->client->client_branch_code }} </strong> registrado con el numero de pedido <strong>{{ $order->id }}</strong>.
+                                Les informamos que el vendedor <strong>{{ ucwords(strtolower($order->seller_user->name . ' ' . $order->seller_user->last_name)) }}</strong> ha asentado un nuevo pedido para el cliente <strong> {{ ucwords(strtolower($order->client->name)) }} </strong>
+                                identificado con <strong> {{ $order->client->number_document }}-{{ $order->client->branch_code }} </strong> registrado con el numero de pedido <strong>{{ $order->id }}</strong>.
                                 El pedido fue registrado a las a las <strong>{{ Carbon::parse($order->created_at)->format('h:i:s A') }}</strong> del día <strong>{{ Carbon::parse($order->created_at)->isoFormat('D [de] MMMM [de] YYYY') }}</strong>  y cerrado a las a las <strong>{{ Carbon::parse($order->seller_date)->format('h:i:s A') }}</strong> del día <strong>{{ Carbon::parse($order->seller_date)->isoFormat('D [de] MMMM [de] YYYY') }}</strong>.
                             </p>
                             <p>Para gestionar el pedido, puede hacer click <a href="{{ URL::route('Dashboard.Orders.Details.Index', ['id' => $order->id]) }}">AQUÍ</a>.

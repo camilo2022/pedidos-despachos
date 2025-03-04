@@ -26,19 +26,19 @@ let tableSales = $('#sales').DataTable({
         {
             data: 'order',
             render: function(data, type, row) {
-                return data.client.client_name;
+                return data.client.name;
             }
         },
         {
             data: 'order',
             render: function(data, type, row) {
-                return `${data.client.client_number_document}-${data.client.client_branch_code}`;
+                return `${data.client.number_document}-${data.client.branch_code}`;
             }
         },
         {
             data: 'order',
             render: function(data, type, row) {
-                return data.client.client_branch_address;
+                return data.client.branch_address;
             }
         },
         {
