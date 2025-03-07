@@ -7,9 +7,13 @@ use App\Http\Requests\Libranza\LibranzaApproveRequest;
 use App\Http\Requests\Libranza\LibranzaCancelRequest;
 use App\Http\Requests\Libranza\LibranzaDiscountRequest;
 use App\Http\Requests\Libranza\LibranzaIndexQueryRequest;
+use App\Http\Requests\Libranza\LibranzaStoreRequest;
 use App\Http\Resources\Libranza\LibranzaIndexQueryCollection;
+use App\Models\Invoice;
 use App\Models\Libranza;
 use App\Models\LibranzaDiscount;
+use App\Models\Person;
+use App\Models\User;
 use App\Traits\ApiMessage;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
@@ -18,7 +22,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class LibranzaController extends Controller
 {
@@ -77,6 +83,79 @@ class LibranzaController extends Controller
                 ],
                 $this->getMessage('Success'),
                 200
+            );
+        } catch (QueryException $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('QueryException'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('Exception'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function create()
+    {
+        try {
+            $people = Person::with('invoices', 'employee')->has('employee')->get();
+
+            return $this->successResponse(
+                [
+                    'people' => $people
+                ],
+                'Ingrese los datos para hacer la validacion y registro.',
+                200
+            );
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('ModelNotFoundException'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('Exception'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function store(LibranzaStoreRequest $request)
+    {
+        try {
+            $invoice = new Invoice();
+            $invoice->model_id = $request->input('person_id');
+            $invoice->model_type = Person::class;
+            $invoice->reference = $request->input('reference');
+            $invoice->save();
+
+            $libranza = new Libranza();
+            $libranza->invoice_id = $invoice->id;
+            $libranza->value = $request->input('value');
+            $libranza->code = Str::upper(Str::random(8));
+            $libranza->sms = $this->sms($libranza->code, $invoice->reference, $request->input('value'), $invoice->model->phone_number, Auth::user()->stores->first()?->name ?? 'SISTEMAS');
+            $libranza->store_id = Auth::user()->stores->first()?->id;
+            $libranza->user_id = Auth::user()->id;
+            $libranza->save();
+
+            return $this->successResponse(
+                $libranza,
+                'El pedido fue registrado exitosamente.',
+                201
             );
         } catch (QueryException $e) {
             return $this->errorResponse(
@@ -264,6 +343,98 @@ class LibranzaController extends Controller
                 ],
                 500
             );
+        }
+    }
+
+    public function audit($id)
+    {
+        try {
+            $libranza = Libranza::findOrFail($id);
+
+            $relations = [
+                'invoice_id' => [Invoice::class, ['reference', 'status', 'created_at']],
+                'user_id' => [User::class, ['name', 'last_name', 'title']]
+            ];
+
+            $audits = $libranza->audits()->with('user')->get()->map(function ($audit) use ($relations) {
+                $old_values = $audit->old_values;
+                $new_values = $audit->new_values;
+
+                foreach (['old_values', 'new_values'] as $valueType) {
+                    foreach ($relations as $key => [$model, $fields]) {
+                        if (isset($$valueType[$key])) {
+                            $$valueType[str_replace('_id', '', $key)] = $model::select($fields)->find($$valueType[$key]);
+                        }
+                    }
+                }
+
+                return [
+                    'id' => $audit->id,
+                    'user_type' => $audit->user_type,
+                    'user_id' => $audit->user_id,
+                    'event' => $audit->event,
+                    'auditable_type' => $audit->auditable_type,
+                    'auditable_id' => $audit->auditable_id,
+                    'old_values' => $old_values,
+                    'new_values' => $new_values,
+                    'url' => $audit->url,
+                    'ip_address' => $audit->ip_address,
+                    'user_agent' => $audit->user_agent,
+                    'tags' => $audit->tags,
+                    'created_at' => $audit->created_at,
+                    'updated_at' => $audit->updated_at,
+                    'user' => $audit->user,
+                ];
+            });
+
+            return $this->successResponse(
+                [
+                    'libranza' => $libranza,
+                    'audits' => $audits
+                ],
+                'El pedido fue encontrado exitosamente.',
+                200
+            );
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [
+                    'message' => $this->getMessage('Exception'),
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    private function sms($code, $reference, $value, $phone, $store)
+    {
+        try {
+            return 'MTczOTY4MTAzNA==|xVxHlrsNKLRUEpwJOS05yiWhM';
+            $url = "https://api103.hablame.co/api/sms/v3/send/priority";
+
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Account' => env('SMS_ACCOUNT'),
+                'ApiKey' => env('SMS_API_KEY'),
+                'Content-Type' => 'application/json',
+                'Token' => env('SMS_TOKEN'),
+            ])->post($url, [
+                'toNumber' => "57$phone",
+                'sms' => "$store Libranza Monto: $ $value. Este es tu código de firma de libranza $code de la factura $reference.",
+                'flash' => '0',
+                'sc' => '899991',
+                'request_dlvr_rcpt' => '0',
+            ]);
+
+            $data = (object) $response->json();
+
+            if (isset($data->status) && $data->status == '1x000') {
+                return $data->smsId;
+            } else {
+                return 'Ha ocurrido un error: ' . ($data->error_description ?? 'Desconocido') . ' (' . ($data->status ?? 'Sin código') . ')';
+            }
+        } catch (Exception $e) {
+            return 'Ha ocurrido un error: Desconocido (Sin código)';
         }
     }
 }

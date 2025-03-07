@@ -90,12 +90,14 @@
                 </div>
             </div>
         </div>
+        @include('Dashboard.Libranzas.Audit')
         @include('Dashboard.Libranzas.Approve')
         @include('Dashboard.Libranzas.Discount')
     </section>
 @endsection
 @section('script')
     <script src="{{ asset('js/Dashboard/Libranzas/DataTableIndex.js') }}"></script>
+    <script src="{{ asset('js/Dashboard/Libranzas/Audit.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Libranzas/Approve.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Libranzas/Cancel.js') }}"></script>
     <script src="{{ asset('js/Dashboard/Libranzas/Discount.js') }}"></script>

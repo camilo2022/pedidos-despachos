@@ -74,9 +74,10 @@ class PublicController extends Controller
             $warehouses = Business::with('warehouses')->find($business_id);
             $to_transit = $warehouses?->warehouses->where('to_transit', true)->pluck('id')->toArray() ?? [];
             $to_discount = $warehouses?->warehouses->where('to_discount', true)->pluck('id')->toArray() ?? [];
-            $inventory = (object) [];
-            $inventory->to_transit = $this->inventory($to_transit, $referencia, ['SIESA', 'VISUAL TNS', 'BMI'], $to_discount);
-            $inventory->to_discount = $this->inventory($to_discount, $referencia);
+            $inventory = (object) [
+                'to_transit' => $this->inventory($to_transit, $referencia, ['SIESA', 'VISUAL TNS', 'BMI'], $to_discount),
+                'to_discount' => $this->inventory($to_discount, $referencia),
+            ];
             $committed = $this->committed($referencia, $business_id);
 
             $referenciaSizes = collect([]);

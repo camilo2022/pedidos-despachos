@@ -133,10 +133,12 @@ let tableLibranzas = $('#libranzas').DataTable({
                     <i class="fas fa-file-pdf text-white"></i>
                 </a>`;
 
-                btn += `<a onclick="ShowLibranzaModal(${row.id})" type="button"
-                class="btn btn-info btn-sm mr-2" title="Visualizar libranza.">
-                    <i class="fas fa-eye text-white"></i>
-                </a>`;
+                if(isAdministrador()){
+                    btn += `<a onclick="AuditLibranzaModal(${row.id})" type="button"
+                    class="btn btn-dark btn-sm mr-2" title="Auditar libranza.">
+                        <i class="fas fa-link text-white"></i>
+                    </a>`;
+                }
 
                 if((row.user_id == $('meta[name="user-id"]').attr('content') && isTienda()) || isAdministrador()){
                     if(['Pendiente', 'Cancelado'].includes(row.status)){

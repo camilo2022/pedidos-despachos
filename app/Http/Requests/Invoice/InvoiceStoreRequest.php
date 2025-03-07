@@ -40,7 +40,7 @@ class InvoiceStoreRequest extends FormRequest
             'payments' => ['required', 'array'],
             'payments.*' => ['required', 'array'],
             'payments.*.payment_method_id' => ['required', 'exists:payment_methods,id'],
-            'payments.*.payment' => ['required', 'numeric', ''],
+            'payments.*.payment' => ['required', 'numeric'],
         ];
     }
 

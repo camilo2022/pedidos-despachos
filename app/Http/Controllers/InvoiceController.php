@@ -102,6 +102,7 @@ class InvoiceController extends Controller
                 $libranza->value = $value_libranza;
                 $libranza->code = Str::upper(Str::random(8));
                 $libranza->sms = $this->sms($libranza->code, $invoice->reference, $value_libranza, $invoice->model->phone_number, $invoice->cash_register->store->name);
+                $libranza->store_id = Auth::user()->stores->first()?->id;
                 $libranza->user_id = Auth::user()->id;
                 $libranza->save();
             }

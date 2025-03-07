@@ -22,6 +22,7 @@ class Libranza extends Model implements Auditable
         'code',
         'sms',
         'share',
+        'store_id',
         'user_id'
     ];
 
@@ -33,6 +34,7 @@ class Libranza extends Model implements Auditable
         'code',
         'sms',
         'share',
+        'store_id',
         'user_id'
     ];
 
@@ -44,6 +46,11 @@ class Libranza extends Model implements Auditable
     public function invoice() : BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'invoice_id');
+    }
+
+    public function store() : BelongsTo
+    {
+        return $this->belongsTo(Store::class, 'store_id');
     }
 
     public function user() : BelongsTo
