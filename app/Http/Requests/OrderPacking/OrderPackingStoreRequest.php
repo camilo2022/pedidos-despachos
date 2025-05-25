@@ -25,7 +25,7 @@ class OrderPackingStoreRequest extends FormRequest
     {
         return [
             'id' => ['required', 'exists:order_packings,id'],
-            'package_type_id' => ['required', 'exists:package_types,id'],
+            'type_of_package_id' => ['required', 'exists:type_of_packages,id'],
         ];
     }
 
@@ -34,8 +34,8 @@ class OrderPackingStoreRequest extends FormRequest
         return [
             'id.required' => 'El Identificador de la orden de empacado es requerido.',
             'id.exists' => 'El Identificador de la orden de empacado no es válido.',
-            'package_type_id.required' => 'El Identificador del tipo de empaque es requerido.',
-            'package_type_id.exists' => 'El Identificador del tipo de empaque no es válido.'
+            'type_of_package_id.required' => 'El Identificador del tipo de empaque es requerido.',
+            'type_of_package_id.exists' => 'El Identificador del tipo de empaque no es válido.'
         ];
     }
 }

@@ -10,7 +10,7 @@ use App\Http\Requests\OrderPacking\OrderPackingStoreRequest;
 use App\Models\OrderPackage;
 use App\Models\OrderPacking;
 use App\Models\OrderPackingDetail;
-use App\Models\PackageType;
+use App\Models\TypeOfPackage;
 use App\Models\Size;
 use App\Traits\ApiMessage;
 use App\Traits\ApiResponser;
@@ -30,8 +30,8 @@ class OrderPackingController extends Controller
         try {
             $orderPacking = OrderPacking::with([
                 'order_dispatch.correria',
-                'order_dispatch.client' => fn($query) => $query->withTrashed(), 
-                'order_dispatch.order_dispatch_details.order_detail.product' => fn($query) => $query->withTrashed(), 
+                'order_dispatch.client' => fn($query) => $query->withTrashed(),
+                'order_dispatch.order_dispatch_details.order_detail.product' => fn($query) => $query->withTrashed(),
                 'order_dispatch.order_dispatch_details.order_detail.color' => fn($query) => $query->withTrashed(),
                 'packing_user' => fn($query) => $query->withTrashed()
             ])->findOrFail($id);
@@ -48,7 +48,7 @@ class OrderPackingController extends Controller
             $orderPacking = OrderPacking::with([
                     'order_packages.order_packing_details.order_dispatch_detail.order_detail.product' => fn($query) => $query->withTrashed(),
                     'order_packages.order_packing_details.order_dispatch_detail.order_detail.color' => fn($query) => $query->withTrashed(),
-                    'order_packages.package_type', 'order_dispatch.order_dispatch_details.order_packings_details',
+                    'order_packages.type_of_package', 'order_dispatch.order_dispatch_details.order_packings_details',
                     'order_packages.order_packing_details.order_dispatch_detail.order_packings_details'
                 ])
                 ->findOrFail($request->input('id'));
@@ -76,15 +76,15 @@ class OrderPackingController extends Controller
                     204
                 );
             }
-            
-            $packageTypes = PackageType::all();
+
+            $typeOfPackages = TypeOfPackage::all();
 
             return $this->successResponse(
                 [
                     'orderPacking' => $orderPacking,
                     'sizes' => $orderDispatchSizes->isNotEmpty() ? $orderDispatchSizes : $sizes,
                     'status' => true,
-                    'packageTypes' => $packageTypes
+                    'typeOfPackages' => $typeOfPackages
                 ],
                 $this->getMessage('Success'),
                 204
@@ -116,7 +116,7 @@ class OrderPackingController extends Controller
 
             $orderPackage = new OrderPackage();
             $orderPackage->order_packing_id = $orderPacking->id;
-            $orderPackage->package_type_id = $request->input('package_type_id');
+            $orderPackage->type_of_package_id = $request->input('type_of_package_id');
             $orderPackage->package_date = Carbon::now()->format('Y-m-d H:i:s');
             $orderPackage->save();
 

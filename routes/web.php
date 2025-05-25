@@ -21,7 +21,7 @@ use App\Http\Controllers\OrderPackingController;
 use App\Http\Controllers\OrderPackingDetailController;
 use App\Http\Controllers\OrderPickingController;
 use App\Http\Controllers\OrderPickingDetailController;
-use App\Http\Controllers\PackageTypeController;
+use App\Http\Controllers\TypeOfPackageController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\POSController;
@@ -155,15 +155,15 @@ Route::middleware(['auth'])->group(function () {
             });
         });
 
-        Route::prefix('/PackageTypes')->group(function () {
-            Route::controller(PackageTypeController::class)->group(function () {
-                Route::get('/Index', 'index')->middleware('can:PackageTypes,Dashboard.PackageTypes.Index')->name('Dashboard.PackageTypes.Index');
-                Route::post('/Index/Query', 'indexQuery')->middleware('can:PackageTypes,Dashboard.PackageTypes.Index.Query')->name('Dashboard.PackageTypes.Index.Query');
-                Route::post('/Create', 'create')->middleware('can:PackageTypes,Dashboard.PackageTypes.Create')->name('Dashboard.PackageTypes.Create');
-                Route::post('/Store', 'store')->middleware('can:PackageTypes,Dashboard.PackageTypes.Store')->name('Dashboard.PackageTypes.Store');
-                Route::post('/Edit/{id}', 'edit')->middleware('can:PackageTypes,Dashboard.PackageTypes.Edit')->name('Dashboard.PackageTypes.Edit');
-                Route::put('/Update/{id}', 'update')->middleware('can:PackageTypes,Dashboard.PackageTypes.Update')->name('Dashboard.PackageTypes.Update');
-                Route::delete('/Delete', 'delete')->middleware('can:PackageTypes,Dashboard.PackageTypes.Delete')->name('Dashboard.PackageTypes.Delete');
+        Route::prefix('/TypeOfPackages')->group(function () {
+            Route::controller(TypeOfPackageController::class)->group(function () {
+                Route::get('/Index', 'index')->middleware('can:TypeOfPackages,Dashboard.TypeOfPackages.Index')->name('Dashboard.TypeOfPackages.Index');
+                Route::post('/Index/Query', 'indexQuery')->middleware('can:TypeOfPackages,Dashboard.TypeOfPackages.Index.Query')->name('Dashboard.TypeOfPackages.Index.Query');
+                Route::post('/Create', 'create')->middleware('can:TypeOfPackages,Dashboard.TypeOfPackages.Create')->name('Dashboard.TypeOfPackages.Create');
+                Route::post('/Store', 'store')->middleware('can:TypeOfPackages,Dashboard.TypeOfPackages.Store')->name('Dashboard.TypeOfPackages.Store');
+                Route::post('/Edit/{id}', 'edit')->middleware('can:TypeOfPackages,Dashboard.TypeOfPackages.Edit')->name('Dashboard.TypeOfPackages.Edit');
+                Route::put('/Update/{id}', 'update')->middleware('can:TypeOfPackages,Dashboard.TypeOfPackages.Update')->name('Dashboard.TypeOfPackages.Update');
+                Route::delete('/Delete', 'delete')->middleware('can:TypeOfPackages,Dashboard.TypeOfPackages.Delete')->name('Dashboard.TypeOfPackages.Delete');
             });
         });
 

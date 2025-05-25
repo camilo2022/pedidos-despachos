@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('modules', function (Blueprint $table) {
-            $table->id()->comment('Identificador del modulo.');
-            $table->string('name')->unique()->comment('Nombre del modulo.');
-            $table->string('type')->default('item')->comment('Tipo de registro.');
-            $table->string('icon')->unique()->comment('Icono del modulo.');
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('type')->default('item');
+            $table->string('icon')->unique();
             $table->timestamps();
         });
     }

@@ -18,7 +18,7 @@ class OrderPackage extends Model implements Auditable
         'order_packing_id',
         'package_type_id',
         'weight',
-        'package_status',
+        'type_of_package_id',
         'package_date'
     ];
 
@@ -26,7 +26,7 @@ class OrderPackage extends Model implements Auditable
         'order_packing_id',
         'package_type_id',
         'weight',
-        'package_status',
+        'type_of_package_id',
         'package_date'
     ];
 
@@ -40,8 +40,8 @@ class OrderPackage extends Model implements Auditable
         return $this->belongsTo(OrderPacking::class, 'order_packing_id');
     }
 
-    public function package_type() : BelongsTo
+    public function type_of_package() : BelongsTo
     {
-        return $this->belongsTo(PackageType::class, 'package_type_id');
+        return $this->belongsTo(TypeOfPackage::class, 'type_of_package_id');
     }
 }

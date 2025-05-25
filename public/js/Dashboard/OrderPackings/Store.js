@@ -1,8 +1,8 @@
 function StoreOrderPacking(id) {
     let options = ``;
 
-    $.each(packageTypes, function(index, package_type) {
-        options += `<option value="${package_type.id}">${package_type.name}</option>`;
+    $.each(typeOfPackages, function(index, type_of_packages) {
+        options += `<option value="${type_of_packages.id}">${type_of_packages.name}</option>`;
     });
 
     Swal.fire({
@@ -15,7 +15,7 @@ function StoreOrderPacking(id) {
         confirmButtonText: 'Si, añadir!',
         cancelButtonText: 'No, cancelar!',
         html:`<div class="input-group">
-            <select class="form-control" id="package_type_id_c" name="package_type_id_c">
+            <select class="form-control" id="type_of_package_id_c" name="type_of_package_id_c">
                 <option value="">SELECCIONE</option>
                 ${options}
             </select>
@@ -29,7 +29,7 @@ function StoreOrderPacking(id) {
                 data: {
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                     'id': id,
-                    'package_type_id': $('#package_type_id_c').val()
+                    'type_of_package_id': $('#type_of_package_id_c').val()
                 },
                 success: function(response) {
                     $('#IndexOrderPacking').trigger('click');

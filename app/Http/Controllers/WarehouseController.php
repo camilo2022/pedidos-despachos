@@ -42,10 +42,8 @@ class WarehouseController extends Controller
                 ->when(!$request->filled('search'),
                     function ($query) {
                         $query->where('to_cut', true)
-                        ->orWhere('to_transit', true)
                         ->orWhere('to_discount', true)
-                        ->orWhere('to_exclusive', true)
-                        ->orWhere('to_sale', true);
+                        ->orWhere('to_exclusive', true);
                     }
                 )
                 ->withTrashed()
@@ -102,7 +100,6 @@ class WarehouseController extends Controller
             $warehouse->name = $request->input('name');
             $warehouse->code = $request->input('code');
             $warehouse->to_cut = $request->input('to_cut');
-            $warehouse->to_transit = $request->input('to_transit');
             $warehouse->to_discount = $request->input('to_discount');
             $warehouse->to_exclusive = $request->input('to_exclusive');
             $warehouse->save();
@@ -173,7 +170,6 @@ class WarehouseController extends Controller
             $warehouse->name = $request->input('name');
             $warehouse->code = $request->input('code');
             $warehouse->to_cut = $request->input('to_cut');
-            $warehouse->to_transit = $request->input('to_transit');
             $warehouse->to_discount = $request->input('to_discount');
             $warehouse->to_exclusive = $request->input('to_exclusive');
             $warehouse->save();
@@ -297,7 +293,6 @@ class WarehouseController extends Controller
                 $warehouse->name = $item->Nombre;
                 $warehouse->code = $item->CodigoBodega;
                 $warehouse->to_cut = false;
-                $warehouse->to_transit = in_array($item->CodigoBodega, ['PPCNI', 'PPCNE', 'PPCOR', 'PPLV', 'LVEXT', 'PPTER', 'TER', 'PPTN', 'PTCOR', 'ZMED']);
                 $warehouse->to_discount = in_array($item->CodigoBodega, ['PT', 'PT001', 'PDDIS', 'DIS', 'BMEC', 'BDM']);
                 $warehouse->to_exclusive = in_array($item->CodigoBodega, ['BCAR']);
                 $warehouse->save();

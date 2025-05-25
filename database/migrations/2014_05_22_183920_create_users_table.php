@@ -15,17 +15,17 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id()->comment('Identificador del usuario.');
-            $table->string('name')->comment('Nombre del usuario.');
-            $table->string('last_name')->comment('Apellido del usuario.');
-            $table->string('document_number')->unique()->comment('Numero de documento del usuario.');
-            $table->string('phone_number')->comment('Numero del telefono del usuario.');
-            $table->string('address')->comment('Direccion del usuario.');
-            $table->string('email')->unique()->comment('Correo del usuario.');
-            $table->timestamp('email_verified_at')->nullable()->comment('Verificacion del correo del usuario.');
-            $table->string('password')->comment('Contraseña del usuario.');
-            $table->enum('title', ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'VENDEDOR', 'VENDEDOR ESPECIAL', 'CARTERA', 'FILTRADOR', 'BODEGA', 'COORDINADOR BODEGA', 'FACTURADOR', 'PROMOTORA', 'COORDINADOR PROMOTORA', 'USUARIO', 'TIENDAS', 'CAJERO VENDEDOR', 'CAJERO SUPERVISOR', 'REPORTES'])->default('USUARIO')->comment('Titulo del usuario.');
-            $table->enum('zone', ['N/A', 'NACIONAL', 'MEDELLIN', 'PERIFERIA'])->default('N/A')->comment('Zona del usuario.');
+            $table->id();
+            $table->string('name');
+            $table->string('last_name');
+            $table->string('document_number')->unique();
+            $table->string('phone_number');
+            $table->string('address');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->enum('title', ['SUPER ADMINISTRADOR', 'ADMINISTRADOR', 'VENDEDOR', 'VENDEDOR ESPECIAL', 'CARTERA', 'FILTRADOR', 'BODEGA', 'COORDINADOR BODEGA', 'FACTURADOR', 'PROMOTORA', 'COORDINADOR PROMOTORA', 'USUARIO', 'TIENDAS', 'CAJERO VENDEDOR', 'CAJERO SUPERVISOR', 'REPORTES'])->default('USUARIO');
+            $table->enum('zone', ['N/A', 'NACIONAL', 'MEDELLIN', 'PERIFERIA'])->default('N/A');
             $table->foreignIdFor(Business::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();

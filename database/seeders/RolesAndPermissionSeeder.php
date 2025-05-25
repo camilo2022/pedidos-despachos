@@ -27,7 +27,7 @@ class RolesAndPermissionSeeder extends Seeder
 
         $Correrias = Role::create(['name' => 'Correrias']);
 
-        $PackageTypes = Role::create(['name' => 'PackageTypes']);
+        $TypeOfPackages = Role::create(['name' => 'TypeOfPackages']);
 
         $PaymentMethods = Role::create(['name' => 'PaymentMethods']);
 
@@ -129,13 +129,13 @@ class RolesAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'Dashboard.Correrias.Update'])->syncRoles([$Correrias]);
         Permission::create(['name' => 'Dashboard.Correrias.Delete'])->syncRoles([$Correrias]);
 
-        Permission::create(['name' => 'Dashboard.PackageTypes.Index'])->syncRoles([$PackageTypes]);
-        Permission::create(['name' => 'Dashboard.PackageTypes.Index.Query'])->syncRoles([$PackageTypes]);
-        Permission::create(['name' => 'Dashboard.PackageTypes.Create'])->syncRoles([$PackageTypes]);
-        Permission::create(['name' => 'Dashboard.PackageTypes.Store'])->syncRoles([$PackageTypes]);
-        Permission::create(['name' => 'Dashboard.PackageTypes.Edit'])->syncRoles([$PackageTypes]);
-        Permission::create(['name' => 'Dashboard.PackageTypes.Update'])->syncRoles([$PackageTypes]);
-        Permission::create(['name' => 'Dashboard.PackageTypes.Delete'])->syncRoles([$PackageTypes]);
+        Permission::create(['name' => 'Dashboard.TypeOfPackages.Index'])->syncRoles([$TypeOfPackages]);
+        Permission::create(['name' => 'Dashboard.TypeOfPackages.Index.Query'])->syncRoles([$TypeOfPackages]);
+        Permission::create(['name' => 'Dashboard.TypeOfPackages.Create'])->syncRoles([$TypeOfPackages]);
+        Permission::create(['name' => 'Dashboard.TypeOfPackages.Store'])->syncRoles([$TypeOfPackages]);
+        Permission::create(['name' => 'Dashboard.TypeOfPackages.Edit'])->syncRoles([$TypeOfPackages]);
+        Permission::create(['name' => 'Dashboard.TypeOfPackages.Update'])->syncRoles([$TypeOfPackages]);
+        Permission::create(['name' => 'Dashboard.TypeOfPackages.Delete'])->syncRoles([$TypeOfPackages]);
 
         Permission::create(['name' => 'Dashboard.PaymentMethods.Index'])->syncRoles([$PaymentMethods]);
         Permission::create(['name' => 'Dashboard.PaymentMethods.Index.Query'])->syncRoles([$PaymentMethods]);

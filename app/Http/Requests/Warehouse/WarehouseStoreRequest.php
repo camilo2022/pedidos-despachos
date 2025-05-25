@@ -21,7 +21,6 @@ class WarehouseStoreRequest extends FormRequest
     {
         $this->merge([
             'to_cut' => $this->input('to_cut') === 'true',
-            'to_transit' => $this->input('to_transit') === 'true',
             'to_discount' => $this->input('to_discount') === 'true',
             'to_exclusive' => $this->input('to_exclusive') === 'true'
         ]);
@@ -38,7 +37,6 @@ class WarehouseStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'unique:warehouses,code', 'max:255'],
             'to_cut' => ['required', 'boolean'],
-            'to_transit' => ['required', 'boolean'],
             'to_discount' => ['required', 'boolean'],
             'to_exclusive' => ['required', 'boolean']
         ];
@@ -56,10 +54,8 @@ class WarehouseStoreRequest extends FormRequest
             'code.max' => 'El campo Codigo de la bodega no debe exceder los 255 caracteres.',
             'to_cut.required' => 'El campo Bodega curva corte original es requerido.',
             'to_cut.boolean' => 'El campo Bodega curva corte original debe ser true o false.',
-            'to_transit.required' => 'El campo Bodega con inventario en proceso es requerido.',
-            'to_transit.boolean' => 'El campo Bodega con inventario en proceso debe ser true o false.',
             'to_discount.required' => 'El campo Bodega con inventario para filtro es requerido.',
-            'to_discount.boolean' => 'El campo Bodega con inventario para filtro debe ser true o false.',            
+            'to_discount.boolean' => 'El campo Bodega con inventario para filtro debe ser true o false.',
             'to_exclusive.required' => 'El campo Bodega con inventario exclusivo para pedidos especiales es requerido.',
             'to_exclusive.boolean' => 'El campo Bodega con inventario exclusivo para pedidos especiales ser true o false.'
         ];

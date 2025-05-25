@@ -39,7 +39,7 @@ function IndexOrderPackingModalCleaned(orderPacking = {}, sizes, status, orderPa
                 <i class="fas fa-plus mr-2"></i> <b>AGREGAR EMPAQUE</b>
             </a>
         </li>`;
-        
+
         $('#ButtonsOrderPacking').html(li);
 
         $.each(orderPacking.order_packages, function(i, order_package) {
@@ -82,12 +82,12 @@ function IndexOrderPackingModalCleaned(orderPacking = {}, sizes, status, orderPa
                     <div>
                         <button type="button" class="mb-2 btn w-100 collapsed btn-info" data-toggle="collapse" data-target="#collapseOrderPackage${order_package.id}Detail${order_packing_detail.id}" aria-expanded="false" aria-controls="#collapseOrderPackage${order_package.id}Detail${order_packing_detail.id}">
                             <b>
-                                # ${j + 1} | <span class="badge badge-light">${order_packing_detail.order_dispatch_detail.order_detail.product.code.toUpperCase()}</span> | 
-                                <span class="badge badge-light">${order_packing_detail.order_dispatch_detail.order_detail.color.name.toUpperCase()} - ${order_packing_detail.order_dispatch_detail.order_detail.color.code.toUpperCase()}</span> | 
+                                # ${j + 1} | <span class="badge badge-light">${order_packing_detail.order_dispatch_detail.order_detail.product.code.toUpperCase()}</span> |
+                                <span class="badge badge-light">${order_packing_detail.order_dispatch_detail.order_detail.color.name.toUpperCase()} - ${order_packing_detail.order_dispatch_detail.order_detail.color.code.toUpperCase()}</span> |
                                 <span class="badge badge-warning">${quantities} UNDS</span>
                             </b>
                         </button>
-                        <div class="table-responsive collapse" id="collapseOrderPackage${order_package.id}Detail${order_packing_detail.id}">                
+                        <div class="table-responsive collapse" id="collapseOrderPackage${order_package.id}Detail${order_packing_detail.id}">
                             <div class="col-12 pt-2">
                                 <div class="table-responsive">
                                     ${table}
@@ -96,14 +96,14 @@ function IndexOrderPackingModalCleaned(orderPacking = {}, sizes, status, orderPa
                         </div>
                     </div>
                 </div>`;
-            });            
+            });
 
             let item = `<div class="col-md-4 col-sm-12 col-12">
                 <div>
                     <button type="button" class="mb-2 btn w-100 collapsed btn-dark" data-toggle="collapse" data-target="#collapseOrderPackage${order_package.id}" aria-expanded="false" aria-controls="#collapseOrderPackage${order_package.id}">
-                        <b># ${i + 1} | <span class="badge badge-info">${order_package.package_type.name}</span> | <span class="badge badge-warning">${quantitiesTotal} UNDS</span> | <span class="badge badge-light">${order_package.weight}</span></b>
+                        <b># ${i + 1} | <span class="badge badge-info">${order_package.type_of_package.name}</span> | <span class="badge badge-warning">${quantitiesTotal} UNDS</span> | <span class="badge badge-light">${order_package.weight}</span></b>
                     </button>
-                    <div class="table-responsive collapse" id="collapseOrderPackage${order_package.id}">                
+                    <div class="table-responsive collapse" id="collapseOrderPackage${order_package.id}">
                         <div class="col-12 pt-2">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -124,24 +124,24 @@ function IndexOrderPackingModalCleaned(orderPacking = {}, sizes, status, orderPa
                     </div>
                 </div>
             </div> `;
-            
+
             $('#OrderPackages').append(item);
         });
     } else {
-        $('#TitleOrderPacking').text(`DETALLES DEL EMPAQUE | ${orderPackage.id} - ${orderPackage.package_type.name}`);
+        $('#TitleOrderPacking').text(`DETALLES DEL EMPAQUE | ${orderPackage.id} - ${orderPackage.type_of_package.name}`);
 
         let li = `<li class="nav-item ml-auto">
             <a class="btn btn-danger text-white w-100" onclick="CloseOrderPackage(${orderPackage.id})" title="Cerrar paquete.">
                 <i class="fas fa-box-taped mr-2"></i> <b>CERRAR</b>
             </a>
         </li>`;
-        
+
         $('#ButtonsOrderPacking').html(li);
 
         $.each(orderPackage.order_packing_details, function(i, order_packing_detail) {
-                    
+
             let identify = `${order_packing_detail.order_dispatch_detail.order_detail.product.code}-${order_packing_detail.order_dispatch_detail.order_detail.color.code}`.toUpperCase();
-            
+
             let table = `<table width="100%" class="table table-striped table-bordered" cellpadding="0" cellspacing="0">
                 <thead>
                     <tr>
@@ -175,7 +175,7 @@ function IndexOrderPackingModalCleaned(orderPacking = {}, sizes, status, orderPa
                     <button type="button" class="mb-2 btn w-100 collapsed btn-primary" data-toggle="collapse" data-target="#collapsePackingDetail${i}" aria-expanded="false" aria-controls="#collapsePackingDetail${i}">
                         <b>
                             <div class="table-responsive">
-                                <span class="badge badge-light">${order_packing_detail.order_dispatch_detail.order_detail.product.code.toUpperCase()} </span> | 
+                                <span class="badge badge-light">${order_packing_detail.order_dispatch_detail.order_detail.product.code.toUpperCase()} </span> |
                                 <span class="badge badge-light"> ${order_packing_detail.order_dispatch_detail.order_detail.color.name.toUpperCase()} - ${order_packing_detail.order_dispatch_detail.order_detail.color.code.toUpperCase()}</span>
                             </div>
                         </b>
