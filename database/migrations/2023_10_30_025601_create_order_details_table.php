@@ -3,7 +3,7 @@
 use App\Models\Color;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\Tone;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -53,20 +53,14 @@ return new class extends Migration
             $table->unsignedBigInteger('TXL')->default(0);
             $table->unsignedBigInteger('TXXL')->default(0);
             $table->enum('priority', ['1', '2', '3', '4', '5'])->default('3')->comment('1: Crítica, 2: Alta, 3: Media, 4: Baja, 5: Mínima');
-            $table->unsignedBigInteger('seller_user_id')->nullable()->comment('Identificador del usuario vendedor.');
+            $table->foreignIdFor(User::class, 'seller_user_id')->constrained()->onUpdate('cascade')->onDelete('cascade')->comment('Identificador del usuario vendedor.');
             $table->datetime('seller_date')->comment('Fecha del vendedor');
             $table->longText('seller_observation')->nullable()->comment('Observacion del vendedor');
-            $table->unsignedBigInteger('wallet_user_id')->nullable()->comment('Identificador del usuario de cartera.');
+            $table->foreignIdFor(User::class, 'wallet_user_id')->constrained()->onUpdate('cascade')->onDelete('cascade')->nullable()->comment('Identificador del usuario de cartera.');
             $table->datetime('wallet_date')->nullable()->comment('Fecha de cartera.');
-            $table->unsignedBigInteger('dispatch_user_id')->nullable()->comment('Identificador del usuario de despacho.');
+            $table->foreignIdFor(User::class, 'dispatch_user_id')->constrained()->onUpdate('cascade')->onDelete('cascade')->nullable()->comment('Identificador del usuario de despacho.');
             $table->datetime('dispatch_date')->nullable()->comment('Fecha de despacho');
             $table->enum('status', ['Pendiente', 'Cancelado', 'Aprobado', 'Autorizado', 'Agotado', 'Suspendido', 'Comprometido', 'Despachado'])->default('Pendiente')->comment('Estado del detalle del pedido.');
-            /* $table->foreign('order_id')->references('id')->on('orders')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('color_id')->references('id')->on('colors')->onUpdate('cascade')->onDelete('cascade'); */
-            $table->foreign('seller_user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('wallet_user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('dispatch_user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

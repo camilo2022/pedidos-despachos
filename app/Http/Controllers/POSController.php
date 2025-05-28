@@ -24,15 +24,14 @@ class POSController extends Controller
     public function index()
     {
         try {
-            $cash_register = Auth::user()->cash_register;
-            if(!$cash_register){
+            if(!Auth::user()->cash_register){
                 return back()->with('danger', 'Para acceder al POS, debe tener una caja asignada. Por favor, solicite la asignación de una caja antes de continuar.');
             }
 
-            if($cash_register->status == 'Activa' and $cash_register->store and $cash_register->store->status == 'Abierta'){
-                if($cash_register->cash_register_controls->where('status', 'Abierta')->where('date', '<>', Carbon::now()->format('Y-m-d'))->first()){
+            if(Auth::user()->cash_register->status == 'Activa' and Auth::user()->cash_register->store and Auth::user()->cash_register->store->status == 'Abierta'){
+                if(Auth::user()->cash_register->cash_register_controls->where('status', 'Abierta')->where('date', '<>', Carbon::now()->format('Y-m-d'))->first()){
                     return back()->with('warning', 'Para acceder al POS, debe realizar los cierres de caja pendientes. Por favor, complete los cierres antes de continuar.');
-                } else if(!$cash_register->cash_register_controls->where('status', 'Abierta')->where('date', Carbon::now()->format('Y-m-d'))->first()) {
+                } else if(!Auth::user()->cash_register->cash_register_controls->where('status', 'Abierta')->where('date', Carbon::now()->format('Y-m-d'))->first()) {
                     return back()->with('info', 'Para acceder al POS, es necesario realizar una apertura de caja. Por favor, asegúrese de abrir una caja antes de continuar.');
                 }
             }
@@ -40,7 +39,7 @@ class POSController extends Controller
             $payment_methods = PaymentMethod::get();
             $promotions = Promotion::get();
 
-            return view('Dashboard.POS.Index', compact('payment_methods', 'promotions'))/*->with('success', "Acceso al POS exitoso. Su caja es {$cash_register->name} de la tienda {$cash_register->store->name}.")*/;
+            return view('Dashboard.POS.Index', compact('payment_methods', 'promotions'))/*->with('success', "Acceso al POS exitoso. Su caja es {Auth::user()->cash_register->name} de la tienda {Auth::user()->cash_register->store->name}.")*/;
         } catch (Exception $e) {
             return back()->with('danger', 'Ocurrió un error al cargar la vista: ' . $e->getMessage());
         }

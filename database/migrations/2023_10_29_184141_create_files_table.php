@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->string('extension');
             $table->string('size');
             $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->json('metadata');
+            $table->json('metadata')->default(new Expression('(JSON_OBJECT())'));
             $table->timestamps();
             $table->softDeletes();
         });

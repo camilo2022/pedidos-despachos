@@ -2,6 +2,8 @@
 
 use App\Models\Category;
 use App\Models\ClothingLine;
+use App\Models\Color;
+use App\Models\Correria;
 use App\Models\Location;
 use App\Models\Silhouette;
 use App\Models\Subcategory;
@@ -9,6 +11,8 @@ use App\Models\TypeOfBoot;
 use App\Models\TypeOfButt;
 use App\Models\TypeOfGarment;
 use App\Models\TypeOfWaistband;
+use App\Models\User;
+use App\Models\WashTone;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,6 +28,8 @@ return new class extends Migration
     {
         Schema::create('technical_sheets', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Color::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(WashTone::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(Category::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(Subcategory::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(ClothingLine::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
@@ -46,7 +52,9 @@ return new class extends Migration
             $table->unsignedBigInteger('clip');
             $table->longText('observation_dry_cleaner')->nullable();
             $table->longText('observation_laundry')->nullable();
-            $table->enum('status', ['Cancelado', 'En elaboracion', 'Revision', 'Aprobado'])->default('');
+            $table->enum('status', ['Cancelado', 'En elaboracion', 'Revision', 'Aprobado'])->default('En elaboracion');
+            $table->foreignIdFor(Correria::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

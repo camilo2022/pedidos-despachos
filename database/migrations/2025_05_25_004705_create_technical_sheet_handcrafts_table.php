@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Handcraft;
+use App\Models\TechnicalSheet;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +17,10 @@ return new class extends Migration
     {
         Schema::create('technical_sheet_handcrafts', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(TechnicalSheet::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(Handcraft::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

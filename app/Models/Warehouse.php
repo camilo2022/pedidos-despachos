@@ -17,29 +17,17 @@ class Warehouse extends Model implements Auditable
     protected $fillable = [
         'name',
         'code',
-        'to_cut',
-        'to_transit',
-        'to_discount',
-        'to_exclusive',
-        'to_sale'
+        'type'
     ];
 
     protected $casts = [
-        'to_cut' => 'boolean',
-        'to_transit' => 'boolean',
-        'to_discount' => 'boolean',
-        'to_exclusive' => 'boolean',
-        'to_sale' => 'boolean'
+        'type' => 'object'
     ];
 
     protected $auditInclude = [
         'name',
         'code',
-        'to_cut',
-        'to_transit',
-        'to_discount',
-        'to_exclusive',
-        'to_sale'
+        'type'
     ];
 
     public function users(): BelongsToMany

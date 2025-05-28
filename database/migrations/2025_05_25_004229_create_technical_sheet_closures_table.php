@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Color;
+use App\Models\Extension;
 use App\Models\Location;
 use App\Models\Size;
 use App\Models\Supply;
@@ -23,8 +23,8 @@ return new class extends Migration
             $table->foreignIdFor(TechnicalSheet::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(Location::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(Supply::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignIdFor(Color::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignIdFor(Size::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(Extension::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('quantity')->default(0);
             $table->float('length')->default(0);
             $table->timestamps();

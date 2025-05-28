@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Category;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -14,11 +14,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('subcategories', function (Blueprint $table) {
+        Schema::create('type_of_processes', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Category::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('name')->unique();
-            $table->string('code')->unique();
+            $table->json('options')->default(new Expression('(JSON_OBJECT())'));
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subcategories');
+        Schema::dropIfExists('type_of_processes');
     }
 };

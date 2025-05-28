@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\Product;
+use App\Models\Process;
+use App\Models\Subprocess;
 use App\Models\TechnicalSheet;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,12 +16,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('technical_sheet_details', function (Blueprint $table) {
+        Schema::create('technical_sheet_laundries', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(TechnicalSheet::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignIdFor(Product::class)->constrained()->onUpdate('cascade')->onDelete('cascade')->unique();
-            $table->enum('status', ['Nacional', 'Medellin', 'Stara']);
+            $table->foreignIdFor(Process::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(Subprocess::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('technical_sheet_details');
+        Schema::dropIfExists('technical_sheet_laundries');
     }
 };

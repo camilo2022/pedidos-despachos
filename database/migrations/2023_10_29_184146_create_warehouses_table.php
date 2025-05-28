@@ -17,9 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code')->unique();
-            $table->boolean('to_cut')->default(false);
-            $table->boolean('to_discount')->default(false);
-            $table->boolean('to_exclusive')->default(false);
+            $table->enum('type', ['CORTE', 'VENTA', 'VENTA EXCLUSIVA']);
             $table->timestamps();
             $table->softDeletes();
         });
