@@ -24,6 +24,11 @@ class Color extends Model implements Auditable
         'code'
     ];
 
+    public function wash_tones() : HasMany
+    {
+        return $this->hasMany(WashTone::class, 'color_id');
+    }
+
     public function inventories() : HasMany
     {
         return $this->hasMany(Inventory::class, 'color_id');

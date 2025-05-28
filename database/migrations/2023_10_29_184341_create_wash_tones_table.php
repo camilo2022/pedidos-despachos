@@ -18,9 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Color::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('name')->unique();
-            $table->string('siesa')->unique();
-            $table->string('visual_tns')->nullable()->unique();
-            $table->string('portal_tns')->nullable()->unique();
+            $table->string('code')->unique();
             $table->timestamps();
             $table->softDeletes();
         });

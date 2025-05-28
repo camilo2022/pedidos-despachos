@@ -56,9 +56,9 @@ return new class extends Migration
             $table->foreignIdFor(User::class, 'seller_user_id')->constrained()->onUpdate('cascade')->onDelete('cascade')->comment('Identificador del usuario vendedor.');
             $table->datetime('seller_date')->comment('Fecha del vendedor');
             $table->longText('seller_observation')->nullable()->comment('Observacion del vendedor');
-            $table->foreignIdFor(User::class, 'wallet_user_id')->constrained()->onUpdate('cascade')->onDelete('cascade')->nullable()->comment('Identificador del usuario de cartera.');
+            $table->foreignIdFor(User::class, 'wallet_user_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade')->comment('Identificador del usuario de cartera.');
             $table->datetime('wallet_date')->nullable()->comment('Fecha de cartera.');
-            $table->foreignIdFor(User::class, 'dispatch_user_id')->constrained()->onUpdate('cascade')->onDelete('cascade')->nullable()->comment('Identificador del usuario de despacho.');
+            $table->foreignIdFor(User::class, 'dispatch_user_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade')->comment('Identificador del usuario de despacho.');
             $table->datetime('dispatch_date')->nullable()->comment('Fecha de despacho');
             $table->enum('status', ['Pendiente', 'Cancelado', 'Aprobado', 'Autorizado', 'Agotado', 'Suspendido', 'Comprometido', 'Despachado'])->default('Pendiente')->comment('Estado del detalle del pedido.');
             $table->timestamps();

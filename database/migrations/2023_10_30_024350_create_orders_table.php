@@ -29,7 +29,7 @@ return new class extends Migration
             $table->longText('seller_observation')->nullable()->comment('Observacion del vendedor.');
             $table->unsignedBigInteger('seller_dispatch_official')->comment('Condicion de despacho OFC vendedor');
             $table->unsignedBigInteger('seller_dispatch_document')->comment('Condicion de despacho DCO vendedor');
-            $table->foreignIdFor(User::class, 'wallet_user_id')->constrained()->onUpdate('cascade')->onDelete('cascade')->nullable()->comment('Identificador del usuario de cartera.');
+            $table->foreignIdFor(User::class, 'wallet_user_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade')->comment('Identificador del usuario de cartera.');
             $table->enum('wallet_status', ['Pendiente', 'Cancelado', 'Suspendido', 'En mora', 'Parcialmente Aprobado', 'Aprobado', 'Autorizado'])->default('Pendiente')->comment('Estado de cartera.');
             $table->datetime('wallet_date')->nullable()->comment('Fecha de cartera');
             $table->longText('wallet_observation')->nullable()->comment('Observacion de cartera');

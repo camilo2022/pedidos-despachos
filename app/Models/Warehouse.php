@@ -20,10 +20,6 @@ class Warehouse extends Model implements Auditable
         'type'
     ];
 
-    protected $casts = [
-        'type' => 'object'
-    ];
-
     protected $auditInclude = [
         'name',
         'code',
